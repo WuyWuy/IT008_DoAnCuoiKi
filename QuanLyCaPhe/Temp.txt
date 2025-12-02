@@ -1,0 +1,145 @@
+﻿//Tạo Tài Khoản 21225.cs
+
+private void BtnClearRegister_Click(object sender, RoutedEventArgs e) => ClearRegisterFields();
+
+private void ClearRegisterFields()
+{
+    txtFullName.Clear();
+    txtEmail.Clear();
+    txtPhone.Clear();
+    txtAddress.Clear();
+    rbMale.IsChecked = true;
+    pbPassword.Clear();
+    pbRetypePassword.Clear();
+    tbRegisterStatus.Text = string.Empty;
+}
+private void BtnRegister_Click(object sender, RoutedEventArgs e)
+{
+    tbRegisterStatus.Text = string.Empty;
+
+    var fullName = txtFullName.Text.Trim();
+    var email = txtEmail.Text.Trim();
+    var phone = txtPhone.Text.Trim();
+    var address = txtAddress.Text.Trim();
+    var gender = rbMale.IsChecked == true ? "Male" : "Female";
+    var pwd = pbPassword.Password;
+    var retype = pbRetypePassword.Password;
+
+    // basic validation
+    if (string.IsNullOrWhiteSpace(fullName) ||
+        string.IsNullOrWhiteSpace(email) ||
+        string.IsNullOrWhiteSpace(phone) ||
+        string.IsNullOrWhiteSpace(pwd) ||
+        string.IsNullOrWhiteSpace(retype))
+    {
+        tbRegisterStatus.Text = "Please fill in all required fields.";
+        return;
+    }
+
+    if (!IsValidEmail(email))
+    {
+        tbRegisterStatus.Text = "Invalid email format.";
+        return;
+    }
+
+    if (!IsValidPhone(phone))
+    {
+        tbRegisterStatus.Text = "Invalid phone number.";
+        return;
+    }
+
+    if (pwd != retype)
+    {
+        tbRegisterStatus.Text = "Passwords do not match.";
+        return;
+    }
+
+    if (pwd.Length < 6)
+    {
+        tbRegisterStatus.Text = "Password must be at least 6 characters.";
+        return;
+    }
+
+    try
+    {
+        var exists = _store.UserExists(email);
+        if (exists)
+        {
+            tbRegisterStatus.Text = "An account with that email already exists.";
+            return;
+        }
+
+        _store.RegisterUser(fullName, email, phone, address, gender, pwd);
+        tbRegisterStatus.Foreground = System.Windows.Media.Brushes.Green;
+        tbRegisterStatus.Text = "Registration successful. You may now log in.";
+        ClearRegisterFields();
+    }
+    catch (Exception ex)
+    {
+        tbRegisterStatus.Foreground = System.Windows.Media.Brushes.Red;
+        tbRegisterStatus.Text = "Registration failed: " + ex.Message;
+    }
+}
+//Tạo tài khoản 21225.xaml 
+<TabItem Header="Register" Height="22" Margin="-2,-2,-2,0" VerticalAlignment="Top">
+                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                    <Grid Margin="12">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+
+                        <StackPanel Grid.Row="0" Margin="0,0,0,8">
+                            <TextBlock Text="Full name" />
+                            <TextBox x:Name="txtFullName" Width="420" />
+                        </StackPanel>
+
+                        <StackPanel Grid.Row="1" Margin="0,0,0,8">
+                            <TextBlock Text="Email" />
+                            <TextBox x:Name="txtEmail" Width="420" />
+                        </StackPanel>
+
+                        <StackPanel Grid.Row="2" Margin="0,0,0,8">
+                            <TextBlock Text="Phone number" />
+                            <TextBox x:Name="txtPhone" Width="420" />
+                        </StackPanel>
+
+                        <StackPanel Grid.Row="3" Margin="0,0,0,8">
+                            <TextBlock Text="Address" />
+                            <TextBox x:Name="txtAddress" Width="420" />
+                        </StackPanel>
+
+                        <StackPanel Grid.Row="4" Margin="0,0,0,8">
+                            <TextBlock Text="Gender" />
+                            <StackPanel Orientation="Horizontal" Margin="0,4,0,0" >
+                                <RadioButton x:Name="rbMale" Content="Male" IsChecked="True" GroupName="GenderGroup"/>
+                                <RadioButton x:Name="rbFemale" Content="Female" GroupName="GenderGroup"/>
+                            </StackPanel>
+                        </StackPanel>
+
+                        <StackPanel Grid.Row="5" Margin="0,0,0,8">
+                            <TextBlock Text="Password" />
+                            <PasswordBox x:Name="pbPassword" Width="420" />
+                        </StackPanel>
+
+                        <StackPanel Grid.Row="6" Margin="0,0,0,8">
+                            <TextBlock Text="Retype password" />
+                            <PasswordBox x:Name="pbRetypePassword" Width="420" />
+                        </StackPanel>
+
+                        <StackPanel Grid.Row="7" Orientation="Horizontal" Margin="0,8,0,8" HorizontalAlignment="Left" >
+                            <Button x:Name="btnRegister" Width="120" Click="BtnRegister_Click">Register</Button>
+                        </StackPanel>
+
+                        <TextBlock Grid.Row="8" x:Name="tbRegisterStatus" Foreground="Red" TextWrapping="Wrap"/>
+                    </Grid>
+                </ScrollViewer>
+            </TabItem>
+
