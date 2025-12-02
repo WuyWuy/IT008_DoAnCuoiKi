@@ -7,6 +7,49 @@
         mc:Ignorable="d"
         Title="AdminWindow" Height="450" Width="800">
     <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="auto"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
         
+        <Border x:Name="Sidebar" Grid.Column="0" Panel.ZIndex="1"
+                MouseEnter="Sidebar_MouseEnter"
+                MouseLeave="Sidebar_MouseLeave"
+                Style="{StaticResource AdminSideBarStyle}">
+            
+            <StackPanel>
+                <Button x:Name="Homebtn" Content="Trang chủ" 
+                        Style="{StaticResource AdminButtonStyle}"
+                        Click="Homebtn_Click"/>
+
+                <Button x:Name="Prodbtn" Content="Món ăn"
+                        Style="{StaticResource AdminButtonStyle}"
+                        Click="Prodbtn_Click"/>
+
+                <Button x:Name="Ingredbtn" Content="Nguyên liệu"
+                        Style="{StaticResource AdminButtonStyle}"
+                        Click="Ingredbtn_Click"/>
+
+                <Button x:Name="Staffbtn" Content="Nhân viên"
+                        Style="{StaticResource AdminButtonStyle}"
+                        Click="Staffbtn_Click"/>
+
+                <Button x:Name="Timelbtn" Content="Ca làm"
+                        Style="{StaticResource AdminButtonStyle}"
+                        Click="Timelbtn_Click"/>
+                
+                <Button x:Name="Profitbtn" Content="Doanh thu"
+                        Style="{StaticResource AdminButtonStyle}"
+                        Click="Profitbtn_Click"/>
+            </StackPanel>
+            
+        </Border>
+
+        <Frame x:Name="MainFrame" Panel.ZIndex="1" 
+               Grid.Column="1" NavigationUIVisibility="Hidden"
+               Background="Aqua">
+
+        </Frame>
+
     </Grid>
 </Window>
