@@ -9,8 +9,24 @@
       Title="ProductsPage">
 
     <Grid>
-        <TextBlock Text="Món ăn nè !!" FontSize="30" 
-            HorizontalAlignment="Center"
-            VerticalAlignment="Center"/>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="0.1*"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <TextBlock Text="chổ này để cái toolbar tutu tao code cái UserControl sau!"/>
+
+        <DataGrid x:Name="Productsdg" Grid.Row="1"
+          AutoGenerateColumns="False" CanUserAddRows="False" IsReadOnly="True" SelectionMode="Single"
+          Background="White" Foreground="Black"
+          BorderBrush="Black" BorderThickness="1">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="ID" Binding="{Binding Id}" Width="100"/>
+                <DataGridTextColumn Header="Tên sản phẩm" Binding="{Binding ProName}" Width="*"/>
+                <DataGridTextColumn Header="Giá bán" Binding="{Binding Price, StringFormat={}{0:N0}đ}" Width="200"/>
+            </DataGrid.Columns>
+
+        </DataGrid>
+
     </Grid>
 </Page>

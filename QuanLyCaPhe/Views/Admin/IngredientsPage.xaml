@@ -9,8 +9,25 @@
       Title="IngredientsPage">
 
     <Grid>
-        <TextBlock Text="Nguyên liệu nè !!" FontSize="30" 
-            HorizontalAlignment="Center"
-            VerticalAlignment="Center"/>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="0.1*"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <TextBlock Text="chổ này để cái toolbar tutu tao code cái UserControl sau!"/>
+
+        <DataGrid x:Name="Productsdg" Grid.Row="1"
+      AutoGenerateColumns="False" CanUserAddRows="False" IsReadOnly="True" SelectionMode="Single"
+      Background="White" Foreground="Black"
+      BorderBrush="Black" BorderThickness="1">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="ID" Binding="{Binding Id}" Width="50"/>
+                <DataGridTextColumn Header="Tên nguyên liệu" Binding="{Binding IngName}" Width="*"/>
+                <DataGridTextColumn Header="Đơn vị" Binding="{Binding Unit}" Width="50"/>
+                <DataGridTextColumn Header="Còn lại" Binding="{Binding Quantity}" Width="200"/>
+            </DataGrid.Columns>
+
+        </DataGrid>
+
     </Grid>
 </Page>
