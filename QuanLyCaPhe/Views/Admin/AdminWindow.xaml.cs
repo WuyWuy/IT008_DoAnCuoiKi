@@ -57,12 +57,12 @@ namespace QuanLyCaPhe.Views.Admin
 
         private void Sidebar_MouseEnter(object sender, MouseEventArgs e)
         {
-            Sidebar.Visibility = Visibility.Collapsed;
+            //Sidebar.Visibility = Visibility.Collapsed;
         }
 
         private void Sidebar_MouseLeave(object sender, MouseEventArgs e)
         {
-            Sidebar.Visibility = Visibility.Visible;
+            //Sidebar.Visibility = Visibility.Visible;
         }
     }
 }
