@@ -4,6 +4,7 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:QuanLyCaPhe.Views.Admin"
+      xmlns:comp="clr-namespace:QuanLyCaPhe.Views.Components"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
       Title="StaffPage">
@@ -14,19 +15,23 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <TextBlock Text="chổ này để cái toolbar tutu tao code cái UserControl sau!"/>
+        <comp:CrudToolBar HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="3" Height="auto"/>
 
-        <DataGrid x:Name="Productsdg" Grid.Row="1"
-  AutoGenerateColumns="False" CanUserAddRows="False" IsReadOnly="True" SelectionMode="Single"
-  Background="White" Foreground="Black"
-  BorderBrush="Black" BorderThickness="1">
+        <DataGrid x:Name="Staffsdg" Grid.Row="1"
+                  ScrollViewer.VerticalScrollBarVisibility="Visible"
+                  ScrollViewer.HorizontalScrollBarVisibility="Visible"
+                  AutoGenerateColumns="False" CanUserAddRows="False" IsReadOnly="True" SelectionMode="Single"
+                  Background="White" Foreground="Black"
+                  BorderBrush="Black" BorderThickness="1">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="ID" Binding="{Binding Id}" Width="50"/>
-                <DataGridTextColumn Header="Tên nhân viên" Binding="{Binding FullName}" Width="auto"/>
-                <DataGridTextColumn Header="Giới tính" Binding="{Binding Gender}" Width="auto"/>
+                <DataGridTextColumn Header="Tên nhân viên" Binding="{Binding FullName}" Width="150"/>
+                <DataGridTextColumn Header="Giới tính" Binding="{Binding Gender}" Width="150"/>
                 <DataGridTextColumn Header="Địa chỉ" Binding="{Binding Address}" Width="150"/>
                 <DataGridTextColumn Header="Số Điện thoại" Binding="{Binding Phone}" Width="150"/>
                 <DataGridTextColumn Header="Email" Binding="{Binding Email}" Width="200"/>
+                <DataGridTextColumn Header="Chức vụ" Binding="{Binding RoleName}" Width="200"/>
+                
             </DataGrid.Columns>
 
         </DataGrid>

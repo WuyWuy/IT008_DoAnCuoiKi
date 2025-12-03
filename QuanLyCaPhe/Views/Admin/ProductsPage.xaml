@@ -4,6 +4,7 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:QuanLyCaPhe.Views.Admin"
+      xmlns:comp="clr-namespace:QuanLyCaPhe.Views.Components"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
       Title="ProductsPage">
@@ -14,7 +15,7 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <TextBlock Text="chổ này để cái toolbar tutu tao code cái UserControl sau!"/>
+        <comp:CrudToolBar HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="3" Height="auto"/>
 
         <DataGrid x:Name="Productsdg" Grid.Row="1"
           AutoGenerateColumns="False" CanUserAddRows="False" IsReadOnly="True" SelectionMode="Single"
