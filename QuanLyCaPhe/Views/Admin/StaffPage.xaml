@@ -15,7 +15,15 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <comp:CrudToolBar HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="3" Height="auto"/>
+        <Grid Grid.Row="0">
+            <StackPanel Orientation="Horizontal">
+                <comp:CrudToolBar VerticalAlignment="Bottom" Margin="3, 3, 20, 3"/>
+                <comp:ExcelControl VerticalAlignment="Bottom" Margin="3"/>
+
+            </StackPanel>
+
+            <comp:SearchBar HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="3"/>
+        </Grid>
 
         <DataGrid x:Name="Staffsdg" Grid.Row="1"
                   ScrollViewer.VerticalScrollBarVisibility="Visible"
@@ -24,14 +32,12 @@
                   Background="White" Foreground="Black"
                   BorderBrush="Black" BorderThickness="1">
             <DataGrid.Columns>
-                <DataGridTextColumn Header="ID" Binding="{Binding Id}" Width="50"/>
-                <DataGridTextColumn Header="Tên nhân viên" Binding="{Binding FullName}" Width="150"/>
-                <DataGridTextColumn Header="Giới tính" Binding="{Binding Gender}" Width="150"/>
+                <DataGridTextColumn Header="STT" Binding="{Binding Id}" Width="50"/>
+                <DataGridTextColumn Header="Họ và tên" Binding="{Binding FullName}" Width="150"/>
                 <DataGridTextColumn Header="Địa chỉ" Binding="{Binding Address}" Width="150"/>
                 <DataGridTextColumn Header="Số Điện thoại" Binding="{Binding Phone}" Width="150"/>
                 <DataGridTextColumn Header="Email" Binding="{Binding Email}" Width="200"/>
                 <DataGridTextColumn Header="Chức vụ" Binding="{Binding RoleName}" Width="200"/>
-                
             </DataGrid.Columns>
 
         </DataGrid>

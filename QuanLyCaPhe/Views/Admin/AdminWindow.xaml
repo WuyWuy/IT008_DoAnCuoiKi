@@ -5,19 +5,18 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:QuanLyCaPhe.Views.Admin"
         mc:Ignorable="d"
-        WindowState="Maximized"
         Title="AdminWindow" Height="450" Width="800">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="auto"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
-        
+
         <Border x:Name="Sidebar" Grid.Column="0" Panel.ZIndex="1"
                 MouseEnter="Sidebar_MouseEnter"
                 MouseLeave="Sidebar_MouseLeave"
                 Style="{StaticResource AdminSideBarStyle}">
-            
+
             <StackPanel>
                 <Button x:Name="Homebtn" Content="Trang chủ" 
                         Style="{StaticResource AdminButtonStyle}"
@@ -38,19 +37,16 @@
                 <Button x:Name="Timelbtn" Content="Ca làm"
                         Style="{StaticResource AdminButtonStyle}"
                         Click="Timelbtn_Click"/>
-                
+
                 <Button x:Name="Profitbtn" Content="Doanh thu"
                         Style="{StaticResource AdminButtonStyle}"
                         Click="Profitbtn_Click"/>
             </StackPanel>
-            
+
         </Border>
 
         <Frame x:Name="MainFrame" Panel.ZIndex="1" 
-               Grid.Column="1" NavigationUIVisibility="Hidden"
-               Background="Aqua">
-
-        </Frame>
+               Grid.Column="1" NavigationUIVisibility="Hidden" Background="White" />
 
     </Grid>
 </Window>

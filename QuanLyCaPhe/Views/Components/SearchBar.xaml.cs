@@ -16,26 +16,13 @@ using System.Windows.Shapes;
 namespace QuanLyCaPhe.Views.Components
 {
     /// <summary>
-    /// Interaction logic for DateToDatePicker.xaml
+    /// Interaction logic for SearchBar.xaml
     /// </summary>
-    public partial class DateToDatePicker : UserControl
+    public partial class SearchBar : UserControl
     {
-        public DateToDatePicker()
+        public SearchBar()
         {
             InitializeComponent();
-            LoadDatePicker(0);
-        }
-
-
-        private void Classify_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            LoadDatePicker(Classify.SelectedIndex);
-        }
-
-        private void LoadDatePicker(int idx)
-        {
-            StartDate.LoadDate(idx);
-            EndDate.LoadDate(idx);
         }
     }
 }
