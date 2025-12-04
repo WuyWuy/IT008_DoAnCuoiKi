@@ -4,11 +4,11 @@
              xmlns:comp="clr-namespace:QuanLyCaPhe.Views.Components">
     
     <StackPanel x:Name="SelectDate" Orientation="Horizontal" 
-            Grid.Row="1" Grid.Column="2" Grid.ColumnSpan="2">
+                Grid.Row="1" Grid.Column="2" Grid.ColumnSpan="2">
 
         <StackPanel>
             <Label Content="Theo"/>
-            <ComboBox x:Name="Classify" Margin="0, 0, 20, 0" Width="70" Height="20">
+            <ComboBox x:Name="Classify" Margin="0, 0, 20, 0" Width="70" Height="20" SelectedIndex="0">
                 <ComboBoxItem Content="Ngày"/>
                 <ComboBoxItem Content="Tháng"/>
                 <ComboBoxItem Content="Năm"/>
@@ -24,5 +24,7 @@
             <Label Content="Đến"/>
             <comp:DatePicker x:Name="EndDate" Margin="0, 0, 20, 0"/>
         </StackPanel>
+
+        <Button x:Name = "Filterbtn" Content = "Lọc" Height = "20" Width = "50" VerticalAlignment = "Bottom" />
     </StackPanel>
 </UserControl>

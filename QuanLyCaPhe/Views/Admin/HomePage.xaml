@@ -9,8 +9,115 @@
       Title="HomePage">
 
     <Grid>
-        <TextBlock Text="Tao là bố ở đây !!" FontSize="30" 
-            HorizontalAlignment="Center"
-            VerticalAlignment="Center"/>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="0.5*"/>
+            <ColumnDefinition Width="0.25*"/>
+            <ColumnDefinition Width="0.25*"/>
+        </Grid.ColumnDefinitions>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="0.15*"/>
+            <RowDefinition Height="0.15*"/>
+            <RowDefinition Height="0.15*"/>
+            <RowDefinition Height="0.65*"/>
+        </Grid.RowDefinitions>
+        
+        <!--________________________________Chữ Chào Mừng__________________________________-->
+        <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" Text="Trang Chủ" FontSize="36"/>
+        <!--________________________________Panel Chào mừng________________________________-->
+        <Border Grid.Row="1" Grid.Column="0" Grid.RowSpan="2"
+                Style="{StaticResource HelloPanelStyle}">
+            <Grid>
+                <StackPanel Orientation="Vertical" VerticalAlignment="Center">
+                    <TextBlock Text="Chào Mày!!" FontSize="30" HorizontalAlignment="Left"/>
+                    <TextBlock Text="Chào mừng đến Cam, giờ thì m lên bàn ngồi đợi t quất roi" 
+                        TextWrapping="Wrap" FontSize="15" Width="200" 
+                        HorizontalAlignment="Left"/>
+                </StackPanel>
+                <Image Source="/Resources/Images/LuomXX.png" Width="auto" MaxWidth="100" VerticalAlignment="Center" HorizontalAlignment="Right"/>
+
+            </Grid>
+        </Border>
+
+        <!--________________________________Panel Tổng quan________________________________-->
+        <!--___________________________Món ăn__________________________________-->
+        <Border Grid.Row="1" Grid.Column="1"
+                Style="{StaticResource HelloPanelStyle}">
+            <StackPanel Orientation="Horizontal">
+                <Image Source="/Resources/Images/LuomXX.png" Width="auto" VerticalAlignment="Center" HorizontalAlignment="Right"/>
+                <StackPanel Orientation="Vertical">
+                    <TextBlock Text="Món ăn" FontSize="13" HorizontalAlignment="Left" Margin="3, 3, 3, 0"/>
+                    <TextBlock Text="-10000000000" FontSize="16" HorizontalAlignment="Center"/>
+                </StackPanel>
+                
+            </StackPanel>
+        </Border>
+        <!--___________________________Nhân viên_______________________________-->
+        <Border Grid.Row="1" Grid.Column="2"
+                Style="{StaticResource HelloPanelStyle}">
+            <StackPanel Orientation="Horizontal">
+                <Image Source="/Resources/Images/LuomXX.png" Width="auto" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+                <StackPanel Orientation="Vertical">
+                    <TextBlock Text="Nhân viên" FontSize="13" HorizontalAlignment="Left" Margin="3, 3, 3, 0"/>
+                    <TextBlock Text="-10000000000" FontSize="16" HorizontalAlignment="Center"/>
+                </StackPanel>
+
+            </StackPanel>
+        </Border>
+
+        <!--___________________________Thập nhập_______________________________-->
+        <Border Grid.Row="2" Grid.Column="1"
+                Style="{StaticResource HelloPanelStyle}">
+            <StackPanel Orientation="Horizontal">
+                <Image Source="/Resources/Images/LuomXX.png" Width="auto" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+                <StackPanel Orientation="Vertical">
+                    <TextBlock Text="Thu nhập" FontSize="13" HorizontalAlignment="Left" Margin="3, 3, 3, 0"/>
+                    <TextBlock Text="10000000000" FontSize="16" HorizontalAlignment="Center"/>
+                </StackPanel>
+
+            </StackPanel>
+        </Border>
+
+        <!--___________________________Chi tiêu________________________________-->
+        <Border Grid.Row="2" Grid.Column="2"
+                Style="{StaticResource HelloPanelStyle}">
+            <StackPanel Orientation="Horizontal">
+                <Image Source="/Resources/Images/LuomXX.png" Width="auto" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+                <StackPanel Orientation="Vertical">
+                    <TextBlock Text="Chi tiêu" FontSize="13" HorizontalAlignment="Left" Margin="3, 3, 3, 0"/>
+                    <TextBlock Text="10000000000" FontSize="16" HorizontalAlignment="Center"/>
+                </StackPanel>
+
+            </StackPanel>
+        </Border>
+        <!--________________________________Panel ff________________________________-->
+        <Border Grid.Row="3" Grid.Column="0" Grid.RowSpan="2"
+                Style="{StaticResource HelloPanelStyle}">
+            <Grid>
+                <StackPanel Orientation="Vertical" VerticalAlignment="Center">
+                    <TextBlock Text="Chào Mày!!" FontSize="30" HorizontalAlignment="Left"/>
+                    <TextBlock Text="Chào mừng đến Cam, giờ thì m lên bàn ngồi đợi t quất roi" 
+                               TextWrapping="Wrap" FontSize="15" Width="200" 
+                               HorizontalAlignment="Left"/>
+                </StackPanel>
+                <Image Source="/Resources/Images/LuomXX.png" Width="auto" MaxWidth="100" VerticalAlignment="Center" HorizontalAlignment="Right"/>
+
+            </Grid>
+        </Border>
+
+        <!--________________________________Panel ff________________________________-->
+        <Border Grid.Row="3" Grid.Column="1" Grid.RowSpan="2" Grid.ColumnSpan="2"
+                Style="{StaticResource HelloPanelStyle}">
+            <Grid>
+                <StackPanel Orientation="Vertical" VerticalAlignment="Center">
+                    <TextBlock Text="Chào Mày!!" FontSize="30" HorizontalAlignment="Left"/>
+                    <TextBlock Text="Chào mừng đến Cam, giờ thì m lên bàn ngồi đợi t quất roi" 
+                        TextWrapping="Wrap" FontSize="15" Width="200" 
+                        HorizontalAlignment="Left"/>
+                </StackPanel>
+                <Image Source="/Resources/Images/LuomXX.png" Width="auto" MaxWidth="100" VerticalAlignment="Center" HorizontalAlignment="Right"/>
+
+            </Grid>
+        </Border>
     </Grid>
 </Page>

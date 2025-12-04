@@ -4,16 +4,10 @@
              Height="auto" >
     <Grid>
         <StackPanel Orientation="Horizontal">
+            <Button x:Name="Reloadbtn" Content="Tải lại"/>
             <Button x:Name="Addbtn" Content="Thêm"/>
             <Button x:Name="Delbtn" Content="Xóa"/>
             <Button x:Name="Editbtn" Content="Sửa"/>
-            <StackPanel Orientation="Horizontal">
-                <Label Content="Tìm Kiếm" />
-                <TextBox x:Name="Searchtb" Width="200"/>
-                <Button>
-                    <Image Source="/Resources/Icons/menu.ico" Width="25" Height="25"/>
-                </Button>
-            </StackPanel>
         </StackPanel>
         
     </Grid>
