@@ -22,14 +22,14 @@ namespace QuanLyCaPhe.Views.Admin
     /// </summary>
     public partial class ProductsPage : Page
     {
-        public ObservableCollection<Product> ProductsList { get; set; }
+        public ObservableCollection<Products> ProductsList { get; set; }
         public ProductsPage()
         {
             InitializeComponent();
 
 
             // Khởi tạo collection
-            ProductsList = new ObservableCollection<Product>();
+            ProductsList = new ObservableCollection<Products>();
 
             // Gán ItemsSource cho DataGrid
             Productsdg.ItemsSource = ProductsList;
@@ -41,21 +41,21 @@ namespace QuanLyCaPhe.Views.Admin
         private void LoadDemoData()
         {
             // Thêm 10 sản phẩm demo
-            ProductsList.Add(new Product { Id = 1, ProName = "Cà phê đen đá", Price = 25000 });
-            ProductsList.Add(new Product { Id = 2, ProName = "Cà phê sữa đá", Price = 30000 });
-            ProductsList.Add(new Product { Id = 3, ProName = "Cà phê bạc xỉu", Price = 35000 });
-            ProductsList.Add(new Product { Id = 4, ProName = "Trà đào cam sả", Price = 40000 });
-            ProductsList.Add(new Product { Id = 5, ProName = "Trà vải", Price = 38000 });
-            ProductsList.Add(new Product { Id = 6, ProName = "Sinh tố bơ", Price = 45000 });
-            ProductsList.Add(new Product { Id = 7, ProName = "Sinh tố xoài", Price = 42000 });
-            ProductsList.Add(new Product { Id = 8, ProName = "Nước ép cam", Price = 35000 });
-            ProductsList.Add(new Product { Id = 9, ProName = "Nước ép dưa hấu", Price = 32000 });
-            ProductsList.Add(new Product { Id = 10, ProName = "Bánh mì chảo", Price = 55000 });
-            ProductsList.Add(new Product { Id = 11, ProName = "Bánh croissant", Price = 28000 });
-            ProductsList.Add(new Product { Id = 12, ProName = "Mì Ý sốt bò bằm", Price = 65000 });
-            ProductsList.Add(new Product { Id = 13, ProName = "Kem matcha", Price = 38000 });
-            ProductsList.Add(new Product { Id = 14, ProName = "Kem chocolate", Price = 38000 });
-            ProductsList.Add(new Product { Id = 15, ProName = "Bánh tiramisu", Price = 45000 });
+            ProductsList.Add(new Products { Id = 1, ProName = "Cà phê đen đá", Price = 25000 });
+            ProductsList.Add(new Products { Id = 2, ProName = "Cà phê sữa đá", Price = 30000 });
+            ProductsList.Add(new Products { Id = 3, ProName = "Cà phê bạc xỉu", Price = 35000 });
+            ProductsList.Add(new Products { Id = 4, ProName = "Trà đào cam sả", Price = 40000 });
+            ProductsList.Add(new Products { Id = 5, ProName = "Trà vải", Price = 38000 });
+            ProductsList.Add(new Products { Id = 6, ProName = "Sinh tố bơ", Price = 45000 });
+            ProductsList.Add(new Products { Id = 7, ProName = "Sinh tố xoài", Price = 42000 });
+            ProductsList.Add(new Products { Id = 8, ProName = "Nước ép cam", Price = 35000 });
+            ProductsList.Add(new Products { Id = 9, ProName = "Nước ép dưa hấu", Price = 32000 });
+            ProductsList.Add(new Products { Id = 10, ProName = "Bánh mì chảo", Price = 55000 });
+            ProductsList.Add(new Products { Id = 11, ProName = "Bánh croissant", Price = 28000 });
+            ProductsList.Add(new Products { Id = 12, ProName = "Mì Ý sốt bò bằm", Price = 65000 });
+            ProductsList.Add(new Products { Id = 13, ProName = "Kem matcha", Price = 38000 });
+            ProductsList.Add(new Products { Id = 14, ProName = "Kem chocolate", Price = 38000 });
+            ProductsList.Add(new Products { Id = 15, ProName = "Bánh tiramisu", Price = 45000 });
         }
     }
 }
