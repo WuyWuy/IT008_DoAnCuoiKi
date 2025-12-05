@@ -10,26 +10,25 @@
 
     <Window.Resources>
         <Style x:Key="TableButtonStyle" TargetType="Button">
-            <Setter Property="Height" Value="50"/>
-            <Setter Property="Width" Value="50"/>
-            <Setter Property="Margin" Value="10"/>
+            <!-- use Min sizes so buttons can expand to fill grid cells -->
+            <Setter Property="MinHeight" Value="70"/>
+            <Setter Property="MinWidth" Value="70"/>
+            <!-- moderate margin -->
+            <Setter Property="Margin" Value="8"/>
             <Setter Property="Background" Value="LightGray"/>
             <Setter Property="Foreground" Value="Black"/>
             <Setter Property="BorderBrush" Value="Gray"/>
-
             <Style.Triggers>
                 <DataTrigger Binding="{Binding Status}" Value="Selected">
                     <Setter Property="Background" Value="#2196F3"/>
                     <Setter Property="Foreground" Value="White"/>
                     <Setter Property="BorderBrush" Value="#1976D2"/>
                 </DataTrigger>
-
                 <DataTrigger Binding="{Binding Status}" Value="Busy">
                     <Setter Property="Background" Value="Crimson"/>
                     <Setter Property="Foreground" Value="White"/>
                     <Setter Property="BorderBrush" Value="#B22222"/>
                 </DataTrigger>
-
                 <DataTrigger Binding="{Binding Status}" Value="Selected Busy">
                     <Setter Property="Background" Value="Orange"/>
                     <Setter Property="Foreground" Value="White"/>
@@ -39,7 +38,6 @@
         </Style>
 
         <local:IntGreaterThanZeroToVisibilityConverter x:Key="IntToVis"/>
-        <!-- Added converter to format seconds as HH:MM:SS -->
         <local:SecondsToTimeConverter x:Key="SecondsToTimeConverter"/>
     </Window.Resources>
 
@@ -49,66 +47,108 @@
             <ColumnDefinition Width="3*"/>
         </Grid.ColumnDefinitions>
 
+        <!-- LEFT PANE: narrow button column + content column with nested grids -->
         <Grid Grid.Column="0">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="0.5*"/>
-                <RowDefinition Height="0.25*"/>
-                <RowDefinition Height="2*"/>
-            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="48"/>
+                <!-- N/I/D column -->
+                <ColumnDefinition Width="*"/>
+                <!-- content column -->
+            </Grid.ColumnDefinitions>
 
-            <TextBlock  Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center"
-                        Text="Quản lý quán cà phê" FontSize="25"/>
+            <!-- Content column is divided into smaller nested grids -->
+            <Grid Grid.Column="1">
+                <!-- top-level split to match your requested areas:
+                     Row 0 = blank (1),
+                     Row 1 = title (3),
+                     Row 2 = subtitle (4),
+                     Row 3 = tables region (5) -->
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <!-- blank area (1) -->
+                    <RowDefinition Height="Auto"/>
+                    <!-- title (3) -->
+                    <RowDefinition Height="*"/>
+                    <!-- tables (5) -->
+                </Grid.RowDefinitions>
 
-            <TextBlock  Grid.Row="1" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="3, 0, 0, 0"
-            FontSize="20" Text="Danh sách quản lý bàn"/>
+                <!-- Title area (3) - nested Grid so you can add more controls later -->
+                <Grid Grid.Row="0">
+                    <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center"
+                               Text="Quản lý quán cà phê" FontSize="25"/>
+                </Grid>
 
-            <ListBox x:Name="lbTables"
-                     Grid.Row="1"
-                     Margin="0,39,0,0"
-                     Grid.RowSpan="2"
-                     BorderThickness="0"
-                     Background="Transparent"
-                     Focusable="False"
-                     SelectionMode="Single">
+                <!-- Subtitle area (4) -->
+                <Grid Grid.Row="1">
+                    <TextBlock HorizontalAlignment="Left" VerticalAlignment="Top" Margin="3,0,0,0"
+                               FontSize="20" Text="Danh sách quản lý bàn"/>
+                </Grid>
 
-                <ListBox.ItemContainerStyle>
-                    <Style TargetType="ListBoxItem">
-                        <Setter Property="Focusable" Value="False"/>
-                        <Setter Property="Template">
-                            <Setter.Value>
-                                <ControlTemplate TargetType="ListBoxItem">
-                                    <ContentPresenter/>
-                                </ControlTemplate>
-                            </Setter.Value>
-                        </Setter>
-                    </Style>
-                </ListBox.ItemContainerStyle>
+                <!-- Tables area (5) - inner grid with header + scrollable list -->
+                <Grid Grid.Row="2">
+                    <!-- ListBox fills available space and uses a UniformGrid so items size uniformly to fill area -->
+                    <ListBox x:Name="lbTables"
+                             BorderThickness="0"
+                             Background="Transparent"
+                             Focusable="False"
+                             SelectionMode="Single"
+                             VerticalAlignment="Stretch"
+                             VerticalContentAlignment="Top"
+                             HorizontalContentAlignment="Stretch"
+                             Padding="0"
+                             Margin="0"
+                             ScrollViewer.VerticalScrollBarVisibility="Auto"
+                             ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                        <ListBox.ItemsPanel>
+                            <ItemsPanelTemplate>
+                            <!-- make UniformGrid stretch to fill the host width (do not bind to ActualWidth) -->
+                                <UniformGrid Columns="3" HorizontalAlignment="Stretch"/>
+                            </ItemsPanelTemplate>
+                        </ListBox.ItemsPanel>
 
-                <ListBox.ItemsPanel>
-                    <ItemsPanelTemplate>
-                        <UniformGrid Columns="3"/>
-                    </ItemsPanelTemplate>
-                </ListBox.ItemsPanel>
+                        <ListBox.ItemContainerStyle>
+                        <Style TargetType="ListBoxItem">
+                            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                            <Setter Property="VerticalContentAlignment" Value="Stretch"/>
+                            <Setter Property="Padding" Value="0"/>
+                            <Setter Property="Margin" Value="0"/>
+                        </Style>
+                        </ListBox.ItemContainerStyle>
 
-                <ListBox.ItemTemplate>
-                    <DataTemplate>
-                        <Button Tag="{Binding Id}"
-                                Click="Table_Click"
-                                PreviewMouseLeftButtonDown="Table_PreviewMouseLeftButtonDown"
-                                Style="{StaticResource TableButtonStyle}">
-                            <StackPanel HorizontalAlignment="Center">
-                                <TextBlock Text="{Binding Name}" HorizontalAlignment="Center" FontWeight="SemiBold"/>
-                                <!-- Use converter to display countdown as HH:MM:SS -->
-                                <TextBlock Text="{Binding Countdown, Converter={StaticResource SecondsToTimeConverter}}"
-                                           HorizontalAlignment="Center" FontSize="11"
-                                           Visibility="{Binding Countdown, Converter={StaticResource IntToVis}}"/>
-                            </StackPanel>
-                        </Button>
-                    </DataTemplate>
-                </ListBox.ItemTemplate>
-            </ListBox>
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+<!-- make the button stretch to fill its ListBoxItem cell -->
+                                <Button Tag="{Binding Id}"
+                                        Click="Table_Click"
+                                        PreviewMouseLeftButtonDown="Table_PreviewMouseLeftButtonDown"
+                                        Style="{StaticResource TableButtonStyle}"
+                                        HorizontalAlignment="Stretch"
+                                        VerticalAlignment="Stretch">
+                                    <StackPanel HorizontalAlignment="Center">
+                                        <TextBlock Text="{Binding Name}" HorizontalAlignment="Center" FontWeight="SemiBold"/>
+                                        <TextBlock Text="{Binding Countdown, Converter={StaticResource SecondsToTimeConverter}}"
+                                                   HorizontalAlignment="Center" FontSize="11"
+                                                   Visibility="{Binding Countdown, Converter={StaticResource IntToVis}}"/>
+                                    </StackPanel>
+                                </Button>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </Grid>
+            </Grid>
+
+            <!-- Vertical sort buttons (N/I/D) centered between title and subtitle areas.
+                 They span the title + subtitle rows so they visually sit between the blank top and the tables. -->
+            <StackPanel Grid.Column="0" Grid.Row="0" Grid.RowSpan="4" VerticalAlignment="Top" HorizontalAlignment="Center" Margin="0,0,0,0">
+                <!-- The panel's VerticalAlignment and RowSpan cause it to be centered between blank and tables.
+                     If you prefer exact centering between rows 1..2 only, set Grid.Row="1" Grid.RowSpan="2" and VerticalAlignment="Center". -->
+                <Button x:Name="btnSortNormal" Content="N" Click="SortNormal_Click" Width="36" Height="36" Margin="0,12" ToolTip="Normal: index order (1..12)" FontWeight="Bold"/>
+                <Button x:Name="btnSortIncrease" Content="I" Click="SortIncrease_Click" Width="36" Height="36" Margin="0,12" ToolTip="Increase: sort by remaining time (asc)" FontWeight="Bold"/>
+                <Button x:Name="btnSortDecrease" Content="D" Click="SortDecrease_Click" Width="36" Height="36" Margin="0,12" ToolTip="Decrease: sort by remaining time (desc)" FontWeight="Bold"/>
+            </StackPanel>
         </Grid>
 
+        <!-- RIGHT PANE unchanged -->
         <Grid Grid.Column="1">
             <Grid.RowDefinitions>
                 <RowDefinition Height="1.25*"/>
@@ -179,21 +219,15 @@
 
             <Grid Grid.Row="1">
                 <DataGrid Name="dtgdOrder"
-                 AutoGenerateColumns="False"
-                 IsReadOnly="True"
-                 ColumnWidth="*">
+                          AutoGenerateColumns="False"
+                          IsReadOnly="True"
+                          ColumnWidth="*">
                     <DataGrid.Columns>
-                        <DataGridTextColumn Header="ID"
-                            Binding="{Binding ID}"
-                            Width="50" />
-                        <DataGridTextColumn Header="Món"
-                            Binding="{Binding Mon}" />
-                        <DataGridTextColumn Header="Đơn giá"
-                            Binding="{Binding Gia}" />
-                        <DataGridTextColumn Header="Số lượng"
-                            Binding="{Binding SoLuong}" />
-                        <DataGridTextColumn Header="Thành tiền"
-                            Binding="{Binding ThanhTien}" />
+                        <DataGridTextColumn Header="ID" Binding="{Binding ID}" Width="50" />
+                        <DataGridTextColumn Header="Món" Binding="{Binding Mon}" />
+                        <DataGridTextColumn Header="Đơn giá" Binding="{Binding Gia}" />
+                        <DataGridTextColumn Header="Số lượng" Binding="{Binding SoLuong}" />
+                        <DataGridTextColumn Header="Thành tiền" Binding="{Binding ThanhTien}" />
                     </DataGrid.Columns>
                 </DataGrid>
             </Grid>
@@ -216,21 +250,21 @@
 
                     <StackPanel x:Name="spHours" Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,11,0,0">
                         <RadioButton x:Name="rbHour1" GroupName="Hours" Content="1" Tag="6000"
-                 Checked="HourRadio_Checked"
-                 PreviewMouseLeftButtonDown="HourRadio_PreviewMouseLeftButtonDown"
-                 ToolTip="1 hour (6.000 VNĐ)" Margin="4,0" FontSize="13"/>
+                                     Checked="HourRadio_Checked"
+                                     PreviewMouseLeftButtonDown="HourRadio_PreviewMouseLeftButtonDown"
+                                     ToolTip="1 hour (6.000 VNĐ)" Margin="4,0" FontSize="13"/>
                         <RadioButton x:Name="rbHour3" GroupName="Hours" Content="3" Tag="12000"
-                 Checked="HourRadio_Checked"
-                 PreviewMouseLeftButtonDown="HourRadio_PreviewMouseLeftButtonDown"
-                 ToolTip="3 hours (12.000 VNĐ)" Margin="6,0" FontSize="13"/>
+                                     Checked="HourRadio_Checked"
+                                     PreviewMouseLeftButtonDown="HourRadio_PreviewMouseLeftButtonDown"
+                                     ToolTip="3 hours (12.000 VNĐ)" Margin="6,0" FontSize="13"/>
                         <RadioButton x:Name="rbHour6" GroupName="Hours" Content="6" Tag="18000"
-                 Checked="HourRadio_Checked"
-                 PreviewMouseLeftButtonDown="HourRadio_PreviewMouseLeftButtonDown"
-                 ToolTip="6 hours (20.000 VNĐ)" Margin="6,0" FontSize="13"/>
+                                     Checked="HourRadio_Checked"
+                                     PreviewMouseLeftButtonDown="HourRadio_PreviewMouseLeftButtonDown"
+                                     ToolTip="6 hours (20.000 VNĐ)" Margin="6,0" FontSize="13"/>
                         <RadioButton x:Name="rbHour12" GroupName="Hours" Content="12" Tag="25000"
-                 Checked="HourRadio_Checked"
-                 PreviewMouseLeftButtonDown="HourRadio_PreviewMouseLeftButtonDown"
-                 ToolTip="12 hours (35.000 VNĐ)" Margin="6,0" FontSize="13"/>
+                                     Checked="HourRadio_Checked"
+                                     PreviewMouseLeftButtonDown="HourRadio_PreviewMouseLeftButtonDown"
+                                     ToolTip="12 hours (35.000 VNĐ)" Margin="6,0" FontSize="13"/>
                     </StackPanel>
 
                     <Label Grid.Column="2" Content="Tổng tiền:" HorizontalAlignment="Right" VerticalAlignment="Center" FontSize="15" />

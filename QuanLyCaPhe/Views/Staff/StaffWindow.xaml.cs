@@ -63,8 +63,8 @@ namespace QuanLyCaPhe.Views.Staff
 
         private readonly DispatcherTimer _dispatcherTimer;
         private readonly bool[] _idUsed = new bool[35];
-        private int _currentSum = 0;                  
-        private int _selectedHourPrice = 0;          
+        private int _currentSum = 0;
+        private int _selectedHourPrice = 0;
 
         private static readonly CultureInfo VietCulture = new CultureInfo("vi-VN");
         private const int MaxIds = 35;
@@ -229,6 +229,51 @@ namespace QuanLyCaPhe.Views.Staff
 
             tbTableNumber.Text = table.Id.ToString();
             PopulateSwapCombo();
+        }
+
+        // Sorting handlers for the left-side N / I / D buttons
+        private void SortNormal_Click(object sender, RoutedEventArgs e)
+        {
+            int previouslySelectedId = -1;
+            if (lbTables.SelectedItem is Table sel) previouslySelectedId = sel.Id;
+
+            Tables = new ObservableCollection<Table>(Tables.OrderBy(t => t.Id));
+            lbTables.ItemsSource = Tables;
+
+            if (previouslySelectedId != -1)
+            {
+                lbTables.SelectedItem = Tables.FirstOrDefault(t => t.Id == previouslySelectedId);
+            }
+        }
+
+        private void SortIncrease_Click(object sender, RoutedEventArgs e)
+        {
+            int previouslySelectedId = -1;
+            if (lbTables.SelectedItem is Table sel) previouslySelectedId = sel.Id;
+
+            // sort by countdown (increasing), then by id to keep deterministic order
+            Tables = new ObservableCollection<Table>(Tables.OrderBy(t => t.Countdown).ThenBy(t => t.Id));
+            lbTables.ItemsSource = Tables;
+
+            if (previouslySelectedId != -1)
+            {
+                lbTables.SelectedItem = Tables.FirstOrDefault(t => t.Id == previouslySelectedId);
+            }
+        }
+
+        private void SortDecrease_Click(object sender, RoutedEventArgs e)
+        {
+            int previouslySelectedId = -1;
+            if (lbTables.SelectedItem is Table sel) previouslySelectedId = sel.Id;
+
+            // sort by countdown (decreasing), then by id to keep deterministic order
+            Tables = new ObservableCollection<Table>(Tables.OrderByDescending(t => t.Countdown).ThenBy(t => t.Id));
+            lbTables.ItemsSource = Tables;
+
+            if (previouslySelectedId != -1)
+            {
+                lbTables.SelectedItem = Tables.FirstOrDefault(t => t.Id == previouslySelectedId);
+            }
         }
 
         private void Table_Click(object sender, RoutedEventArgs e)
@@ -398,6 +443,7 @@ namespace QuanLyCaPhe.Views.Staff
         {
             if (iudAmmount.Value <= 0) iudAmmount.Value = 1;
         }
+
         private void Button_Click_1(object sender, RoutedEventArgs e)
         {
             var selectedTable = lbTables.SelectedItem as Table;
