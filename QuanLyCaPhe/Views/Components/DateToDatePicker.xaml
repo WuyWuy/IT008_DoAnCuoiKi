@@ -8,7 +8,7 @@
 
         <StackPanel>
             <Label Content="Theo"/>
-            <ComboBox x:Name="Classify" Margin="0, 0, 20, 0" Width="70" Height="20" SelectedIndex="0">
+            <ComboBox x:Name="Classify" Margin="0, 0, 20, 0" Width="70" Height="20" SelectedIndex="0" SelectionChanged="Classify_SelectionChanged">
                 <ComboBoxItem Content="Ngày"/>
                 <ComboBoxItem Content="Tháng"/>
                 <ComboBoxItem Content="Năm"/>

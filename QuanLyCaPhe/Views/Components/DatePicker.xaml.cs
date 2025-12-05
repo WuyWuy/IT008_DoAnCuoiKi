@@ -28,6 +28,8 @@ namespace QuanLyCaPhe.Views.Components
 
         public void LoadDate(int idx = 0)
         {
+            if (cbDay == null || cbMonth == null || cbYear == null) return;
+
             cbDay.IsEnabled = false;
             cbMonth.IsEnabled = false;
             cbYear.IsEnabled = false;

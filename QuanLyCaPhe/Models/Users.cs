@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace QuanLyCaPhe.Models
 {
-    class Users
+    public class Users
     {
         public int Id { get; set; }
         public string FullName { get; set; }
