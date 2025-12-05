@@ -57,7 +57,7 @@
 
             <TabItem Header="Chi tiết Thu (Hóa Đơn)">
                 <DataGrid x:Name="dgIncome" AutoGenerateColumns="False" IsReadOnly="True" 
-                      Background="White" Margin="0,10,0,0"
+                      Style="{StaticResource CardStyleDataGridStyle}"
                       HeadersVisibility="Column" GridLinesVisibility="Horizontal">
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="Mã HĐ" Binding="{Binding Id}" Width="80"/>
@@ -70,14 +70,14 @@
 
             <TabItem Header="Chi tiết Chi (Nhập Kho)">
                 <DataGrid x:Name="dgExpense" AutoGenerateColumns="False" IsReadOnly="True" 
-                      Background="White" Margin="0,10,0,0"
+                      Style="{StaticResource CardStyleDataGridStyle}"
                       HeadersVisibility="Column" GridLinesVisibility="Horizontal">
                     <DataGrid.Columns>
-                        <DataGridTextColumn Header="Mã Phiếu" Binding="{Binding ImportId}" Width="80"/>
-                        <DataGridTextColumn Header="Ngày Nhập" Binding="{Binding ImportDate, StringFormat=dd/MM/yyyy}" Width="150"/>
-                        <DataGridTextColumn Header="Nguyên Liệu" Binding="{Binding IngredientName}" Width="200"/>
-                        <DataGridTextColumn Header="Số Lượng" Binding="{Binding Quantity}" Width="100"/>
-                        <DataGridTextColumn Header="Thành Tiền" Binding="{Binding Cost, StringFormat={}{0:N0} đ}" Width="*" FontWeight="Bold" Foreground="Red"/>
+                        <DataGridTextColumn Header="Mã Phiếu" Binding="{Binding ImportId}" Width="auto"/>
+                        <DataGridTextColumn Header="Ngày Nhập" Binding="{Binding ImportDate, StringFormat=dd/MM/yyyy}" Width="auto"/>
+                        <DataGridTextColumn Header="Nguyên Liệu" Binding="{Binding IngredientName}" Width="auto"/>
+                        <DataGridTextColumn Header="Số Lượng" Binding="{Binding Quantity}" Width="auto"/>
+                        <DataGridTextColumn Header="Thành Tiền" Binding="{Binding Cost, StringFormat={}{0:N0} đ}" Width="auto" FontWeight="Bold" Foreground="Red"/>
                     </DataGrid.Columns>
                 </DataGrid>
             </TabItem>

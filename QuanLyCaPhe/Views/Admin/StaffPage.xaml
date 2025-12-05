@@ -26,18 +26,15 @@
         </Grid>
 
         <DataGrid x:Name="Staffsdg" Grid.Row="1"
-                  ScrollViewer.VerticalScrollBarVisibility="Visible"
-                  ScrollViewer.HorizontalScrollBarVisibility="Visible"
                   AutoGenerateColumns="False" CanUserAddRows="False" IsReadOnly="True" SelectionMode="Single"
-                  Background="White" Foreground="Black"
-                  BorderBrush="Black" BorderThickness="1">
+                  Style="{StaticResource CardStyleDataGridStyle}">
             <DataGrid.Columns>
-                <DataGridTextColumn Header="STT" Binding="{Binding Id}" Width="50"/>
-                <DataGridTextColumn Header="Họ và tên" Binding="{Binding FullName}" Width="150"/>
-                <DataGridTextColumn Header="Địa chỉ" Binding="{Binding Address}" Width="150"/>
-                <DataGridTextColumn Header="Số Điện thoại" Binding="{Binding Phone}" Width="150"/>
-                <DataGridTextColumn Header="Email" Binding="{Binding Email}" Width="200"/>
-                <DataGridTextColumn Header="Chức vụ" Binding="{Binding RoleName}" Width="200"/>
+                <DataGridTextColumn Header="STT" Binding="{Binding Id}" Width="auto"/>
+                <DataGridTextColumn Header="Họ và tên" Binding="{Binding FullName}" Width="auto"/>
+                <DataGridTextColumn Header="Địa chỉ" Binding="{Binding Address}" Width="auto"/>
+                <DataGridTextColumn Header="Số Điện thoại" Binding="{Binding Phone}" Width="auto"/>
+                <DataGridTextColumn Header="Email" Binding="{Binding Email}" Width="auto"/>
+                <DataGridTextColumn Header="Chức vụ" Binding="{Binding RoleName}" Width="auto"/>
             </DataGrid.Columns>
 
         </DataGrid>

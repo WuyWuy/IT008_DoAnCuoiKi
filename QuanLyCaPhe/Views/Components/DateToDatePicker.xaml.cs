@@ -29,6 +29,8 @@ namespace QuanLyCaPhe.Views.Components
 
         private void Classify_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            if (StartDate == null || EndDate == null) return;
+
             LoadDatePicker(Classify.SelectedIndex);
         }
 

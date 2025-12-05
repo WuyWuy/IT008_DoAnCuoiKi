@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 
 namespace QuanLyCaPhe.Models
 {
-    class Products
+    public class Ingredient
     {
         public int Id { get; set; }
-        public string ProName { get; set; }
-        public int Price { get; set; }
-        public int CateId { get; set; }
+        public string IngName { get; set; }
+        public string Unit { get; set; }
+        public double Quantity { get; set; }
     }
 }

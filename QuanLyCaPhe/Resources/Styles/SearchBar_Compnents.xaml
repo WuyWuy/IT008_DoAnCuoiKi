@@ -12,7 +12,7 @@
                         <Border x:Name="UnderLine" 
                                 Height="1" 
                                 VerticalAlignment="Bottom" 
-                                Background="LightGray"
+                                Background="#4F46E5"
                                 SnapsToDevicePixels="True"/>
                         <Border x:Name="Box" 
                                 VerticalAlignment="Bottom"
@@ -25,7 +25,7 @@
                     </Grid>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsFocused" Value="True">
-                            <Setter TargetName="UnderLine" Property="Background" Value="Black"/>
+                            <Setter TargetName="UnderLine" Property="Background" Value="#6366F1"/>
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
