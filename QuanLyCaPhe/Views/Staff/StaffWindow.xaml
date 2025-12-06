@@ -11,8 +11,8 @@
     <Window.Resources>
         <Style x:Key="TableButtonStyle" TargetType="Button">
             <!-- use Min sizes so buttons can expand to fill grid cells -->
-            <Setter Property="MinHeight" Value="70"/>
-            <Setter Property="MinWidth" Value="70"/>
+            <Setter Property="MinHeight" Value="50"/>
+            <Setter Property="MinWidth" Value="50"/>
             <!-- moderate margin -->
             <Setter Property="Margin" Value="8"/>
             <Setter Property="Background" Value="LightGray"/>
@@ -49,6 +49,12 @@
 
         <!-- LEFT PANE: narrow button column + content column with nested grids -->
         <Grid Grid.Column="0">
+            <!-- top blank row (1) + main area row (2) -->
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="48"/>
                 <!-- N/I/D column -->
@@ -56,35 +62,30 @@
                 <!-- content column -->
             </Grid.ColumnDefinitions>
 
-            <!-- Content column is divided into smaller nested grids -->
-            <Grid Grid.Column="1">
-                <!-- top-level split to match your requested areas:
-                     Row 0 = blank (1),
-                     Row 1 = title (3),
-                     Row 2 = subtitle (4),
-                     Row 3 = tables region (5) -->
+            <!-- Row0: blank spacer (1) -->
+            <Border Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Background="Transparent" Height="8"/>
+
+            <!-- Content column: title, subtitle, tables -->
+            <Grid Grid.Row="1" Grid.Column="1">
                 <Grid.RowDefinitions>
+                    <RowDefinition Height="0.22*"/>
                     <RowDefinition Height="Auto"/>
-                    <!-- blank area (1) -->
-                    <RowDefinition Height="Auto"/>
-                    <!-- title (3) -->
                     <RowDefinition Height="*"/>
-                    <!-- tables (5) -->
                 </Grid.RowDefinitions>
 
-                <!-- Title area (3) - nested Grid so you can add more controls later -->
+                <!-- Title area -->
                 <Grid Grid.Row="0">
                     <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center"
                                Text="Quản lý quán cà phê" FontSize="25"/>
                 </Grid>
 
-                <!-- Subtitle area (4) -->
+                <!-- Subtitle area -->
                 <Grid Grid.Row="1">
                     <TextBlock HorizontalAlignment="Left" VerticalAlignment="Top" Margin="3,0,0,0"
                                FontSize="20" Text="Danh sách quản lý bàn"/>
                 </Grid>
 
-                <!-- Tables area (5) - inner grid with header + scrollable list -->
+                <!-- Tables area -->
                 <Grid Grid.Row="2">
                     <!-- ListBox fills available space and uses a UniformGrid so items size uniformly to fill area -->
                     <ListBox x:Name="lbTables"
@@ -137,15 +138,31 @@
                 </Grid>
             </Grid>
 
-            <!-- Vertical sort buttons (N/I/D) centered between title and subtitle areas.
-                 They span the title + subtitle rows so they visually sit between the blank top and the tables. -->
-            <StackPanel Grid.Column="0" Grid.Row="0" Grid.RowSpan="4" VerticalAlignment="Top" HorizontalAlignment="Center" Margin="0,0,0,0">
-                <!-- The panel's VerticalAlignment and RowSpan cause it to be centered between blank and tables.
-                     If you prefer exact centering between rows 1..2 only, set Grid.Row="1" Grid.RowSpan="2" and VerticalAlignment="Center". -->
-                <Button x:Name="btnSortNormal" Content="N" Click="SortNormal_Click" Width="36" Height="36" Margin="0,12" ToolTip="Normal: index order (1..12)" FontWeight="Bold"/>
-                <Button x:Name="btnSortIncrease" Content="I" Click="SortIncrease_Click" Width="36" Height="36" Margin="0,12" ToolTip="Increase: sort by remaining time (asc)" FontWeight="Bold"/>
-                <Button x:Name="btnSortDecrease" Content="D" Click="SortDecrease_Click" Width="36" Height="36" Margin="0,12" ToolTip="Decrease: sort by remaining time (desc)" FontWeight="Bold"/>
-            </StackPanel>
+            <!-- Narrow left column: sort buttons, clock, spacer, logout -->
+            <Grid Grid.Row="1" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Stretch">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>    <!-- sort buttons -->
+                    <RowDefinition Height="Auto"/>    <!-- clock -->
+                    <RowDefinition Height="*"/>      <!-- spacer -->
+                    <RowDefinition Height="Auto"/>    <!-- logout -->
+                </Grid.RowDefinitions>
+
+                <StackPanel Grid.Row="0" VerticalAlignment="Top" HorizontalAlignment="Center" Margin="0,8,0,4">
+                    <Button x:Name="btnSortNormal" Content="N" Click="SortNormal_Click" Width="36" Height="36" Margin="0,6" ToolTip="Normal: index order (1..12)" FontWeight="Bold"/>
+                    <Button x:Name="btnSortIncrease" Content="I" Click="SortIncrease_Click" Width="36" Height="36" Margin="0,6" ToolTip="Increase: sort by remaining time (asc)" FontWeight="Bold"/>
+                    <Button x:Name="btnSortDecrease" Content="D" Click="SortDecrease_Click" Width="36" Height="36" Margin="0,6" ToolTip="Decrease: sort by remaining time (desc)" FontWeight="Bold"/>
+                </StackPanel>
+
+                <!-- Clock placed below sort buttons; foreground set to black as requested. Increase width to avoid wrapping. -->
+                <StackPanel Grid.Row="1" Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,4" Width="72">
+                    <TextBlock x:Name="tbClockTime" FontSize="14" FontWeight="Bold" Foreground="Black" HorizontalAlignment="Center" TextAlignment="Center" />
+                    <TextBlock x:Name="tbClockDayMonth" FontSize="11" Foreground="Black" HorizontalAlignment="Center" TextAlignment="Center" />
+                    <TextBlock x:Name="tbClockYear" FontSize="11" Foreground="Black" HorizontalAlignment="Center" TextAlignment="Center" />
+                </StackPanel>
+
+                <Button x:Name="btnLogout" Grid.Row="3" Content="L" Click="BtnLogout_Click"
+                        Width="36" Height="36" Margin="0,8" HorizontalAlignment="Center" VerticalAlignment="Bottom" ToolTip="Log out" FontWeight="Bold"/>
+            </Grid>
         </Grid>
 
         <!-- RIGHT PANE unchanged -->
@@ -194,7 +211,8 @@
                         </Grid.RowDefinitions>
 
                         <Label Grid.Row="0" Content="Đồ order" FontSize="12" VerticalAlignment="Center"/>
-                        <ComboBox x:Name="cbOrder" Grid.Row="1" SelectionChanged="ComboBox_SelectionChanged_2" Height="28" VerticalAlignment="Top" />
+                        <ComboBox x:Name="cbOrder" Grid.Row="1" SelectionChanged="ComboBox_SelectionChanged_2" Height="28" VerticalAlignment="Top"
+                                  IsEditable="True" IsTextSearchEnabled="False" StaysOpenOnEdit="True" />
                     </Grid>
 
                     <Grid Grid.Column="3">

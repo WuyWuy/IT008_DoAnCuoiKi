@@ -1,4 +1,6 @@
-﻿using System.Collections.ObjectModel;
+﻿using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Windows;
 using System.Windows.Controls;
@@ -6,6 +8,9 @@ using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Threading;
 using System.Linq;
+using QuanLyCaPhe.Views.Login;
+using System.Text;
+using System.ComponentModel;
 
 namespace QuanLyCaPhe.Views.Staff
 {
@@ -62,6 +67,7 @@ namespace QuanLyCaPhe.Views.Staff
         public ObservableCollection<Table> Tables { get; private set; }
 
         private readonly DispatcherTimer _dispatcherTimer;
+        private readonly DispatcherTimer _clockTimer;
         private readonly bool[] _idUsed = new bool[35];
         private int _currentSum = 0;
         private int _selectedHourPrice = 0;
@@ -69,11 +75,18 @@ namespace QuanLyCaPhe.Views.Staff
         private static readonly CultureInfo VietCulture = new CultureInfo("vi-VN");
         private const int MaxIds = 35;
 
+        private List<Drink> _allDrinks;
+
+        // references for XAML named controls that do not get generated in this build environment
+        // (no manual clock fields here - XAML generates them)
+
         public StaffWindow()
         {
             InitializeComponent();
+            this.Loaded += StaffWindow_Loaded;
 
             InitializeDrinks();
+            _allDrinks = Drinks;
             InitializeTables();
 
             lbTables.ItemsSource = Tables;
@@ -85,7 +98,8 @@ namespace QuanLyCaPhe.Views.Staff
             OrderList = new ObservableCollection<OrderItem>();
             dtgdOrder.ItemsSource = OrderList;
 
-            cbOrder.SelectedIndex = 0;
+            // do not pre-select first item
+            cbOrder.SelectedIndex = -1;
 
             SelectFirstFreeTable();
 
@@ -96,33 +110,32 @@ namespace QuanLyCaPhe.Views.Staff
             _dispatcherTimer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(1) };
             _dispatcherTimer.Tick += DispatcherTimer_Tick;
             _dispatcherTimer.Start();
+
+            // clock timer
+            _clockTimer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(1) };
+            _clockTimer.Tick += ClockTimer_Tick;
+            _clockTimer.Start();
+
+            // set initial clock text
+            UpdateClock();
         }
 
-        private void InitializeDrinks()
+        private void ClockTimer_Tick(object? sender, EventArgs e)
         {
-            Drinks = new List<Drink>
-            {
-                new() { Id = 1,  Name = "Cà phê đen",         Price = 15000 },
-                new() { Id = 2,  Name = "Cà phê sữa",         Price = 17000 },
-                new() { Id = 3,  Name = "Cà phê muối",        Price = 20000 },
-                new() { Id = 4,  Name = "Soda dâu",           Price = 23000 },
-                new() { Id = 5,  Name = "Soda việt quất",     Price = 25000 },
-                new() { Id = 6,  Name = "Soda chanh",         Price = 20000 },
-                new() { Id = 7,  Name = "Nước ép cam",        Price = 18000 },
-                new() { Id = 8,  Name = "Nước ép dưa hấu",   Price = 20000 },
-                new() { Id = 9,  Name = "Nước ép chanh",      Price = 15000 },
-                new() { Id = 10, Name = "Matcha đá xay",      Price = 20000 },
-                new() { Id = 11, Name = "Cookie đá xay",      Price = 25000 },
-                new() { Id = 12, Name = "Matcha latte",       Price = 23000 }
-            };
+            UpdateClock();
         }
 
-        private void InitializeTables()
+        private void UpdateClock()
         {
-            Tables = new ObservableCollection<Table>(
-                Enumerable.Range(1, 12).Select(i => new Table { Id = i, Name = $"Bàn {i}" })
-            );
+            var now = DateTime.Now;
+            //24-hour time HH:mm
+            if (tbClockTime != null) tbClockTime.Text = now.ToString("HH:mm");
+            // day-month without 'thg'
+            if (tbClockDayMonth != null) tbClockDayMonth.Text = now.ToString("dd-MM");
+            // year
+            if (tbClockYear != null) tbClockYear.Text = now.ToString("yyyy");
         }
+
         private void DispatcherTimer_Tick(object? sender, EventArgs e)
         {
             foreach (var t in Tables)
@@ -337,7 +350,7 @@ namespace QuanLyCaPhe.Views.Staff
 
         private void ReleaseId(int id)
         {
-            if (id > 0 && id < MaxIds) _idUsed[id] = false;
+            if (id >0 && id < MaxIds) _idUsed[id] = false;
         }
         private void ComboBox_SelectionChanged_2(object sender, SelectionChangedEventArgs e)
         {
@@ -575,6 +588,103 @@ namespace QuanLyCaPhe.Views.Staff
             {
                 throw new NotImplementedException();
             }
+        }
+
+        private void BtnLogout_Click(object sender, RoutedEventArgs e)
+        {
+            // stop background timers
+            try { _dispatcherTimer?.Stop(); } catch { }
+            try { _clockTimer?.Stop(); } catch { }
+
+            var login = new QuanLyCaPhe.Views.Login.LoginWindow();
+            login.Show();
+            this.Close();
+        }
+
+        private void StaffWindow_Loaded(object sender, RoutedEventArgs e)
+        {
+            // attach to editable TextBox inside ComboBox
+            var textBox = cbOrder.Template.FindName("PART_EditableTextBox", cbOrder) as System.Windows.Controls.TextBox;
+            if (textBox != null)
+            {
+                textBox.TextChanged += cbOrder_TextChanged;
+            }
+        }
+
+        private static string RemoveDiacritics(string text)
+        {
+            if (string.IsNullOrEmpty(text)) return text;
+            var normalized = text.Normalize(NormalizationForm.FormD);
+            var sb = new StringBuilder();
+            foreach (var ch in normalized)
+            {
+                var uc = System.Globalization.CharUnicodeInfo.GetUnicodeCategory(ch);
+                if (uc != System.Globalization.UnicodeCategory.NonSpacingMark)
+                    sb.Append(ch);
+            }
+            return sb.ToString().Normalize(NormalizationForm.FormC);
+        }
+
+        private void cbOrder_TextChanged(object? sender, TextChangedEventArgs e)
+        {
+            if (cbOrder == null) return;
+            var tb = sender as System.Windows.Controls.TextBox;
+            var text = tb?.Text ?? string.Empty;
+            var words = text.Split(new[] { ' ' }, System.StringSplitOptions.RemoveEmptyEntries)
+            .Select(w => w.Trim())
+            .Where(w => w.Length > 0)
+            .ToArray();
+
+            IEnumerable<Drink> items = _allDrinks ?? new List<Drink>();
+            if (words.Length > 0)
+            {
+                var normalizedWords = words.Select(w => RemoveDiacritics(w).ToLowerInvariant()).ToArray();
+                items = _allDrinks.Where(d =>
+                {
+                    var nameNorm = RemoveDiacritics(d.Name).ToLowerInvariant();
+                    return normalizedWords.All(w => nameNorm.IndexOf(w, StringComparison.Ordinal) >= 0);
+                });
+            }
+
+            cbOrder.ItemsSource = items.ToList();
+            cbOrder.DisplayMemberPath = nameof(Drink.Name);
+            cbOrder.SelectedValuePath = nameof(Drink.Id);
+            cbOrder.IsDropDownOpen = true;
+
+            // ensure the editable TextBox does not select the typed character
+            var editableTb = sender as System.Windows.Controls.TextBox;
+            if (editableTb != null)
+            {
+                editableTb.SelectionStart = editableTb.Text.Length;
+                editableTb.SelectionLength = 0;
+                editableTb.CaretIndex = editableTb.Text.Length;
+            }
+        }
+
+        private void InitializeDrinks()
+        {
+            Drinks = new List<Drink>
+            {
+                new() { Id =1, Name = "Cà phê đen", Price =15000 },
+                new() { Id =2, Name = "Cà phê sữa", Price =17000 },
+                new() { Id =3, Name = "Cà phê muối", Price =20000 },
+                new() { Id =4, Name = "Soda dâu", Price =23000 },
+                new() { Id =5, Name = "Soda việt quất", Price =25000 },
+                new() { Id =6, Name = "Soda chanh", Price =20000 },
+                new() { Id =7, Name = "Nước ép cam", Price =18000 },
+                new() { Id =8, Name = "Nước ép dưa hấu", Price =20000 },
+                new() { Id =9, Name = "Nước ép chanh", Price =15000 },
+                new() { Id =10, Name = "Matcha đá xay", Price =20000 },
+                new() { Id =11, Name = "Cookie đá xay", Price =25000 },
+                new() { Id =12, Name = "Matcha latte", Price =23000 }
+            };
+        }
+
+        private void InitializeTables()
+        {
+            Tables = new ObservableCollection<Table>(
+                Enumerable.Range(1, 12).Select(i => new Table { Id = i, Name = $"Bàn {i}" })
+            );
         }
     }
 }
