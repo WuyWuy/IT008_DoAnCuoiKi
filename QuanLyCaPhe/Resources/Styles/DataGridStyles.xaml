@@ -121,7 +121,8 @@
 
     <Style x:Key="CardRowType" TargetType="DataGridRow">
         <Setter Property="Background" Value="White"/>
-        <Setter Property="Margin" Value="8,4"/>
+        <Setter Property="Margin" Value="3.6"/>
+        <Setter Property="Padding" Value="10"/>
         <Setter Property="BorderBrush" Value="#E5E7EB"/>
         <Setter Property="BorderThickness" Value="1"/>
         <Setter Property="SnapsToDevicePixels" Value="True"/>
@@ -129,7 +130,7 @@
             <Setter.Value>
                 <ControlTemplate TargetType="DataGridRow">
                     <Border x:Name="DGR_Border"
-                            Padding="10, 0, 0, 0"
+                            Padding="10, 0, -5, 0"
                             Background="{TemplateBinding Background}"
                             BorderBrush="{TemplateBinding BorderBrush}"
                             BorderThickness="{TemplateBinding BorderThickness}"
@@ -171,7 +172,6 @@
             <SolidColorBrush x:Key="{x:Static SystemColors.HighlightTextBrushKey}" Color="#111827"/>
             <SolidColorBrush x:Key="{x:Static SystemColors.InactiveSelectionHighlightBrushKey}" Color="Transparent"/>
         </Style.Resources>
-        
         <Setter Property="ScrollViewer.CanContentScroll" Value="False"/>
         <Setter Property="Background" Value="Transparent"/>
         <Setter Property="BorderThickness" Value="0"/>
@@ -180,7 +180,7 @@
         <Setter Property="RowHeight" Value="52"/>
         <Setter Property="ColumnHeaderHeight" Value="48"/>
         <Setter Property="RowDetailsVisibilityMode" Value="VisibleWhenSelected"/>
-
+        
         <Setter Property="CellStyle">
             <Setter.Value>
                 <Style TargetType="DataGridCell">

@@ -9,6 +9,22 @@
       d:DesignHeight="450" d:DesignWidth="800"
       Title="ProductsPage">
 
+    <Page.Resources>
+        <ContextMenu x:Key="ContextMenu">
+            <MenuItem x:Name="BtnEdit" Header="Sửa món này" Click="BtnEdit_Click">
+                <MenuItem.Icon>
+                    <TextBlock Text="&#xE70F;" FontFamily="Segoe MDL2 Assets"/>
+                </MenuItem.Icon>
+            </MenuItem>
+
+            <MenuItem x:Name="BtnDelete" Header="Xóa món này" Foreground="Red" Click="BtnDelete_Click">
+                <MenuItem.Icon>
+                    <TextBlock Text="&#xE74D;" FontFamily="Segoe MDL2 Assets" Foreground="Red"/>
+                </MenuItem.Icon>
+            </MenuItem>
+        </ContextMenu>
+    </Page.Resources>
+
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="0.15*"/>
@@ -17,30 +33,38 @@
         </Grid.RowDefinitions>
 
         <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" 
-                   Text="Nguyên Liệu" 
+                   Text="Món" 
                    Style="{StaticResource AdminTextBlockStyle}"/>
 
-        <Grid Grid.Row="1" >
+        <Grid Grid.Row="1">
             <comp:ExcelControl VerticalAlignment="Bottom" Margin="3"/>
             <comp:SearchBar HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="3"/>
         </Grid>
 
         <DataGrid x:Name="Productsdg" Grid.Row="2" 
-          AutoGenerateColumns="False" CanUserAddRows="False" IsReadOnly="True" SelectionMode="Single"
+          AutoGenerateColumns="False" 
+          IsReadOnly="True" 
+          SelectionMode="Single"
           Style="{StaticResource CardStyleDataGridStyle}">
-            
-            
-            
+
+            <DataGrid.RowStyle>
+                <Style TargetType="DataGridRow" BasedOn="{StaticResource CardRowType}">
+                    <Setter Property="ContextMenu" Value="{StaticResource ContextMenu}"/>
+                </Style>
+            </DataGrid.RowStyle>
             <DataGrid.Columns>
                 <DataGridTextColumn Header="ID" Binding="{Binding Id}" Width="auto"/>
-                <DataGridTextColumn Header="Tên sản phẩm" Binding="{Binding ProName}" Width="*"/>
+                <DataGridTextColumn Header="Tên món" Binding="{Binding ProName}" Width="*"/>
                 <DataGridTextColumn Header="Giá bán" Binding="{Binding Price, StringFormat={}{0:N0}đ}" Width="auto"/>
             </DataGrid.Columns>
-
         </DataGrid>
 
-        <Button Grid.Row="2" Panel.ZIndex="999"
+        <Button x:Name="BtnAdd" Grid.Row="2" Panel.ZIndex="999"
                 Style="{StaticResource FabButtonStyle}"
-                HorizontalAlignment="Right" VerticalAlignment="Bottom"/>
+                HorizontalAlignment="Right" VerticalAlignment="Bottom"
+                Click="BtnAdd_Click">
+            <TextBlock Text="&#xE710;" FontFamily="Segoe MDL2 Assets" 
+               FontSize="20" FontWeight="Bold" Foreground="White"/>
+        </Button>
     </Grid>
 </Page>

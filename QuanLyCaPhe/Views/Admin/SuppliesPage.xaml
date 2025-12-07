@@ -9,15 +9,32 @@
       d:DesignHeight="450" d:DesignWidth="800"
       Title="SuppliesPage">
 
+    <Page.Resources>
+        <ContextMenu x:Key="ContextMenu">
+            <MenuItem x:Name="BtnEdit" Header="Sửa số liệu này" Click="BtnEdit_Click">
+                <MenuItem.Icon>
+                    <TextBlock Text="&#xE70F;" FontFamily="Segoe MDL2 Assets"/>
+                </MenuItem.Icon>
+            </MenuItem>
+
+            <MenuItem x:Name="BtnDelete" Header="Xóa số liệu này" Foreground="Red" Click="BtnDelete_Click">
+                <MenuItem.Icon>
+                    <TextBlock Text="&#xE74D;" FontFamily="Segoe MDL2 Assets" Foreground="Red"/>
+                </MenuItem.Icon>
+            </MenuItem>
+        </ContextMenu>
+    </Page.Resources>
+
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="0.15*"/>
             <RowDefinition Height="0.1*"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
+        
         <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" 
-                   Text="Hàng Hóa" 
-                   Style="{StaticResource AdminTextBlockStyle}"/>
+                   Text="Hàng Hóa" Style="{StaticResource AdminTextBlockStyle}"/>
+        
         <Grid Grid.Row="1">
             <StackPanel Orientation="Horizontal">
                 <comp:ExcelControl VerticalAlignment="Bottom" Margin="3"/>
@@ -29,6 +46,7 @@
         <DataGrid Grid.Row="2" x:Name="dgExpense" AutoGenerateColumns="False" IsReadOnly="True" 
                   Style="{StaticResource CardStyleDataGridStyle}"
                   HeadersVisibility="Column" GridLinesVisibility="Horizontal">
+            <!--chổ này cũng chưa có DB nốt với thêm cái Models nha đặt tên đại đại đi xong hết ae mình hiệu chỉnh sau-->
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Mã Phiếu" Binding="{Binding ImportId}" Width="auto"/>
                 <DataGridTextColumn Header="Ngày Nhập" Binding="{Binding ImportDate, StringFormat=dd/MM/yyyy}" Width="auto"/>
@@ -38,8 +56,12 @@
             </DataGrid.Columns>
         </DataGrid>
 
-        <Button Grid.Row="2" Panel.ZIndex="999"
+        <Button x:Name="BtnAdd" Grid.Row="2" Panel.ZIndex="999"
         Style="{StaticResource FabButtonStyle}"
-        HorizontalAlignment="Right" VerticalAlignment="Bottom"/>
+        HorizontalAlignment="Right" VerticalAlignment="Bottom"
+        Click="BtnAdd_Click">
+            <TextBlock Text="&#xE710;" FontFamily="Segoe MDL2 Assets" 
+               FontSize="20" FontWeight="Bold" Foreground="White"/>
+        </Button>
     </Grid>
 </Page>

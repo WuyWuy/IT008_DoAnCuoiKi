@@ -79,5 +79,10 @@ namespace QuanLyCaPhe.Views.Admin
         {
             MainFrame.Navigate(new BillsPage());
         }
+
+        private void Menubtn_Click(object sender, RoutedEventArgs e)
+        {
+            Sidebar.Visibility = (Sidebar.Visibility == Visibility.Visible) ? Visibility.Collapsed : Visibility.Visible;
+        }
     }
 }

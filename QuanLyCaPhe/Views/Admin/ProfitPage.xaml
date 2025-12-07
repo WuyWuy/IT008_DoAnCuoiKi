@@ -59,6 +59,7 @@
             </Border>
         </Grid>
 
+        <!---->
         <Frame Grid.Row="4" x:Name="ChartFrame">
             
         </Frame>
