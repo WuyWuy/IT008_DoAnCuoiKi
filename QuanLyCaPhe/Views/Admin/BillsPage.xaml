@@ -1,4 +1,4 @@
-﻿<Page x:Class="QuanLyCaPhe.Views.Admin.IngredientsPage"
+﻿<Page x:Class="QuanLyCaPhe.Views.Admin.BillsPage"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -7,7 +7,7 @@
       xmlns:comp="clr-namespace:QuanLyCaPhe.Views.Components"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
-      Title="IngredientsPage">
+      Title="BillsPage">
 
     <Grid>
         <Grid.RowDefinitions>
@@ -17,18 +17,21 @@
         </Grid.RowDefinitions>
 
         <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" 
-           Text="Nguyên Liệu" 
-           Style="{StaticResource AdminTextBlockStyle}"/>
-
+                   Text="Nguyên Liệu" 
+                   Style="{StaticResource AdminTextBlockStyle}"/>
+        
         <Grid Grid.Row="1">
-            <comp:ExcelControl VerticalAlignment="Bottom" Margin="3"/>
+            <StackPanel Orientation="Horizontal">
+                <comp:ExcelControl VerticalAlignment="Bottom" Margin="3"/>
+
+            </StackPanel>
 
             <comp:SearchBar HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="3"/>
         </Grid>
 
-        <DataGrid x:Name="Productsdg" Grid.Row="2"
-      AutoGenerateColumns="False" CanUserAddRows="False" IsReadOnly="True" SelectionMode="Single"
-      Style="{StaticResource CardStyleDataGridStyle}">
+        <DataGrid x:Name="Ingredientsdg" Grid.Row="2"
+              AutoGenerateColumns="False" CanUserAddRows="False" IsReadOnly="True" SelectionMode="Single"
+              Style="{StaticResource CardStyleDataGridStyle}">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="ID" Binding="{Binding Id}" Width="auto"/>
                 <DataGridTextColumn Header="Tên nguyên liệu" Binding="{Binding IngName}" Width="*"/>
@@ -36,10 +39,8 @@
                 <DataGridTextColumn Header="Còn lại" Binding="{Binding Quantity}" Width="auto"/>
                 <DataGridTextColumn Header="Đơn vị" Binding="{Binding Unit}" Width="auto"/>
             </DataGrid.Columns>
+
         </DataGrid>
 
-        <Button Grid.Row="2" Panel.ZIndex="999"
-        Style="{StaticResource FabButtonStyle}"
-        HorizontalAlignment="Right" VerticalAlignment="Bottom"/>
     </Grid>
 </Page>

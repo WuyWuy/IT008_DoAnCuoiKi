@@ -11,23 +11,26 @@
 
     <Grid>
         <Grid.RowDefinitions>
+            <RowDefinition Height="0.15*"/>
             <RowDefinition Height="0.1*"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <Grid Grid.Row="0">
-            <StackPanel Orientation="Horizontal">
-                <comp:CrudToolBar VerticalAlignment="Bottom" Margin="3, 3, 20, 3"/>
-                <comp:ExcelControl VerticalAlignment="Bottom" Margin="3"/>
+        <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" 
+                   Text="Nguyên Liệu" 
+                   Style="{StaticResource AdminTextBlockStyle}"/>
 
-            </StackPanel>
-
+        <Grid Grid.Row="1" >
+            <comp:ExcelControl VerticalAlignment="Bottom" Margin="3"/>
             <comp:SearchBar HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="3"/>
         </Grid>
 
-        <DataGrid x:Name="Productsdg" Grid.Row="1" 
+        <DataGrid x:Name="Productsdg" Grid.Row="2" 
           AutoGenerateColumns="False" CanUserAddRows="False" IsReadOnly="True" SelectionMode="Single"
           Style="{StaticResource CardStyleDataGridStyle}">
+            
+            
+            
             <DataGrid.Columns>
                 <DataGridTextColumn Header="ID" Binding="{Binding Id}" Width="auto"/>
                 <DataGridTextColumn Header="Tên sản phẩm" Binding="{Binding ProName}" Width="*"/>
@@ -36,5 +39,8 @@
 
         </DataGrid>
 
+        <Button Grid.Row="2" Panel.ZIndex="999"
+                Style="{StaticResource FabButtonStyle}"
+                HorizontalAlignment="Right" VerticalAlignment="Bottom"/>
     </Grid>
 </Page>

@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:QuanLyCaPhe.Views.Admin"
         mc:Ignorable="d"
-        Title="AdminWindow" Height="450" Width="800">
+        Title="AdminWindow" Height="450" Width="850">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="auto"/>
@@ -34,6 +34,13 @@
                         Style="{StaticResource AdminButtonStyle}"
                         Click="Staffbtn_Click"/>
 
+                <Button x:Name="Suplybtn" Content="Hàng hóa"
+                        Style="{StaticResource AdminButtonStyle}"
+                        Click="Suplybtn_Click"/>
+
+                <Button x:Name="Billbtn" Content="Hóa đơn"
+                        Style="{StaticResource AdminButtonStyle}"
+                        Click="Billbtn_Click"/>
                 <Button x:Name="Timelbtn" Content="Ca làm"
                         Style="{StaticResource AdminButtonStyle}"
                         Click="Timelbtn_Click"/>

@@ -13,17 +13,16 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace QuanLyCaPhe.Views.Admin
+namespace QuanLyCaPhe.Views.Components
 {
     /// <summary>
-    /// Interaction logic for ProfitPage.xaml
+    /// Interaction logic for DatePickerv2.xaml
     /// </summary>
-    public partial class ProfitPage : Page
+    public partial class DatePickerv2 : UserControl
     {
-        public ProfitPage()
+        public DatePickerv2()
         {
             InitializeComponent();
-            ChartFrame.Navigate(new ProfitChartPage());
         }
     }
 }
