@@ -10,6 +10,24 @@
 
   <ItemGroup>
     <None Remove="Resources\Icons\menu.ico" />
+    <None Remove="Views\Staff\Coffee cup.png" />
+    <None Remove="Views\Staff\coffee-cup %281%29.png" />
+    <None Remove="Views\Staff\coffee-cup.png" />
+    <None Remove="Views\Staff\Dark-brown-wood-texture-background-with-natural-details-wooden-surface-for-wall-and-floor-design-and-decoration-artwork-wallpapers-4.jpg" />
+    <None Remove="Views\Staff\delete.png" />
+    <None Remove="Views\Staff\icons8-add-64.png" />
+    <None Remove="Views\Staff\icons8-coffee-cup-100.png" />
+    <None Remove="Views\Staff\icons8-coffee-maker-40.png" />
+    <None Remove="Views\Staff\icons8-coffee-script-48.png" />
+    <None Remove="Views\Staff\icons8-delete-64.png" />
+    <None Remove="Views\Staff\icons8-log-out-64.png" />
+    <None Remove="Views\Staff\icons8-sort-50.png" />
+    <None Remove="Views\Staff\icons8-sort-64 %281%29.png" />
+    <None Remove="Views\Staff\icons8-sort-64 %282%29.png" />
+    <None Remove="Views\Staff\icons8-sort-64.png" />
+    <None Remove="Views\Staff\logout.png" />
+    <None Remove="Views\Staff\round table.png" />
+    <None Remove="Views\Staff\unnamed.jpg" />
   </ItemGroup>
 
   <ItemGroup>
@@ -28,6 +46,24 @@
     <Resource Include="Resources\Icons\menu.ico">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
+    <Resource Include="Views\Staff\Coffee cup.png" />
+    <Resource Include="Views\Staff\coffee-cup (1).png" />
+    <Resource Include="Views\Staff\coffee-cup.png" />
+    <Resource Include="Views\Staff\Dark-brown-wood-texture-background-with-natural-details-wooden-surface-for-wall-and-floor-design-and-decoration-artwork-wallpapers-4.jpg" />
+    <Resource Include="Views\Staff\delete.png" />
+    <Resource Include="Views\Staff\icons8-add-64.png" />
+    <Resource Include="Views\Staff\icons8-coffee-cup-100.png" />
+    <Resource Include="Views\Staff\icons8-coffee-maker-40.png" />
+    <Resource Include="Views\Staff\icons8-coffee-script-48.png" />
+    <Resource Include="Views\Staff\icons8-delete-64.png" />
+    <Resource Include="Views\Staff\icons8-log-out-64.png" />
+    <Resource Include="Views\Staff\icons8-sort-50.png" />
+    <Resource Include="Views\Staff\icons8-sort-64 (1).png" />
+    <Resource Include="Views\Staff\icons8-sort-64 (2).png" />
+    <Resource Include="Views\Staff\icons8-sort-64.png" />
+    <Resource Include="Views\Staff\logout.png" />
+    <Resource Include="Views\Staff\round table.png" />
+    <Resource Include="Views\Staff\unnamed.jpg" />
   </ItemGroup>
 
 </Project>
