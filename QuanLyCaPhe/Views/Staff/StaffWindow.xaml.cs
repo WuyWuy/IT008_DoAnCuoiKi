@@ -1,4 +1,5 @@
-﻿using System;
+﻿
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
@@ -11,6 +12,8 @@ using System.Linq;
 using QuanLyCaPhe.Views.Login;
 using System.Text;
 using System.ComponentModel;
+using System.IO;
+using System.Text.Json;
 
 namespace QuanLyCaPhe.Views.Staff
 {
@@ -62,6 +65,8 @@ namespace QuanLyCaPhe.Views.Staff
             }
         }
 
+        private record TableState(int Id, string Name, string Status, DateTime? EndTimeUtc);
+
         public List<Drink> Drinks { get; private set; }
         public ObservableCollection<OrderItem> OrderList { get; private set; }
         public ObservableCollection<Table> Tables { get; private set; }
@@ -77,13 +82,19 @@ namespace QuanLyCaPhe.Views.Staff
 
         private List<Drink> _allDrinks;
 
-        // references for XAML named controls that do not get generated in this build environment
-        // (no manual clock fields here - XAML generates them)
+        private readonly string _tablesStatePath;
 
         public StaffWindow()
         {
             InitializeComponent();
             this.Loaded += StaffWindow_Loaded;
+            this.Closing += StaffWindow_Closing;
+
+            // choose a persistent path in AppData
+            var appData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+            var folder = Path.Combine(appData, "QuanLyCaPhe");
+            Directory.CreateDirectory(folder);
+            _tablesStatePath = Path.Combine(folder, "tables.json");
 
             InitializeDrinks();
             _allDrinks = Drinks;
@@ -120,6 +131,14 @@ namespace QuanLyCaPhe.Views.Staff
             UpdateClock();
         }
 
+        private void StaffWindow_Closing(object? sender, CancelEventArgs e)
+        {
+            // stop timers and save the table state
+            try { _dispatcherTimer?.Stop(); } catch { }
+            try { _clockTimer?.Stop(); } catch { }
+            SaveTablesState();
+        }
+
         private void ClockTimer_Tick(object? sender, EventArgs e)
         {
             UpdateClock();
@@ -140,12 +159,24 @@ namespace QuanLyCaPhe.Views.Staff
         {
             foreach (var t in Tables)
             {
-                if (t.Countdown > 0)
+                if (t.EndTimeUtc.HasValue)
                 {
-                    t.Countdown--;
-                    if (t.Countdown == 0)
+                    var remaining = (int)Math.Max(0, (t.EndTimeUtc.Value - DateTime.UtcNow).TotalSeconds);
+                    t.Countdown = remaining;
+                    if (remaining == 0)
                     {
+                        t.EndTimeUtc = null;
                         t.Status = "Free";
+                    }
+                }
+                else
+                {
+                    // keep existing countdown if any; ensure consistency
+                    if (t.Countdown > 0)
+                    {
+                        // fallback decrement (shouldn't be necessary if EndTimeUtc used)
+                        t.Countdown = Math.Max(0, t.Countdown - 1);
+                        if (t.Countdown == 0) t.Status = "Free";
                     }
                 }
             }
@@ -214,13 +245,22 @@ namespace QuanLyCaPhe.Views.Staff
             }
 
             var oldStatus = source.Status;
-            var oldCountdown = source.Countdown;
+            var oldEnd = source.EndTimeUtc;
 
             source.Status = "Free";
+            source.EndTimeUtc = null;
             source.Countdown = 0;
 
             target.Status = oldStatus;
-            target.Countdown = oldCountdown;
+            target.EndTimeUtc = oldEnd;
+            if (oldEnd.HasValue)
+            {
+                target.Countdown = (int)Math.Max(0, (oldEnd.Value - DateTime.UtcNow).TotalSeconds);
+            }
+            else
+            {
+                target.Countdown = 0;
+            }
 
             foreach (var t in Tables.Where(t => t.Id != target.Id))
             {
@@ -324,6 +364,7 @@ namespace QuanLyCaPhe.Views.Staff
                 if (res == MessageBoxResult.Yes)
                 {
                     table.Status = "Free";
+                    table.EndTimeUtc = null;
                     table.Countdown = 0;
 
                     lbTables.SelectedItem = table;
@@ -350,7 +391,7 @@ namespace QuanLyCaPhe.Views.Staff
 
         private void ReleaseId(int id)
         {
-            if (id >0 && id < MaxIds) _idUsed[id] = false;
+            if (id > 0 && id < MaxIds) _idUsed[id] = false;
         }
         private void ComboBox_SelectionChanged_2(object sender, SelectionChangedEventArgs e)
         {
@@ -475,7 +516,10 @@ namespace QuanLyCaPhe.Views.Staff
                 if (_selectedHourPrice > 0)
                 {
                     int hours = GetSelectedHoursFromRadioButtons();
-                    selectedTable.Countdown += hours * 3600;
+                    // extend existing end time or set a new one
+                    var baseTime = selectedTable.EndTimeUtc ?? DateTime.UtcNow;
+                    selectedTable.EndTimeUtc = baseTime.AddHours(hours);
+                    selectedTable.Countdown = (int)Math.Max(0, (selectedTable.EndTimeUtc.Value - DateTime.UtcNow).TotalSeconds);
                     selectedTable.Status = "Busy";
 
                     ClearHourSelection();
@@ -505,7 +549,8 @@ namespace QuanLyCaPhe.Views.Staff
             if (selectedTable != null)
             {
                 int hours = GetSelectedHoursFromRadioButtons();
-                selectedTable.Countdown = Math.Max(0, hours) * 3600;
+                selectedTable.EndTimeUtc = DateTime.UtcNow.AddHours(Math.Max(0, hours));
+                selectedTable.Countdown = (int)Math.Max(0, (selectedTable.EndTimeUtc.Value - DateTime.UtcNow).TotalSeconds);
                 selectedTable.Status = "Busy";
             }
 
@@ -682,9 +727,53 @@ namespace QuanLyCaPhe.Views.Staff
 
         private void InitializeTables()
         {
+            // try to load persisted state; if not present create defaults
+            if (File.Exists(_tablesStatePath))
+            {
+                try
+                {
+                    var json = File.ReadAllText(_tablesStatePath);
+                    var states = JsonSerializer.Deserialize<List<TableState>>(json);
+                    if (states != null && states.Count > 0)
+                    {
+                        Tables = new ObservableCollection<Table>(
+                            states.Select(s =>
+                            {
+                                var t = new Table { Id = s.Id, Name = s.Name, Status = s.Status, EndTimeUtc = s.EndTimeUtc };
+                                if (s.EndTimeUtc.HasValue)
+                                    t.Countdown = (int)Math.Max(0, (s.EndTimeUtc.Value - DateTime.UtcNow).TotalSeconds);
+                                else
+                                    t.Countdown = 0;
+                                return t;
+                            }).OrderBy(t => t.Id)
+                        );
+                        return;
+                    }
+                }
+                catch
+                {
+                    // ignore and fall back to default layout
+                }
+            }
+
+            // default: 12 tables
             Tables = new ObservableCollection<Table>(
-                Enumerable.Range(1, 12).Select(i => new Table { Id = i, Name = $"Bàn {i}" })
+                Enumerable.Range(1, 12).Select(i => new Table { Id = i, Name = $"Bàn {i}", Status = "Free", Countdown = 0 })
             );
+        }
+
+        private void SaveTablesState()
+        {
+            try
+            {
+                var states = Tables.Select(t => new TableState(t.Id, t.Name ?? $"Bàn {t.Id}", t.Status, t.EndTimeUtc)).ToList();
+                var json = JsonSerializer.Serialize(states, new JsonSerializerOptions { WriteIndented = true });
+                File.WriteAllText(_tablesStatePath, json);
+            }
+            catch
+            {
+                // do not crash on exit; could log if you add logging
+            }
         }
     }
 }
