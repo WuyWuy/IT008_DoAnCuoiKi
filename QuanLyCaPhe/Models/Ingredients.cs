@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace QuanLyCaPhe.Models
 {
-    class Ingredients
+    public class Ingredients
     {
         public int Id { get; set; }
         public string IngName { get; set; }

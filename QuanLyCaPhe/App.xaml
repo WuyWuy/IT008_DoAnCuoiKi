@@ -9,6 +9,10 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="/Resources/Styles/LoginStyles.xaml"/>
                 <ResourceDictionary Source="/Resources/Styles/AdminStyles.xaml"/>
+                <ResourceDictionary Source="/Resources/Styles/HomePage_Admin.xaml"/>
+                <ResourceDictionary Source="/Resources/Styles/SearchBar_Compnents.xaml"/>
+                <ResourceDictionary Source="/Resources/Styles/DataGridStyles.xaml"/>
+                <ResourceDictionary Source="/Resources/Styles/HoverBorderAnimation.xaml"/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>

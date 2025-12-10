@@ -9,25 +9,79 @@
       d:DesignHeight="450" d:DesignWidth="800"
       Title="ProfitPage">
     
-    
-    <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="0.1*"/>
-            <ColumnDefinition Width="0.1*"/>
-            <ColumnDefinition Width="0.3*"/>
-            <ColumnDefinition Width="0.3*"/>
-            <ColumnDefinition Width="*"/>
-        </Grid.ColumnDefinitions>
-
+    <Grid Background="#F5F7FA" Margin="20">
         <Grid.RowDefinitions>
-            <RowDefinition Height="0.1*"/>
-            <RowDefinition Height="0.1*"/>
-            <RowDefinition Height="0.1*"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
+        <comp:DateToDatePicker Grid.Row="1" Margin="10"/>
 
-        <comp:DateToDatePicker Grid.Row="1" Grid.Column="2" Grid.ColumnSpan="2"/>
+        <Grid Grid.Row="2" Margin="0,0,0,20">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <Border Grid.Column="0" Background="White" CornerRadius="10" Margin="10,0,10,0" Padding="15">
+                <StackPanel>
+                    <TextBlock Text="TỔNG THU"/>
+                </StackPanel>
+            </Border>
+
+            <Border Grid.Column="1" Background="White" CornerRadius="10" Margin="0,0,10,0" Padding="15">
+                <StackPanel>
+                    <TextBlock Text="TỔNG CHI"/>
+                </StackPanel>
+            </Border>
+
+            <Border Grid.Column="2" Background="White" CornerRadius="10" Margin="0,0,10,0" Padding="15">
+                <StackPanel>
+                    <TextBlock Text="LỢI NHUẬN"/>
+                </StackPanel>
+            </Border>
+        </Grid>
+
+        <TabControl Grid.Row="3" BorderThickness="0" Background="Transparent">
+            <TabControl.Resources>
+                <Style TargetType="TabItem">
+                    <Setter Property="FontSize" Value="16"/>
+                    <Setter Property="Padding" Value="15,10"/>
+                    <Setter Property="FontWeight" Value="SemiBold"/>
+                    <Setter Property="Background" Value="Transparent"/>
+                </Style>
+            </TabControl.Resources>
+
+            <TabItem Header="Chi tiết Thu (Hóa Đơn)">
+                <DataGrid x:Name="dgIncome" AutoGenerateColumns="False" IsReadOnly="True" 
+                      Style="{StaticResource CardStyleDataGridStyle}"
+                      HeadersVisibility="Column" GridLinesVisibility="Horizontal">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Mã HĐ" Binding="{Binding Id}" Width="80"/>
+                        <DataGridTextColumn Header="Ngày Bán" Binding="{Binding CreatedDate, StringFormat=dd/MM/yyyy HH:mm}" Width="150"/>
+                        <DataGridTextColumn Header="Nhân Viên" Binding="{Binding StaffName}" Width="150"/>
+                        <DataGridTextColumn Header="Tổng Tiền" Binding="{Binding TotalAmount, StringFormat={}{0:N0} đ}" Width="*" FontWeight="Bold" Foreground="Green"/>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </TabItem>
+
+            <TabItem Header="Chi tiết Chi (Nhập Kho)">
+                <DataGrid x:Name="dgExpense" AutoGenerateColumns="False" IsReadOnly="True" 
+                      Style="{StaticResource CardStyleDataGridStyle}"
+                      HeadersVisibility="Column" GridLinesVisibility="Horizontal">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Mã Phiếu" Binding="{Binding ImportId}" Width="auto"/>
+                        <DataGridTextColumn Header="Ngày Nhập" Binding="{Binding ImportDate, StringFormat=dd/MM/yyyy}" Width="auto"/>
+                        <DataGridTextColumn Header="Nguyên Liệu" Binding="{Binding IngredientName}" Width="auto"/>
+                        <DataGridTextColumn Header="Số Lượng" Binding="{Binding Quantity}" Width="auto"/>
+                        <DataGridTextColumn Header="Thành Tiền" Binding="{Binding Cost, StringFormat={}{0:N0} đ}" Width="auto" FontWeight="Bold" Foreground="Red"/>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </TabItem>
+        </TabControl>
 
     </Grid>
 </Page>

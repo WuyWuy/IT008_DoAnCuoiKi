@@ -23,6 +23,21 @@ namespace QuanLyCaPhe.Views.Components
         public DatePicker()
         {
             InitializeComponent();
+            LoadDate(0);
+        }
+
+        public void LoadDate(int idx = 0)
+        {
+            if (cbDay == null || cbMonth == null || cbYear == null) return;
+
+            cbDay.IsEnabled = false;
+            cbMonth.IsEnabled = false;
+            cbYear.IsEnabled = false;
+
+            if (idx <= 0) cbDay.IsEnabled = true;
+            if (idx <= 1) cbMonth.IsEnabled = true;
+            if (idx <= 2) cbYear.IsEnabled = true;
+
         }
     }
 }

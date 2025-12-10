@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 namespace QuanLyCaPhe.Models
 {
-    class Products
+    public class Products
     {
         public int Id { get; set; }
-        public string ProName { get; set; }
+        public string? ProName { get; set; }
         public int Price { get; set; }
         public int CateId { get; set; }
     }

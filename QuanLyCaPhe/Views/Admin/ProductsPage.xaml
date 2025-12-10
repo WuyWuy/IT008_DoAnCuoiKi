@@ -15,16 +15,23 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <comp:CrudToolBar HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="3" Height="auto"/>
+        <Grid Grid.Row="0">
+            <StackPanel Orientation="Horizontal">
+                <comp:CrudToolBar VerticalAlignment="Bottom" Margin="3, 3, 20, 3"/>
+                <comp:ExcelControl VerticalAlignment="Bottom" Margin="3"/>
 
-        <DataGrid x:Name="Productsdg" Grid.Row="1"
+            </StackPanel>
+
+            <comp:SearchBar HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="3"/>
+        </Grid>
+
+        <DataGrid x:Name="Productsdg" Grid.Row="1" 
           AutoGenerateColumns="False" CanUserAddRows="False" IsReadOnly="True" SelectionMode="Single"
-          Background="White" Foreground="Black"
-          BorderBrush="Black" BorderThickness="1">
+          Style="{StaticResource CardStyleDataGridStyle}">
             <DataGrid.Columns>
-                <DataGridTextColumn Header="ID" Binding="{Binding Id}" Width="100"/>
+                <DataGridTextColumn Header="ID" Binding="{Binding Id}" Width="auto"/>
                 <DataGridTextColumn Header="Tên sản phẩm" Binding="{Binding ProName}" Width="*"/>
-                <DataGridTextColumn Header="Giá bán" Binding="{Binding Price, StringFormat={}{0:N0}đ}" Width="200"/>
+                <DataGridTextColumn Header="Giá bán" Binding="{Binding Price, StringFormat={}{0:N0}đ}" Width="auto"/>
             </DataGrid.Columns>
 
         </DataGrid>
