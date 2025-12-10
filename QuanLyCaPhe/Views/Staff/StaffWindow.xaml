@@ -232,11 +232,7 @@
                 </Grid>
             </Grid>
             <!-- Narrow left column: sort buttons, clock, spacer, logout -->
-            <Image HorizontalAlignment="Left" Height="66" VerticalAlignment="Top" Width="64" Margin="360,213,0,0" Grid.Row="1">
-                <Image.OpacityMask>
-                    <ImageBrush TileMode="None" ImageSource="/Views/Staff/icons8-coffee-cup-100.png"/>
-                </Image.OpacityMask>
-            </Image>
+
         </Grid>
 
         <!-- LEFT PANE: narrow button column + content column with nested grids -->
@@ -297,8 +293,8 @@
                         </Grid.RowDefinitions>
 
                         <Label Grid.Row="0" Content="Đồ order" FontSize="12" VerticalAlignment="Top" Foreground="#FFFFF6F6" Margin="0,-7,0,0"/>
-                        <ComboBox x:Name="cbOrder" SelectionChanged="ComboBox_SelectionChanged_2" Height="28" VerticalAlignment="Top"
-                                  IsEditable="True" IsTextSearchEnabled="False" StaysOpenOnEdit="True" Margin="0,19,0,0" Grid.RowSpan="2" />
+                        <ComboBox x:Name="cbOrder"   Height="28" VerticalAlignment="Top"
+                                  IsEditable="True"  IsTextSearchEnabled="False" StaysOpenOnEdit="True" Margin="0,19,0,0" Grid.RowSpan="2" IsReadOnly="False" />
                     </Grid>
 
                     <Grid Grid.Column="3">
@@ -312,7 +308,7 @@
                     </Grid>
 
                     <Grid Grid.Column="5">
-                        <Button x:Name="btnAdd" Content=" "  VerticalAlignment="Top" Height="58" Click="btnAdd_Click" RenderTransformOrigin="0.542,0.586" BorderBrush="{x:Null}" HorizontalAlignment="Right" Width="69">
+                        <Button x:Name="btnAdd" Content=" "  VerticalAlignment="Top" Height="58" Click="btnAdd_Click" RenderTransformOrigin="0.542,0.586" BorderBrush="{x:Null}" HorizontalAlignment="Center" Width="69" Margin="0,-5,0,0">
                             <Button.Background>
                                 <ImageBrush ImageSource="/Views/Staff/icons8-add-64.png"/>
                             </Button.Background>

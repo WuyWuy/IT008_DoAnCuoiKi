@@ -11,6 +11,13 @@
   <ItemGroup>
     <None Remove="Resources\Icons\menu.ico" />
     <None Remove="Resources\Images\LuomXX.png" />
+    <None Remove="Views\Staff\icons8-add-64.png" />
+    <None Remove="Views\Staff\icons8-coffee-script-48.png" />
+    <None Remove="Views\Staff\icons8-delete-64.png" />
+    <None Remove="Views\Staff\icons8-log-out-64.png" />
+    <None Remove="Views\Staff\icons8-sort-50.png" />
+    <None Remove="Views\Staff\icons8-sort-64 %281%29.png" />
+    <None Remove="Views\Staff\icons8-sort-64 %282%29.png" />
   </ItemGroup>
 
   <ItemGroup>
@@ -30,6 +37,13 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
     <Resource Include="Resources\Images\LuomXX.png" />
+    <Resource Include="Views\Staff\icons8-add-64.png" />
+    <Resource Include="Views\Staff\icons8-coffee-script-48.png" />
+    <Resource Include="Views\Staff\icons8-delete-64.png" />
+    <Resource Include="Views\Staff\icons8-log-out-64.png" />
+    <Resource Include="Views\Staff\icons8-sort-50.png" />
+    <Resource Include="Views\Staff\icons8-sort-64 (1).png" />
+    <Resource Include="Views\Staff\icons8-sort-64 (2).png" />
   </ItemGroup>
 
 </Project>

@@ -65,7 +65,7 @@ namespace QuanLyCaPhe.Views.Staff
         public List<Drink> Drinks { get; private set; }
         public ObservableCollection<OrderItem> OrderList { get; private set; }
         public ObservableCollection<Table> Tables { get; private set; }
-
+        private bool isUserEditing = false;
         private readonly DispatcherTimer _dispatcherTimer;
         private readonly DispatcherTimer _clockTimer;
         private readonly bool[] _idUsed = new bool[35];
@@ -370,7 +370,7 @@ namespace QuanLyCaPhe.Views.Staff
                 MessageBox.Show("Hãy chọn số giờ sử dụng trước khi order", "Order thất bại", MessageBoxButton.OK, MessageBoxImage.Error);
                 return false;
             }
-
+            
             return true;
         }
 
@@ -394,7 +394,11 @@ namespace QuanLyCaPhe.Views.Staff
             if (!IsValid(requireHour)) return;
 
             var d = cbOrder.SelectedItem as Drink;
-            if (d == null) return;
+            if (d == null)
+            {
+                MessageBox.Show( " Vui lòng nhập hoặc chọn đồ order hợp lệ","Order thất bại" ,MessageBoxButton.OK,MessageBoxImage.Error);
+                return;
+            }
 
             int amount = iudAmmount.Value ?? 1;
             if (amount <= 0) amount = 1;
@@ -627,37 +631,59 @@ namespace QuanLyCaPhe.Views.Staff
 
         private void cbOrder_TextChanged(object? sender, TextChangedEventArgs e)
         {
-            if (cbOrder == null) return;
-            var tb = sender as System.Windows.Controls.TextBox;
-            var text = tb?.Text ?? string.Empty;
-            var words = text.Split(new[] { ' ' }, System.StringSplitOptions.RemoveEmptyEntries)
-            .Select(w => w.Trim())
-            .Where(w => w.Length > 0)
-            .ToArray();
+            // Lấy TextBox từ sender
+    var tb = sender as System.Windows.Controls.TextBox;
+            if (tb == null || cbOrder == null) return;
 
-            IEnumerable<Drink> items = _allDrinks ?? new List<Drink>();
-            if (words.Length > 0)
+            // 1. LẤY GIÁ TRỊ HIỆN TẠI MÀ NGƯỜI DÙNG ĐANG GÕ
+            string currentText = tb.Text;
+            int caretIndex = tb.CaretIndex; // Lưu vị trí con trỏ để khôi phục sau
+
+            // 2. GỠ BỎ SỰ KIỆN ĐỂ TRÁNH VÒNG LẶP HOẶC TỰ ĐỘNG CẬP NHẬT
+            tb.TextChanged -= cbOrder_TextChanged;
+
+            try
             {
-                var normalizedWords = words.Select(w => RemoveDiacritics(w).ToLowerInvariant()).ToArray();
-                items = _allDrinks.Where(d =>
+                // 3. XỬ LÝ LỌC DỮ LIỆU (Logic của bạn giữ nguyên)
+                var words = currentText.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries)
+                                .Select(w => w.Trim())
+                                .Where(w => w.Length > 0)
+                                .ToArray();
+
+                IEnumerable<Drink> items = _allDrinks ?? new List<Drink>();
+
+                if (words.Length > 0)
                 {
-                    var nameNorm = RemoveDiacritics(d.Name).ToLowerInvariant();
-                    return normalizedWords.All(w => nameNorm.IndexOf(w, StringComparison.Ordinal) >= 0);
-                });
+                    var normalizedWords = words.Select(w => RemoveDiacritics(w).ToLowerInvariant()).ToArray();
+                    items = _allDrinks.Where(d =>
+                    {
+                        var nameNorm = RemoveDiacritics(d.Name).ToLowerInvariant();
+                        return normalizedWords.All(w => nameNorm.IndexOf(w, StringComparison.Ordinal) >= 0);
+                    });
+                }
+
+                // 4. CẬP NHẬT ITEMSSOURCE
+                // Quan trọng: Set lại ItemsSource sẽ làm ComboBox cố gắng chọn lại Item
+                cbOrder.ItemsSource = items.ToList();
+
+                // 5. MỞ DROPDOWN ĐỂ HIỆN KẾT QUẢ
+                cbOrder.IsDropDownOpen = true;
+
+                // 6. CỰC KỲ QUAN TRỌNG: GÁN LẠI TEXT CŨ
+                // Vì bước gán ItemsSource ở trên có thể đã làm thay đổi Text của ComboBox,
+                // ta phải ép nó quay về cái text người dùng đang gõ.
+                cbOrder.Text = currentText;
+
+                // Hoặc gán trực tiếp vào TextBox nếu binding của ComboBox chưa cập nhật kịp
+                tb.Text = currentText;
+
+                // 7. KHÔI PHỤC VỊ TRÍ CON TRỎ
+                tb.CaretIndex = caretIndex;
             }
-
-            cbOrder.ItemsSource = items.ToList();
-            cbOrder.DisplayMemberPath = nameof(Drink.Name);
-            cbOrder.SelectedValuePath = nameof(Drink.Id);
-            cbOrder.IsDropDownOpen = true;
-
-            // ensure the editable TextBox does not select the typed character
-            var editableTb = sender as System.Windows.Controls.TextBox;
-            if (editableTb != null)
+            finally
             {
-                editableTb.SelectionStart = editableTb.Text.Length;
-                editableTb.SelectionLength = 0;
-                editableTb.CaretIndex = editableTb.Text.Length;
+                // 8. GẮN LẠI SỰ KIỆN ĐỂ LẦN GÕ TIẾP THEO HOẠT ĐỘNG
+                tb.TextChanged += cbOrder_TextChanged;
             }
         }
 
