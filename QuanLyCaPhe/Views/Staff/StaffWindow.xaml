@@ -37,6 +37,47 @@
             </Style.Triggers>
         </Style>
 
+        <Style x:Key="OverlayButtonStyle" TargetType="Button">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderBrush" Value="Transparent"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Grid x:Name="grid_wrap">
+                            <!-- Overlay mờ -->
+                            <Border x:Name="overlay"
+                            Background="Transparent"
+                            Opacity="0"
+                            CornerRadius="6"
+                            />
+
+                            <!-- Nội dung gốc của nút -->
+                            <Border Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}">
+                                <ContentPresenter HorizontalAlignment="Center"
+                                          VerticalAlignment="Center"/>
+                            </Border>
+                        </Grid>
+
+                        <ControlTemplate.Triggers>
+                            <!-- Khi hover → overlay mờ -->
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="overlay" Property="Background" Value="Black"/>
+                                <Setter TargetName="overlay" Property="Opacity" Value="0.2"/>
+                            </Trigger>
+
+                            <!-- Khi bị disable (ví dụ m muốn làm hiệu ứng cho nút khác) -->
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter TargetName="overlay" Property="Background" Value="Gray"/>
+                                <Setter TargetName="overlay" Property="Opacity" Value="0.4"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
         <local:IntGreaterThanZeroToVisibilityConverter x:Key="IntToVis"/>
         <local:SecondsToTimeConverter x:Key="SecondsToTimeConverter"/>
     </Window.Resources>
@@ -71,17 +112,17 @@
             <Grid  Background="White" VerticalAlignment="Bottom" Width="64" Margin="0,9,0,0" Grid.Row="1">
 
                 <StackPanel VerticalAlignment="Stretch"  Margin="0,32,0,10">
-                    <Button x:Name="btnSortNormal" Content="" Click="SortNormal_Click" Width="36" Height="36" Margin="0,6" ToolTip="Sắp xếp theo ID" FontWeight="Bold">
+                    <Button x:Name="btnSortNormal"  Style="{StaticResource OverlayButtonStyle}" Content="" Click="SortNormal_Click" Width="36" Height="36" Margin="0,6" ToolTip="Sắp xếp theo ID" FontWeight="Bold">
                         <Button.Background>
                             <ImageBrush ImageSource="/Views/Staff/icons8-sort-50.png"/>
                         </Button.Background>
                     </Button>
-                    <Button x:Name="btnSortIncrease" Content="" Click="SortIncrease_Click" Width="36" Height="36" Margin="0,6" ToolTip="Sắp xếp tăng dần theo thời gian còn lại" FontWeight="Bold">
+                    <Button x:Name="btnSortIncrease"  Style="{StaticResource OverlayButtonStyle}" Content="" Click="SortIncrease_Click" Width="36" Height="36" Margin="0,6" ToolTip="Sắp xếp tăng dần theo thời gian còn lại" FontWeight="Bold">
                         <Button.Background>
                             <ImageBrush ImageSource="/Views/Staff/icons8-sort-64 (1).png"/>
                         </Button.Background>
                     </Button>
-                    <Button x:Name="btnSortDecrease" Content="" Click="SortDecrease_Click" Width="36" Height="36" Margin="0,6" ToolTip="Sắp xếp giảm dần theo thời gian còn lại" FontWeight="Bold" BorderBrush="Black">
+                    <Button x:Name="btnSortDecrease"  Style="{StaticResource OverlayButtonStyle}" Content="" Click="SortDecrease_Click" Width="36" Height="36" Margin="0,6" ToolTip="Sắp xếp giảm dần theo thời gian còn lại" FontWeight="Bold" BorderBrush="{x:Null}">
                         <Button.Background>
                             <ImageBrush ImageSource="/Views/Staff/icons8-sort-64 (2).png"/>
                         </Button.Background>
@@ -100,18 +141,17 @@
                 <TextBlock x:Name="tbClockDayMonth" FontSize="11" Foreground="White" HorizontalAlignment="Center" TextAlignment="Center" />
                 <TextBlock x:Name="tbClockYear" FontSize="11" Foreground="White" HorizontalAlignment="Center" TextAlignment="Center" />
             </StackPanel>
-            <Grid Height="76" Margin="3,5,2,0" Width="63" Grid.Row="2">
+            <Grid Height="76" Margin="3,5,2,0" Width="63" Grid.Row="2" ToolTip="Đăng xuất">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition/>
-                    <ColumnDefinition Width="7*"/>
                 </Grid.ColumnDefinitions>
-                <Button x:Name="btnLogout" Content="" Click="BtnLogout_Click"
-                        Width="54" Height="60" HorizontalAlignment="Right" ToolTip="Log out" FontWeight="Bold" BorderBrush="{x:Null}" RenderTransformOrigin="0.5,0.5" Margin="0,5,6,0" VerticalAlignment="Top" Grid.ColumnSpan="2">
+                <Button x:Name="btnLogout" Style ="{StaticResource OverlayButtonStyle}" Content="" Click="BtnLogout_Click"
+                        Width="54" Height="60" HorizontalAlignment="Right" ToolTip="Đăng xuất" FontWeight="Bold" BorderBrush="{x:Null}" RenderTransformOrigin="0.5,0.5" Margin="0,5,6,0" VerticalAlignment="Top">
                     <Button.RenderTransform>
                         <TransformGroup>
                             <ScaleTransform/>
                             <SkewTransform/>
-                            <RotateTransform Angle="-1.406"/>
+                            <RotateTransform Angle="-0.166"/>
                             <TranslateTransform/>
                         </TransformGroup>
                     </Button.RenderTransform>
@@ -308,7 +348,7 @@
                     </Grid>
 
                     <Grid Grid.Column="5">
-                        <Button x:Name="btnAdd" Content=" "  VerticalAlignment="Top" Height="58" Click="btnAdd_Click" RenderTransformOrigin="0.542,0.586" BorderBrush="{x:Null}" HorizontalAlignment="Center" Width="69" Margin="0,-5,0,0">
+                        <Button x:Name="btnAdd" Content=" " Style="{StaticResource OverlayButtonStyle}" VerticalAlignment="Top" Height="58" Click="btnAdd_Click" RenderTransformOrigin="0.542,0.586" BorderBrush="{x:Null}" HorizontalAlignment="Center" Width="69" Margin="0,-5,0,0">
                             <Button.Background>
                                 <ImageBrush ImageSource="/Views/Staff/icons8-add-64.png"/>
                             </Button.Background>
@@ -316,7 +356,7 @@
                     </Grid>
 
                     <Grid Grid.Column="6">
-                        <Button x:Name="btnDelete" Content="" VerticalAlignment="Top" Height="59" Click="btnDelete_Click" BorderBrush="{x:Null}" HorizontalAlignment="Center" Width="59" Margin="0,-5,0,0">
+                        <Button x:Name="btnDelete" Content=""  Style="{StaticResource OverlayButtonStyle}" VerticalAlignment="Top" Height="59" Click="btnDelete_Click" BorderBrush="{x:Null}" HorizontalAlignment="Center" Width="59" Margin="0,-5,0,0">
                             <Button.Background>
                                 <ImageBrush ImageSource="/Views/Staff/icons8-delete-64.png"/>
                             </Button.Background>

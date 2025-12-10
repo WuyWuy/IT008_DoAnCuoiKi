@@ -631,7 +631,7 @@ namespace QuanLyCaPhe.Views.Staff
 
         private void cbOrder_TextChanged(object? sender, TextChangedEventArgs e)
         {
-            // Lấy TextBox từ sender
+            
     var tb = sender as System.Windows.Controls.TextBox;
             if (tb == null || cbOrder == null) return;
 
