@@ -1,0 +1,218 @@
+﻿<!-- 2. BIỂU ĐỒ PHÂN BỔ CHI PHÍ -->
+            <Grid Grid.Row="2" Margin="0,0,0,20">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <Border Grid.Column="0"
+                        Background="White" 
+                        CornerRadius="12"
+                        Padding="20"
+                        BorderBrush="#E5E7EB"
+                        BorderThickness="1"
+                        Effect="{StaticResource CardShadow}">
+                    <StackPanel>
+                        <TextBlock Text="💰 PHÂN BỔ CHI PHÍ"
+                                   FontSize="16" FontWeight="SemiBold"
+                                   Foreground="#374151"
+                                   Margin="0,0,0,15"/>
+
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+
+                            <lvc:PieChart Grid.Column="0"
+                                          Series="{Binding ExpenseBreakdownSeries}"
+                                          InnerRadius="100"
+                                          Hoverable="True"
+                                          Height="250">
+                                <lvc:PieChart.ChartLegend>
+                                    <lvc:DefaultLegend BulletSize="12" 
+                                                       Foreground="#374151"/>
+                                </lvc:PieChart.ChartLegend>
+                            </lvc:PieChart>
+
+                            <StackPanel Grid.Column="1" Margin="30,0,0,0">
+                                <TextBlock Text="TỔNG CHI PHÍ 6T" 
+                                           Foreground="#6B7280" FontSize="12"/>
+                                <TextBlock Text="31.65M ₫" 
+                                           Foreground="#111827"
+                                           FontSize="20" FontWeight="Bold"
+                                           Margin="0,5,0,15"/>
+
+                                <StackPanel>
+                                    <StackPanel Orientation="Horizontal" Margin="0,5">
+                                        <Rectangle Width="12" Height="12" Fill="#F97316" 
+                                                   VerticalAlignment="Center"/>
+                                        <TextBlock Text="Nguyên liệu: 13.3M ₫" 
+                                                   Margin="10,0,0,0"/>
+                                    </StackPanel>
+                                    <StackPanel Orientation="Horizontal" Margin="0,5">
+                                        <Rectangle Width="12" Height="12" Fill="#3B82F6" 
+                                                   VerticalAlignment="Center"/>
+                                        <TextBlock Text="Lương NV: 8.86M ₫" 
+                                                   Margin="10,0,0,0"/>
+                                    </StackPanel>
+                                    <StackPanel Orientation="Horizontal" Margin="0,5">
+                                        <Rectangle Width="12" Height="12" Fill="#10B981" 
+                                                   VerticalAlignment="Center"/>
+                                        <TextBlock Text="Mặt bằng: 4.75M ₫" 
+                                                   Margin="10,0,0,0"/>
+                                    </StackPanel>
+                                    <StackPanel Orientation="Horizontal" Margin="0,5">
+                                        <Rectangle Width="12" Height="12" Fill="#A855F7" 
+                                                   VerticalAlignment="Center"/>
+                                        <TextBlock Text="Điện nước: 2.53M ₫" 
+                                                   Margin="10,0,0,0"/>
+                                    </StackPanel>
+                                    <StackPanel Orientation="Horizontal" Margin="0,5">
+                                        <Rectangle Width="12" Height="12" Fill="#6B7280" 
+                                                   VerticalAlignment="Center"/>
+                                        <TextBlock Text="Khác: 2.21M ₫" 
+                                                   Margin="10,0,0,0"/>
+                                    </StackPanel>
+                                </StackPanel>
+                            </StackPanel>
+                        </Grid>
+                    </StackPanel>
+                </Border>
+            </Grid>
+
+            <!-- 3. BIỂU ĐỒ SẢN PHẨM BÁN CHẠY -->
+            <Border Grid.Row="3" 
+                    Background="White" 
+                    CornerRadius="12"
+                    Margin="0,0,0,20"
+                    Padding="20"
+                    BorderBrush="#E5E7EB"
+                    BorderThickness="1"
+                    Effect="{StaticResource CardShadow}">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <TextBlock Grid.Row="0"
+                               Text="🏆 TOP SẢN PHẨM BÁN CHẠY"
+                               FontSize="16" FontWeight="SemiBold"
+                               Foreground="#374151"
+                               Margin="0,0,0,15"/>
+
+                    <lvc:CartesianChart Grid.Row="1"
+                                        Series="{Binding TopProductsSeries}"
+                                        LegendLocation="None"
+                                        Hoverable="True"
+                                        Height="300">
+                        <lvc:CartesianChart.AxisX>
+                            <lvc:Axis LabelFormatter="{Binding CurrencyFormatter}"
+                                      Foreground="#6B7280"/>
+                        </lvc:CartesianChart.AxisX>
+                        <lvc:CartesianChart.AxisY>
+                            <lvc:Axis Labels="{Binding TopProductNames}" 
+                                      Foreground="#6B7280"/>
+                        </lvc:CartesianChart.AxisY>
+                    </lvc:CartesianChart>
+
+                    <!-- Stats row -->
+                    <StackPanel Grid.Row="2" Orientation="Horizontal" 
+                                Margin="0,15,0,0">
+                        <Border Background="#FEF3C7" CornerRadius="6" Padding="10">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="🔥" FontSize="16" Margin="0,0,5,0"/>
+                                <TextBlock Text="Cà phê đen bán chạy nhất: " 
+                                           Foreground="#92400E"/>
+                                <TextBlock Text="1,250 ly/6T" 
+                                           Foreground="#92400E" FontWeight="Bold"/>
+                            </StackPanel>
+                        </Border>
+
+                        <Border Background="#F0F9FF" CornerRadius="6" 
+                                Padding="10" Margin="10,0,0,0">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="📊" FontSize="16" Margin="0,0,5,0"/>
+                                <TextBlock Text="Tổng số ly bán: " 
+                                           Foreground="#0C4A6E"/>
+                                <TextBlock Text="5,400 ly" 
+                                           Foreground="#0C4A6E" FontWeight="Bold"/>
+                            </StackPanel>
+                        </Border>
+                    </StackPanel>
+                </Grid>
+            </Border>
+
+            <!-- 4. BIỂU ĐỒ DOANH THU THEO NGÀY -->
+            <Border Grid.Row="4" 
+                    Background="White" 
+                    CornerRadius="12"
+                    Padding="20"
+                    BorderBrush="#E5E7EB"
+                    BorderThickness="1"
+                    Effect="{StaticResource CardShadow}">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
+                    <StackPanel Grid.Row="0" Orientation="Horizontal" 
+                                Margin="0,0,0,15">
+                        <TextBlock Text="📅 DOANH THU THEO NGÀY TRONG TUẦN"
+                                   FontSize="16" FontWeight="SemiBold"
+                                   Foreground="#374151"/>
+                        <TextBlock Text="(Tuần gần nhất)"
+                                   FontSize="12" Foreground="#9CA3AF"
+                                   Margin="10,0,0,0" VerticalAlignment="Center"/>
+                    </StackPanel>
+
+                    <Grid Grid.Row="1">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+
+                        <lvc:CartesianChart Grid.Column="0"
+                                            Series="{Binding DailyRevenueSeries}"
+                                            LegendLocation="Top"
+                                            Hoverable="True"
+                                            Height="250">
+                            <lvc:CartesianChart.AxisX>
+                                <lvc:Axis Labels="{Binding WeekDays}" 
+                                          Foreground="#6B7280"/>
+                            </lvc:CartesianChart.AxisX>
+                            <lvc:CartesianChart.AxisY>
+                                <lvc:Axis LabelFormatter="{Binding CurrencyFormatter}"
+                                          Foreground="#6B7280"/>
+                            </lvc:CartesianChart.AxisY>
+                        </lvc:CartesianChart>
+
+                        <!-- Data table -->
+                        <DataGrid Grid.Column="1" Margin="30,0,0,0"
+                                  ItemsSource="{Binding WeeklyData}"
+                                  AutoGenerateColumns="False"
+                                  HeadersVisibility="Column"
+                                  BorderThickness="0"
+                                  Background="Transparent"
+                                  Width="350">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="Ngày" 
+                                                    Binding="{Binding Day}" 
+                                                    Width="80"/>
+                                <DataGridTextColumn Header="Doanh thu" 
+                                                    Binding="{Binding Revenue, StringFormat={}{0:N0} ₫}"
+                                                    Width="120"/>
+                                <DataGridTextColumn Header="Số khách" 
+                                                    Binding="{Binding Customers}"
+                                                    Width="80"/>
+                                <DataGridTextColumn Header="Hóa đơn TB" 
+                                                    Binding="{Binding AverageBill, StringFormat={}{0:N0} ₫}"
+                                                    Width="120"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </Grid>
+                </Grid>
+            </Border>

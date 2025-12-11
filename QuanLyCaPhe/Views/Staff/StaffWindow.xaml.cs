@@ -1,4 +1,7 @@
-﻿using System.Collections.ObjectModel;
+﻿
+using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Windows;
 using System.Windows.Controls;
@@ -6,6 +9,11 @@ using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Threading;
 using System.Linq;
+using QuanLyCaPhe.Views.Login;
+using System.Text;
+using System.ComponentModel;
+using System.IO;
+using System.Text.Json;
 
 namespace QuanLyCaPhe.Views.Staff
 {
@@ -57,23 +65,39 @@ namespace QuanLyCaPhe.Views.Staff
             }
         }
 
+        private record TableState(int Id, string Name, string Status, DateTime? EndTimeUtc);
+
         public List<Drink> Drinks { get; private set; }
         public ObservableCollection<OrderItem> OrderList { get; private set; }
         public ObservableCollection<Table> Tables { get; private set; }
 
         private readonly DispatcherTimer _dispatcherTimer;
+        private readonly DispatcherTimer _clockTimer;
         private readonly bool[] _idUsed = new bool[35];
-        private int _currentSum = 0;                  
-        private int _selectedHourPrice = 0;          
+        private int _currentSum = 0;
+        private int _selectedHourPrice = 0;
 
         private static readonly CultureInfo VietCulture = new CultureInfo("vi-VN");
         private const int MaxIds = 35;
 
+        private List<Drink> _allDrinks;
+
+        private readonly string _tablesStatePath;
+
         public StaffWindow()
         {
             InitializeComponent();
+            this.Loaded += StaffWindow_Loaded;
+            this.Closing += StaffWindow_Closing;
+
+            // choose a persistent path in AppData
+            var appData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+            var folder = Path.Combine(appData, "QuanLyCaPhe");
+            Directory.CreateDirectory(folder);
+            _tablesStatePath = Path.Combine(folder, "tables.json");
 
             InitializeDrinks();
+            _allDrinks = Drinks;
             InitializeTables();
 
             lbTables.ItemsSource = Tables;
@@ -85,7 +109,8 @@ namespace QuanLyCaPhe.Views.Staff
             OrderList = new ObservableCollection<OrderItem>();
             dtgdOrder.ItemsSource = OrderList;
 
-            cbOrder.SelectedIndex = 0;
+            // do not pre-select first item
+            cbOrder.SelectedIndex = -1;
 
             SelectFirstFreeTable();
 
@@ -96,43 +121,62 @@ namespace QuanLyCaPhe.Views.Staff
             _dispatcherTimer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(1) };
             _dispatcherTimer.Tick += DispatcherTimer_Tick;
             _dispatcherTimer.Start();
+
+            // clock timer
+            _clockTimer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(1) };
+            _clockTimer.Tick += ClockTimer_Tick;
+            _clockTimer.Start();
+
+            // set initial clock text
+            UpdateClock();
         }
 
-        private void InitializeDrinks()
+        private void StaffWindow_Closing(object? sender, CancelEventArgs e)
         {
-            Drinks = new List<Drink>
-            {
-                new() { Id = 1,  Name = "Cà phê đen",         Price = 15000 },
-                new() { Id = 2,  Name = "Cà phê sữa",         Price = 17000 },
-                new() { Id = 3,  Name = "Cà phê muối",        Price = 20000 },
-                new() { Id = 4,  Name = "Soda dâu",           Price = 23000 },
-                new() { Id = 5,  Name = "Soda việt quất",     Price = 25000 },
-                new() { Id = 6,  Name = "Soda chanh",         Price = 20000 },
-                new() { Id = 7,  Name = "Nước ép cam",        Price = 18000 },
-                new() { Id = 8,  Name = "Nước ép dưa hấu",   Price = 20000 },
-                new() { Id = 9,  Name = "Nước ép chanh",      Price = 15000 },
-                new() { Id = 10, Name = "Matcha đá xay",      Price = 20000 },
-                new() { Id = 11, Name = "Cookie đá xay",      Price = 25000 },
-                new() { Id = 12, Name = "Matcha latte",       Price = 23000 }
-            };
+            // stop timers and save the table state
+            try { _dispatcherTimer?.Stop(); } catch { }
+            try { _clockTimer?.Stop(); } catch { }
+            SaveTablesState();
         }
 
-        private void InitializeTables()
+        private void ClockTimer_Tick(object? sender, EventArgs e)
         {
-            Tables = new ObservableCollection<Table>(
-                Enumerable.Range(1, 12).Select(i => new Table { Id = i, Name = $"Bàn {i}" })
-            );
+            UpdateClock();
         }
+
+        private void UpdateClock()
+        {
+            var now = DateTime.Now;
+            //24-hour time HH:mm
+            if (tbClockTime != null) tbClockTime.Text = now.ToString("HH:mm");
+            // day-month without 'thg'
+            if (tbClockDayMonth != null) tbClockDayMonth.Text = now.ToString("dd-MM");
+            // year
+            if (tbClockYear != null) tbClockYear.Text = now.ToString("yyyy");
+        }
+
         private void DispatcherTimer_Tick(object? sender, EventArgs e)
         {
             foreach (var t in Tables)
             {
-                if (t.Countdown > 0)
+                if (t.EndTimeUtc.HasValue)
                 {
-                    t.Countdown--;
-                    if (t.Countdown == 0)
+                    var remaining = (int)Math.Max(0, (t.EndTimeUtc.Value - DateTime.UtcNow).TotalSeconds);
+                    t.Countdown = remaining;
+                    if (remaining == 0)
                     {
+                        t.EndTimeUtc = null;
                         t.Status = "Free";
+                    }
+                }
+                else
+                {
+                    // keep existing countdown if any; ensure consistency
+                    if (t.Countdown > 0)
+                    {
+                        // fallback decrement (shouldn't be necessary if EndTimeUtc used)
+                        t.Countdown = Math.Max(0, t.Countdown - 1);
+                        if (t.Countdown == 0) t.Status = "Free";
                     }
                 }
             }
@@ -201,13 +245,22 @@ namespace QuanLyCaPhe.Views.Staff
             }
 
             var oldStatus = source.Status;
-            var oldCountdown = source.Countdown;
+            var oldEnd = source.EndTimeUtc;
 
             source.Status = "Free";
+            source.EndTimeUtc = null;
             source.Countdown = 0;
 
             target.Status = oldStatus;
-            target.Countdown = oldCountdown;
+            target.EndTimeUtc = oldEnd;
+            if (oldEnd.HasValue)
+            {
+                target.Countdown = (int)Math.Max(0, (oldEnd.Value - DateTime.UtcNow).TotalSeconds);
+            }
+            else
+            {
+                target.Countdown = 0;
+            }
 
             foreach (var t in Tables.Where(t => t.Id != target.Id))
             {
@@ -229,6 +282,51 @@ namespace QuanLyCaPhe.Views.Staff
 
             tbTableNumber.Text = table.Id.ToString();
             PopulateSwapCombo();
+        }
+
+        // Sorting handlers for the left-side N / I / D buttons
+        private void SortNormal_Click(object sender, RoutedEventArgs e)
+        {
+            int previouslySelectedId = -1;
+            if (lbTables.SelectedItem is Table sel) previouslySelectedId = sel.Id;
+
+            Tables = new ObservableCollection<Table>(Tables.OrderBy(t => t.Id));
+            lbTables.ItemsSource = Tables;
+
+            if (previouslySelectedId != -1)
+            {
+                lbTables.SelectedItem = Tables.FirstOrDefault(t => t.Id == previouslySelectedId);
+            }
+        }
+
+        private void SortIncrease_Click(object sender, RoutedEventArgs e)
+        {
+            int previouslySelectedId = -1;
+            if (lbTables.SelectedItem is Table sel) previouslySelectedId = sel.Id;
+
+            // sort by countdown (increasing), then by id to keep deterministic order
+            Tables = new ObservableCollection<Table>(Tables.OrderBy(t => t.Countdown).ThenBy(t => t.Id));
+            lbTables.ItemsSource = Tables;
+
+            if (previouslySelectedId != -1)
+            {
+                lbTables.SelectedItem = Tables.FirstOrDefault(t => t.Id == previouslySelectedId);
+            }
+        }
+
+        private void SortDecrease_Click(object sender, RoutedEventArgs e)
+        {
+            int previouslySelectedId = -1;
+            if (lbTables.SelectedItem is Table sel) previouslySelectedId = sel.Id;
+
+            // sort by countdown (decreasing), then by id to keep deterministic order
+            Tables = new ObservableCollection<Table>(Tables.OrderByDescending(t => t.Countdown).ThenBy(t => t.Id));
+            lbTables.ItemsSource = Tables;
+
+            if (previouslySelectedId != -1)
+            {
+                lbTables.SelectedItem = Tables.FirstOrDefault(t => t.Id == previouslySelectedId);
+            }
         }
 
         private void Table_Click(object sender, RoutedEventArgs e)
@@ -266,6 +364,7 @@ namespace QuanLyCaPhe.Views.Staff
                 if (res == MessageBoxResult.Yes)
                 {
                     table.Status = "Free";
+                    table.EndTimeUtc = null;
                     table.Countdown = 0;
 
                     lbTables.SelectedItem = table;
@@ -398,6 +497,7 @@ namespace QuanLyCaPhe.Views.Staff
         {
             if (iudAmmount.Value <= 0) iudAmmount.Value = 1;
         }
+
         private void Button_Click_1(object sender, RoutedEventArgs e)
         {
             var selectedTable = lbTables.SelectedItem as Table;
@@ -416,7 +516,10 @@ namespace QuanLyCaPhe.Views.Staff
                 if (_selectedHourPrice > 0)
                 {
                     int hours = GetSelectedHoursFromRadioButtons();
-                    selectedTable.Countdown += hours * 3600;
+                    // extend existing end time or set a new one
+                    var baseTime = selectedTable.EndTimeUtc ?? DateTime.UtcNow;
+                    selectedTable.EndTimeUtc = baseTime.AddHours(hours);
+                    selectedTable.Countdown = (int)Math.Max(0, (selectedTable.EndTimeUtc.Value - DateTime.UtcNow).TotalSeconds);
                     selectedTable.Status = "Busy";
 
                     ClearHourSelection();
@@ -446,7 +549,8 @@ namespace QuanLyCaPhe.Views.Staff
             if (selectedTable != null)
             {
                 int hours = GetSelectedHoursFromRadioButtons();
-                selectedTable.Countdown = Math.Max(0, hours) * 3600;
+                selectedTable.EndTimeUtc = DateTime.UtcNow.AddHours(Math.Max(0, hours));
+                selectedTable.Countdown = (int)Math.Max(0, (selectedTable.EndTimeUtc.Value - DateTime.UtcNow).TotalSeconds);
                 selectedTable.Status = "Busy";
             }
 
@@ -528,6 +632,147 @@ namespace QuanLyCaPhe.Views.Staff
             public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
             {
                 throw new NotImplementedException();
+            }
+        }
+
+        private void BtnLogout_Click(object sender, RoutedEventArgs e)
+        {
+            // stop background timers
+            try { _dispatcherTimer?.Stop(); } catch { }
+            try { _clockTimer?.Stop(); } catch { }
+
+            var login = new QuanLyCaPhe.Views.Login.LoginWindow();
+            login.Show();
+            this.Close();
+        }
+
+        private void StaffWindow_Loaded(object sender, RoutedEventArgs e)
+        {
+            // attach to editable TextBox inside ComboBox
+            var textBox = cbOrder.Template.FindName("PART_EditableTextBox", cbOrder) as System.Windows.Controls.TextBox;
+            if (textBox != null)
+            {
+                textBox.TextChanged += cbOrder_TextChanged;
+            }
+        }
+
+        private static string RemoveDiacritics(string text)
+        {
+            if (string.IsNullOrEmpty(text)) return text;
+            var normalized = text.Normalize(NormalizationForm.FormD);
+            var sb = new StringBuilder();
+            foreach (var ch in normalized)
+            {
+                var uc = System.Globalization.CharUnicodeInfo.GetUnicodeCategory(ch);
+                if (uc != System.Globalization.UnicodeCategory.NonSpacingMark)
+                    sb.Append(ch);
+            }
+            return sb.ToString().Normalize(NormalizationForm.FormC);
+        }
+
+        private void cbOrder_TextChanged(object? sender, TextChangedEventArgs e)
+        {
+            if (cbOrder == null) return;
+            var tb = sender as System.Windows.Controls.TextBox;
+            var text = tb?.Text ?? string.Empty;
+            var words = text.Split(new[] { ' ' }, System.StringSplitOptions.RemoveEmptyEntries)
+            .Select(w => w.Trim())
+            .Where(w => w.Length > 0)
+            .ToArray();
+
+            IEnumerable<Drink> items = _allDrinks ?? new List<Drink>();
+            if (words.Length > 0)
+            {
+                var normalizedWords = words.Select(w => RemoveDiacritics(w).ToLowerInvariant()).ToArray();
+                items = _allDrinks.Where(d =>
+                {
+                    var nameNorm = RemoveDiacritics(d.Name).ToLowerInvariant();
+                    return normalizedWords.All(w => nameNorm.IndexOf(w, StringComparison.Ordinal) >= 0);
+                });
+            }
+
+            cbOrder.ItemsSource = items.ToList();
+            cbOrder.DisplayMemberPath = nameof(Drink.Name);
+            cbOrder.SelectedValuePath = nameof(Drink.Id);
+            cbOrder.IsDropDownOpen = true;
+
+            // ensure the editable TextBox does not select the typed character
+            var editableTb = sender as System.Windows.Controls.TextBox;
+            if (editableTb != null)
+            {
+                editableTb.SelectionStart = editableTb.Text.Length;
+                editableTb.SelectionLength = 0;
+                editableTb.CaretIndex = editableTb.Text.Length;
+            }
+        }
+
+        private void InitializeDrinks()
+        {
+            Drinks = new List<Drink>
+            {
+                new() { Id =1, Name = "Cà phê đen", Price =15000 },
+                new() { Id =2, Name = "Cà phê sữa", Price =17000 },
+                new() { Id =3, Name = "Cà phê muối", Price =20000 },
+                new() { Id =4, Name = "Soda dâu", Price =23000 },
+                new() { Id =5, Name = "Soda việt quất", Price =25000 },
+                new() { Id =6, Name = "Soda chanh", Price =20000 },
+                new() { Id =7, Name = "Nước ép cam", Price =18000 },
+                new() { Id =8, Name = "Nước ép dưa hấu", Price =20000 },
+                new() { Id =9, Name = "Nước ép chanh", Price =15000 },
+                new() { Id =10, Name = "Matcha đá xay", Price =20000 },
+                new() { Id =11, Name = "Cookie đá xay", Price =25000 },
+                new() { Id =12, Name = "Matcha latte", Price =23000 }
+            };
+        }
+
+        private void InitializeTables()
+        {
+            // try to load persisted state; if not present create defaults
+            if (File.Exists(_tablesStatePath))
+            {
+                try
+                {
+                    var json = File.ReadAllText(_tablesStatePath);
+                    var states = JsonSerializer.Deserialize<List<TableState>>(json);
+                    if (states != null && states.Count > 0)
+                    {
+                        Tables = new ObservableCollection<Table>(
+                            states.Select(s =>
+                            {
+                                var t = new Table { Id = s.Id, Name = s.Name, Status = s.Status, EndTimeUtc = s.EndTimeUtc };
+                                if (s.EndTimeUtc.HasValue)
+                                    t.Countdown = (int)Math.Max(0, (s.EndTimeUtc.Value - DateTime.UtcNow).TotalSeconds);
+                                else
+                                    t.Countdown = 0;
+                                return t;
+                            }).OrderBy(t => t.Id)
+                        );
+                        return;
+                    }
+                }
+                catch
+                {
+                    // ignore and fall back to default layout
+                }
+            }
+
+            // default: 12 tables
+            Tables = new ObservableCollection<Table>(
+                Enumerable.Range(1, 12).Select(i => new Table { Id = i, Name = $"Bàn {i}", Status = "Free", Countdown = 0 })
+            );
+        }
+
+        private void SaveTablesState()
+        {
+            try
+            {
+                var states = Tables.Select(t => new TableState(t.Id, t.Name ?? $"Bàn {t.Id}", t.Status, t.EndTimeUtc)).ToList();
+                var json = JsonSerializer.Serialize(states, new JsonSerializerOptions { WriteIndented = true });
+                File.WriteAllText(_tablesStatePath, json);
+            }
+            catch
+            {
+                // do not crash on exit; could log if you add logging
             }
         }
     }
