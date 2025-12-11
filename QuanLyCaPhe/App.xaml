@@ -3,7 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="clr-namespace:QuanLyCaPhe"
              xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
-             StartupUri="Views/Admin/AdminWindow.xaml">
+             StartupUri="Views/Staff/StaffWindow.xaml">
     <Application.Resources>
         <ResourceDictionary>
             
