@@ -15,6 +15,7 @@
                 <ResourceDictionary Source="/Resources/Styles/DataGridStyles.xaml"/>
                 <ResourceDictionary Source="/Resources/Styles/HoverBorderAnimation.xaml"/>
                 <ResourceDictionary Source="/Resources/Styles/ProfitStyles.xaml"/>
+                <ResourceDictionary Source="/Resources/Styles/StaffWindowStyle.xaml"/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>
