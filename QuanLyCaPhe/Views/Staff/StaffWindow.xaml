@@ -6,37 +6,9 @@
         xmlns:local="clr-namespace:QuanLyCaPhe"
         xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
         mc:Ignorable="d"
-        Title="Quản lý quán cà phê" Height="450" Width="800" Background="White">
+        Title="Quản lý quán cà phê" Height="450" Width="" Background="White">
 
     <Window.Resources>
-        <Style x:Key="TableButtonStyle" TargetType="Button">
-            <!-- use Min sizes so buttons can expand to fill grid cells -->
-            <Setter Property="MinHeight" Value="50"/>
-            <Setter Property="MinWidth" Value="50"/>
-            <!-- moderate margin -->
-            <Setter Property="Margin" Value="8"/>
-            <Setter Property="Background" Value="LightGray"/>
-            <Setter Property="Foreground" Value="Black"/>
-            <Setter Property="BorderBrush" Value="Gray"/>
-            <Style.Triggers>
-                <DataTrigger Binding="{Binding Status}" Value="Selected">
-                    <Setter Property="Background" Value="#2196F3"/>
-                    <Setter Property="Foreground" Value="White"/>
-                    <Setter Property="BorderBrush" Value="#1976D2"/>
-                </DataTrigger>
-                <DataTrigger Binding="{Binding Status}" Value="Busy">
-                    <Setter Property="Background" Value="Crimson"/>
-                    <Setter Property="Foreground" Value="White"/>
-                    <Setter Property="BorderBrush" Value="#B22222"/>
-                </DataTrigger>
-                <DataTrigger Binding="{Binding Status}" Value="Selected Busy">
-                    <Setter Property="Background" Value="Orange"/>
-                    <Setter Property="Foreground" Value="White"/>
-                    <Setter Property="BorderBrush" Value="DarkOrange"/>
-                </DataTrigger>
-            </Style.Triggers>
-        </Style>
-
         <Style x:Key="OverlayButtonStyle" TargetType="Button">
             <Setter Property="Background" Value="Transparent"/>
             <Setter Property="BorderBrush" Value="Transparent"/>
@@ -77,7 +49,6 @@
                 </Setter.Value>
             </Setter>
         </Style>
-
         <local:IntGreaterThanZeroToVisibilityConverter x:Key="IntToVis"/>
         <local:SecondsToTimeConverter x:Key="SecondsToTimeConverter"/>
     </Window.Resources>
@@ -95,9 +66,6 @@
         </Grid.ColumnDefinitions>
 
         <!-- LEFT PANE: narrow button column + content column with nested grids -->
-
-        <!-- LEFT PANE: narrow button column + content column with nested grids -->
-        <!-- LEFT PANE: narrow button column + content column with nested grids -->
         <Grid Margin="0,0,0,-1" Background="#FF067B80" Grid.RowSpan="2" HorizontalAlignment="Left" Width="68" Grid.Column="1">
             <Grid.RowDefinitions>
                 <!-- sort buttons -->
@@ -114,17 +82,17 @@
                 <StackPanel VerticalAlignment="Stretch"  Margin="0,32,0,10">
                     <Button x:Name="btnSortNormal"  Style="{StaticResource OverlayButtonStyle}" Content="" Click="SortNormal_Click" Width="36" Height="36" Margin="0,6" ToolTip="Sắp xếp theo ID" FontWeight="Bold">
                         <Button.Background>
-                            <ImageBrush ImageSource="/Views/Staff/icons8-sort-50.png"/>
+                            <ImageBrush ImageSource="/Resources/Images/coffee-cup.png"/>
                         </Button.Background>
                     </Button>
                     <Button x:Name="btnSortIncrease"  Style="{StaticResource OverlayButtonStyle}" Content="" Click="SortIncrease_Click" Width="36" Height="36" Margin="0,6" ToolTip="Sắp xếp tăng dần theo thời gian còn lại" FontWeight="Bold">
                         <Button.Background>
-                            <ImageBrush ImageSource="/Views/Staff/icons8-sort-64 (1).png"/>
+                            <ImageBrush ImageSource="/Resources/Images/coffee-cup.png"/>
                         </Button.Background>
                     </Button>
                     <Button x:Name="btnSortDecrease"  Style="{StaticResource OverlayButtonStyle}" Content="" Click="SortDecrease_Click" Width="36" Height="36" Margin="0,6" ToolTip="Sắp xếp giảm dần theo thời gian còn lại" FontWeight="Bold" BorderBrush="{x:Null}">
                         <Button.Background>
-                            <ImageBrush ImageSource="/Views/Staff/icons8-sort-64 (2).png"/>
+                            <ImageBrush ImageSource="/Resources/Images/coffee-cup.png"/>
                         </Button.Background>
                     </Button>
                 </StackPanel>
@@ -156,7 +124,7 @@
                         </TransformGroup>
                     </Button.RenderTransform>
                     <Button.Background>
-                        <ImageBrush ImageSource="/Views/Staff/icons8-log-out-64.png"/>
+                        <ImageBrush ImageSource="/Resources/Images/coffee-cup.png"/>
                     </Button.Background>
                 </Button>
             </Grid>
@@ -171,7 +139,7 @@
                 <TextBlock HorizontalAlignment="Left" Height="86" TextWrapping="Wrap" VerticalAlignment="Top" Width="180" Foreground="White" FontSize="30" FontWeight="Bold" Margin="10,0,0,0"><Run Text="Quản lý "/><LineBreak/><Run Text="quán cà phê"/></TextBlock>
                 <Grid HorizontalAlignment="Left" Height="75" Margin="195,5,0,0" VerticalAlignment="Top" Width="90" RenderTransformOrigin="1.786,0.273">
                     <Grid.Background>
-                        <ImageBrush ImageSource="/Views/Staff/icons8-coffee-script-48.png"/>
+                        <ImageBrush ImageSource="/Resources/Images/coffee-cup.png"/>
                     </Grid.Background>
                 </Grid>
             </Grid>
@@ -217,37 +185,15 @@
                     </Grid.ColumnDefinitions>
                     <!-- ListBox fills available space and uses a UniformGrid so items size uniformly to fill area -->
                     <ListBox x:Name="lbTables"
-                             BorderThickness="0"
-                             Focusable="False"
-                             SelectionMode="Single"
-                             VerticalContentAlignment="Stretch"
-                             HorizontalContentAlignment="Stretch"
-                             Padding="0"
-                             ScrollViewer.VerticalScrollBarVisibility="Auto"
-                             ScrollViewer.HorizontalScrollBarVisibility="Disabled" Background="{x:Null}" Margin="0,0,0,10">
-                        <ListBox.ItemsPanel>
-                            <ItemsPanelTemplate>
-                                <!-- make UniformGrid stretch to fill the host width (do not bind to ActualWidth) -->
-                                <UniformGrid Columns="3" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
-                            </ItemsPanelTemplate>
-                        </ListBox.ItemsPanel>
-
-                        <ListBox.ItemContainerStyle>
-                            <Style TargetType="{x:Type ListBoxItem}">
-                                <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
-                                <Setter Property="VerticalContentAlignment" Value="Stretch"/>
-                                <Setter Property="Padding" Value="0"/>
-                                <Setter Property="Margin" Value="0"/>
-                            </Style>
-                        </ListBox.ItemContainerStyle>
+                             ItemsSource="{Binding DanhSachBan}"
+                             Style="{StaticResource CafeTableListBoxStyle}" d:ItemsSource="{d:SampleData ItemCount=5}">
 
                         <ListBox.ItemTemplate>
                             <DataTemplate>
-                                <!-- make the button stretch to fill its ListBoxItem cell -->
                                 <Button Tag="{Binding Id}"
                                         Click="Table_Click"
                                         PreviewMouseLeftButtonDown="Table_PreviewMouseLeftButtonDown"
-                                        Style="{StaticResource TableButtonStyle}"
+                                        Style="{StaticResource TableCardButtonStyle}"
                                         HorizontalAlignment="Stretch"
                                         VerticalAlignment="Stretch">
                                     <StackPanel HorizontalAlignment="Center">
@@ -255,11 +201,11 @@
                                         <StackPanel.Background>
                                             <ImageBrush/>
                                         </StackPanel.Background>
-                                        <Image Source="/Views/Staff/coffee-cup.png"
-                                        Width="24"
-                                        Height="24"
-                                        Margin="0,0,0,4"
-                                        Stretch="Uniform" HorizontalAlignment="Center" />
+                                        <Image Source="/Resources/Images/coffee-cup.png"
+                                               Width="24"
+                                               Height="24"
+                                               Margin="0,0,0,4"
+                                               Stretch="Uniform" HorizontalAlignment="Center" />
                                         <TextBlock Text="{Binding Name}" HorizontalAlignment="Center" FontWeight="SemiBold"/>
                                         <TextBlock Text="{Binding Countdown, Converter={StaticResource SecondsToTimeConverter}}"
                                                    HorizontalAlignment="Center" FontSize="11"
@@ -268,6 +214,7 @@
                                 </Button>
                             </DataTemplate>
                         </ListBox.ItemTemplate>
+
                     </ListBox>
                 </Grid>
             </Grid>
@@ -350,7 +297,7 @@
                     <Grid Grid.Column="5">
                         <Button x:Name="btnAdd" Content=" " Style="{StaticResource OverlayButtonStyle}" VerticalAlignment="Top" Height="58" Click="btnAdd_Click" RenderTransformOrigin="0.542,0.586" BorderBrush="{x:Null}" HorizontalAlignment="Center" Width="69" Margin="0,-5,0,0">
                             <Button.Background>
-                                <ImageBrush ImageSource="/Views/Staff/icons8-add-64.png"/>
+                                <ImageBrush ImageSource="/Resources/Images/coffee-cup.png"/>
                             </Button.Background>
                         </Button>
                     </Grid>
@@ -358,7 +305,7 @@
                     <Grid Grid.Column="6">
                         <Button x:Name="btnDelete" Content=""  Style="{StaticResource OverlayButtonStyle}" VerticalAlignment="Top" Height="59" Click="btnDelete_Click" BorderBrush="{x:Null}" HorizontalAlignment="Center" Width="59" Margin="0,-5,0,0">
                             <Button.Background>
-                                <ImageBrush ImageSource="/Views/Staff/icons8-delete-64.png"/>
+                                <ImageBrush ImageSource="/Resources/Images/coffee-cup.png"/>
                             </Button.Background>
                         </Button>
                     </Grid>
@@ -369,7 +316,8 @@
                 <DataGrid x:Name="dtgdOrder"
                           AutoGenerateColumns="False"
                           IsReadOnly="True"
-                          ColumnWidth="*">
+                          ColumnWidth="*"
+                          Style="{StaticResource CardStyleDataGridStyle}">
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="ID" Binding="{Binding ID}" Width="50" />
                         <DataGridTextColumn Header="Món" Binding="{Binding Mon}" />
