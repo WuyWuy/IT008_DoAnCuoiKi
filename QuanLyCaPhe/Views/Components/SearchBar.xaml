@@ -3,15 +3,19 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              Height="auto" >
     <Grid>
-        <StackPanel Orientation="Horizontal">
-            <TextBox x:Name="Searchtb" Style="{StaticResource SearchBarStyle }"/>
-            <Button x:Name="Searchbtn" Style="{StaticResource SearchButtonStyle}">
-                <StackPanel Orientation="Horizontal">
-                    <Image Source="/Resources/Images/LuomXX.png" Height="14" Margin="0, 0, 7, 0"/>
-                    <TextBlock Text="Tìm Kiếm"/>
-                </StackPanel>
-            </Button>
-        </StackPanel>
-
+        <Border>
+            <StackPanel Orientation="Horizontal">
+                <TextBox x:Name="Searchtb" Style="{StaticResource SearchBarStyle}" FontSize="14"/>
+                <Button x:Name="Searchbtn" Style="{StaticResource SearchButtonStyle}" Padding="5">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="&#xE721;" FontFamily="Segoe MDL2 Assets"
+                       Foreground="White" 
+                       Height="14"  
+                       Margin="0, 2, 2, 0"/>
+                        <TextBlock Text="Tìm kiếm"/>
+                    </StackPanel>
+                </Button>
+            </StackPanel>
+        </Border>
     </Grid>
 </UserControl>

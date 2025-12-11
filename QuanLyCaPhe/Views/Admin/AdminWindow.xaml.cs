@@ -22,6 +22,11 @@ namespace QuanLyCaPhe.Views.Admin
         public AdminWindow()
         {
             InitializeComponent();
+            Loaded += AdminWindow_Loaded;
+        }
+
+        private void AdminWindow_Loaded(object sender, RoutedEventArgs e)
+        {
             MainFrame.Navigate(new HomePage());
         }
 
@@ -63,6 +68,21 @@ namespace QuanLyCaPhe.Views.Admin
         private void Sidebar_MouseLeave(object sender, MouseEventArgs e)
         {
             //Sidebar.Visibility = Visibility.Visible;
+        }
+
+        private void Suplybtn_Click(object sender, RoutedEventArgs e)
+        {
+            MainFrame.Navigate(new SuppliesPage());
+        }
+
+        private void Billbtn_Click(object sender, RoutedEventArgs e)
+        {
+            MainFrame.Navigate(new BillsPage());
+        }
+
+        private void Menubtn_Click(object sender, RoutedEventArgs e)
+        {
+            Sidebar.Visibility = (Sidebar.Visibility == Visibility.Visible) ? Visibility.Collapsed : Visibility.Visible;
         }
     }
 }

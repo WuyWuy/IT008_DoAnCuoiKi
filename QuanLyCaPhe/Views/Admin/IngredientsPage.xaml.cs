@@ -61,7 +61,22 @@ namespace QuanLyCaPhe.Views.Admin
                 new Ingredients { Id = 20, IngName = "Siro vanilla", Unit = "chai", Quantity = 9f }
             };
 
-            Productsdg.ItemsSource = IngredientList;
+            Ingedientsdg.ItemsSource = IngredientList;
+        }
+
+        private void BtnEdit_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void BtnDelete_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void BtnAdd_Click(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }

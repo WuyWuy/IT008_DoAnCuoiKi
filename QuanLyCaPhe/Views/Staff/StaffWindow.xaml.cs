@@ -62,6 +62,8 @@ namespace QuanLyCaPhe.Views.Staff
             }
         }
 
+        private record TableState(int Id, string Name, string Status, DateTime? EndTimeUtc);
+
         public List<Drink> Drinks { get; private set; }
         public ObservableCollection<OrderItem> OrderList { get; private set; }
         public ObservableCollection<Table> Tables { get; private set; }
@@ -140,12 +142,24 @@ namespace QuanLyCaPhe.Views.Staff
         {
             foreach (var t in Tables)
             {
-                if (t.Countdown > 0)
+                if (t.EndTimeUtc.HasValue)
                 {
-                    t.Countdown--;
-                    if (t.Countdown == 0)
+                    var remaining = (int)Math.Max(0, (t.EndTimeUtc.Value - DateTime.UtcNow).TotalSeconds);
+                    t.Countdown = remaining;
+                    if (remaining == 0)
                     {
+                        t.EndTimeUtc = null;
                         t.Status = "Free";
+                    }
+                }
+                else
+                {
+                    // keep existing countdown if any; ensure consistency
+                    if (t.Countdown > 0)
+                    {
+                        // fallback decrement (shouldn't be necessary if EndTimeUtc used)
+                        t.Countdown = Math.Max(0, t.Countdown - 1);
+                        if (t.Countdown == 0) t.Status = "Free";
                     }
                 }
             }
@@ -214,13 +228,22 @@ namespace QuanLyCaPhe.Views.Staff
             }
 
             var oldStatus = source.Status;
-            var oldCountdown = source.Countdown;
+            var oldEnd = source.EndTimeUtc;
 
             source.Status = "Free";
+            source.EndTimeUtc = null;
             source.Countdown = 0;
 
             target.Status = oldStatus;
-            target.Countdown = oldCountdown;
+            target.EndTimeUtc = oldEnd;
+            if (oldEnd.HasValue)
+            {
+                target.Countdown = (int)Math.Max(0, (oldEnd.Value - DateTime.UtcNow).TotalSeconds);
+            }
+            else
+            {
+                target.Countdown = 0;
+            }
 
             foreach (var t in Tables.Where(t => t.Id != target.Id))
             {
@@ -324,6 +347,7 @@ namespace QuanLyCaPhe.Views.Staff
                 if (res == MessageBoxResult.Yes)
                 {
                     table.Status = "Free";
+                    table.EndTimeUtc = null;
                     table.Countdown = 0;
 
                     lbTables.SelectedItem = table;
@@ -479,7 +503,10 @@ namespace QuanLyCaPhe.Views.Staff
                 if (_selectedHourPrice > 0)
                 {
                     int hours = GetSelectedHoursFromRadioButtons();
-                    selectedTable.Countdown += hours * 3600;
+                    // extend existing end time or set a new one
+                    var baseTime = selectedTable.EndTimeUtc ?? DateTime.UtcNow;
+                    selectedTable.EndTimeUtc = baseTime.AddHours(hours);
+                    selectedTable.Countdown = (int)Math.Max(0, (selectedTable.EndTimeUtc.Value - DateTime.UtcNow).TotalSeconds);
                     selectedTable.Status = "Busy";
 
                     ClearHourSelection();
@@ -509,7 +536,8 @@ namespace QuanLyCaPhe.Views.Staff
             if (selectedTable != null)
             {
                 int hours = GetSelectedHoursFromRadioButtons();
-                selectedTable.Countdown = Math.Max(0, hours) * 3600;
+                selectedTable.EndTimeUtc = DateTime.UtcNow.AddHours(Math.Max(0, hours));
+                selectedTable.Countdown = (int)Math.Max(0, (selectedTable.EndTimeUtc.Value - DateTime.UtcNow).TotalSeconds);
                 selectedTable.Status = "Busy";
             }
 

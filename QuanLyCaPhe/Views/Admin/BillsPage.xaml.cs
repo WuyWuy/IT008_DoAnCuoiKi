@@ -16,14 +16,28 @@ using System.Windows.Shapes;
 namespace QuanLyCaPhe.Views.Admin
 {
     /// <summary>
-    /// Interaction logic for ProfitPage.xaml
+    /// Interaction logic for BillsPage.xaml
     /// </summary>
-    public partial class ProfitPage : Page
+    public partial class BillsPage : Page
     {
-        public ProfitPage()
+        public BillsPage()
         {
             InitializeComponent();
-            ChartFrame.Navigate(new ProfitChartPage());
+        }
+
+        private void BtnEdit_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void BtnDelete_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void BtnAdd_Click(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }

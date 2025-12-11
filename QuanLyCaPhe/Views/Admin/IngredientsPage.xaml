@@ -9,34 +9,63 @@
       d:DesignHeight="450" d:DesignWidth="800"
       Title="IngredientsPage">
 
+    <Page.Resources>
+        <ContextMenu x:Key="ContextMenu">
+            <MenuItem x:Name="BtnEdit" Header="Sửa nguyên liệu này" Click="BtnEdit_Click">
+                <MenuItem.Icon>
+                    <TextBlock Text="&#xE70F;" FontFamily="Segoe MDL2 Assets"/>
+                </MenuItem.Icon>
+            </MenuItem>
+
+            <MenuItem x:Name="BtnDelete" Header="Xóa nguyên liệu này" Foreground="Red" Click="BtnDelete_Click">
+                <MenuItem.Icon>
+                    <TextBlock Text="&#xE74D;" FontFamily="Segoe MDL2 Assets" Foreground="Red"/>
+                </MenuItem.Icon>
+            </MenuItem>
+        </ContextMenu>
+    </Page.Resources>
+
     <Grid>
         <Grid.RowDefinitions>
+            <RowDefinition Height="0.15*"/>
             <RowDefinition Height="0.1*"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <Grid Grid.Row="0">
-            <StackPanel Orientation="Horizontal">
-                <comp:CrudToolBar VerticalAlignment="Bottom" Margin="3, 3, 20, 3"/>
-                <comp:ExcelControl VerticalAlignment="Bottom" Margin="3"/>
+        <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" 
+           Text="Nguyên Liệu" 
+           Style="{StaticResource AdminTextBlockStyle}"/>
 
-            </StackPanel>
+        <Grid Grid.Row="1">
+            <comp:ExcelControl VerticalAlignment="Bottom" Margin="3"/>
 
             <comp:SearchBar HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="3"/>
         </Grid>
 
-        <DataGrid x:Name="Productsdg" Grid.Row="1"
-      AutoGenerateColumns="False" CanUserAddRows="False" IsReadOnly="True" SelectionMode="Single"
-      Style="{StaticResource CardStyleDataGridStyle}">
+        <DataGrid x:Name="Ingedientsdg" Grid.Row="2"
+                  AutoGenerateColumns="False" CanUserAddRows="False" IsReadOnly="True" SelectionMode="Single"
+                  Style="{StaticResource CardStyleDataGridStyle}">
+
+            <DataGrid.RowStyle>
+                <Style TargetType="DataGridRow" BasedOn="{StaticResource CardRowType}">
+                    <Setter Property="ContextMenu" Value="{StaticResource ContextMenu}"/>
+                </Style>
+            </DataGrid.RowStyle>
+
             <DataGrid.Columns>
                 <DataGridTextColumn Header="ID" Binding="{Binding Id}" Width="auto"/>
                 <DataGridTextColumn Header="Tên nguyên liệu" Binding="{Binding IngName}" Width="*"/>
-                
                 <DataGridTextColumn Header="Còn lại" Binding="{Binding Quantity}" Width="auto"/>
                 <DataGridTextColumn Header="Đơn vị" Binding="{Binding Unit}" Width="auto"/>
             </DataGrid.Columns>
-
         </DataGrid>
 
+        <Button x:Name="BtnAdd" Grid.Row="2" Panel.ZIndex="999"
+                Style="{StaticResource FabButtonStyle}"
+                HorizontalAlignment="Right" VerticalAlignment="Bottom"
+                Click="BtnAdd_Click">
+            <TextBlock Text="&#xE710;" FontFamily="Segoe MDL2 Assets" 
+                       FontSize="20" FontWeight="Bold" Foreground="White"/>
+        </Button>
     </Grid>
 </Page>
