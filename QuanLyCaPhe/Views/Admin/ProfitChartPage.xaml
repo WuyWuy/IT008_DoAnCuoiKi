@@ -1,0 +1,128 @@
+﻿<Page x:Class="QuanLyCaPhe.Views.Admin.ProfitChartPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:lvc="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"
+      Title="Biểu đồ doanh thu">
+
+    <Grid Background="#F9FAFB">
+
+        <!-- Header -->
+        <StackPanel Margin="30,20,30,0" VerticalAlignment="Top">
+            <TextBlock Text="BÁO CÁO DOANH THU QUÁN CAFE" 
+                       FontSize="24" FontWeight="Bold"
+                       Foreground="#111827"/>
+            <TextBlock Text="Dữ liệu 6 tháng gần nhất - Cập nhật: 15/12/2024"
+                       FontSize="14" Foreground="#6B7280"
+                       Margin="0,5,0,20"/>
+        </StackPanel>
+
+        <!-- Biểu đồ 3 đường -->
+        <Border Margin="30,80,30,30"
+                Background="White" 
+                CornerRadius="12"
+                Padding="25"
+                BorderBrush="#E5E7EB"
+                BorderThickness="1">
+
+            <Border.Effect>
+                <DropShadowEffect BlurRadius="15" 
+                                  ShadowDepth="3" 
+                                  Opacity="0.12" 
+                                  Color="Black"/>
+            </Border.Effect>
+
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <!-- Tiêu đề và đơn vị -->
+                <StackPanel Grid.Row="0" Margin="0,0,0,20">
+                    <TextBlock Text="DOANH THU  LỢI NHUẬN THEO THÁNG" 
+                               FontSize="16" FontWeight="SemiBold"
+                               Foreground="#374151"/>
+                    <TextBlock Text="(Đơn vị: Triệu đồng)"
+                               FontSize="12" Foreground="#9CA3AF"
+                               Margin="0,5,0,0"/>
+                </StackPanel>
+
+                <!-- Biểu đồ -->
+                <lvc:CartesianChart Grid.Row="1"
+                                    Series="{Binding ThreeLineSeries}"
+                                    LegendLocation="Top"
+                                    Hoverable="True"
+                                    DisableAnimations="False"
+                                    AnimationsSpeed="0:0:0.3">
+
+                    <!-- Cấu hình trục X -->
+                    <lvc:CartesianChart.AxisX>
+                        <lvc:Axis Labels="{Binding Months}" 
+                                  Foreground="#6B7280"
+                                  FontSize="12"
+                                  Separator="{x:Static lvc:DefaultAxes.CleanSeparator}"/>
+                    </lvc:CartesianChart.AxisX>
+
+                    <!-- Cấu hình trục Y -->
+                    <lvc:CartesianChart.AxisY>
+                        <lvc:Axis LabelFormatter="{Binding CurrencyFormatter}"
+                                  Foreground="#6B7280"
+                                  FontSize="12"/>
+                    </lvc:CartesianChart.AxisY>
+
+                    <!-- Legend tùy chỉnh -->
+                    <lvc:CartesianChart.ChartLegend>
+                        <lvc:DefaultLegend BulletSize="15" 
+                                           FontSize="13"
+                                           Foreground="#374151"/>
+                    </lvc:CartesianChart.ChartLegend>
+
+                    <!-- Tooltip tùy chỉnh -->
+                    <lvc:CartesianChart.DataTooltip>
+                        <lvc:DefaultTooltip BulletSize="10" 
+                                            Background="#374151"
+                                            Foreground="White"
+                                            FontSize="12"/>
+                    </lvc:CartesianChart.DataTooltip>
+
+                </lvc:CartesianChart>
+
+                <!-- Thống kê nhanh -->
+                <StackPanel Grid.Row="1" VerticalAlignment="Bottom" 
+                            HorizontalAlignment="Right" 
+                            Margin="0,0,0,10">
+                    <Border Background="#F3F4F6" CornerRadius="6" Padding="10">
+                        <StackPanel>
+                            <TextBlock Text="📊 Thống kê 6 tháng" 
+                                       FontWeight="SemiBold"
+                                       Foreground="#374151"/>
+                            <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
+                                <Rectangle Width="8" Height="8" Fill="#10B981" 
+                                           VerticalAlignment="Center" Margin="0,0,5,0"/>
+                                <TextBlock Text="Thu nhập TB: " Foreground="#6B7280"/>
+                                <TextBlock Text="14.05M ₫" Foreground="#065F46" 
+                                           FontWeight="SemiBold"/>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal">
+                                <Rectangle Width="8" Height="8" Fill="#EF4444" 
+                                           VerticalAlignment="Center" Margin="0,0,5,0"/>
+                                <TextBlock Text="Chi phí TB: " Foreground="#6B7280"/>
+                                <TextBlock Text="8.6M ₫" Foreground="#991B1B" 
+                                           FontWeight="SemiBold"/>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal">
+                                <Rectangle Width="8" Height="8" Fill="#3B82F6" 
+                                           VerticalAlignment="Center" Margin="0,0,5,0"/>
+                                <TextBlock Text="Lợi nhuận TB: " Foreground="#6B7280"/>
+                                <TextBlock Text="5.45M ₫" Foreground="#1E40AF" 
+                                           FontWeight="SemiBold"/>
+                            </StackPanel>
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+
+            </Grid>
+        </Border>
+
+    </Grid>
+</Page>

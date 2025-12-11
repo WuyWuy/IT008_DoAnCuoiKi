@@ -2,7 +2,6 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <Style x:Key="SearchBarStyle" TargetType="TextBox">
         <Setter Property="Width" Value="200"/>
-        <Setter Property="Background" Value="Transparent"/>
         <Setter Property="BorderThickness" Value="0"/>
         <Setter Property="VerticalAlignment" Value="Bottom"/>
         <Setter Property="Template">
@@ -14,11 +13,12 @@
                                 VerticalAlignment="Bottom" 
                                 Background="#4F46E5"
                                 SnapsToDevicePixels="True"/>
+                        
                         <Border x:Name="Box" 
-                                VerticalAlignment="Bottom"
-                                BorderThickness="0" Height="auto" 
-                                Background="Transparent"
-                                Margin="0,0,0,2">
+                            VerticalAlignment="Bottom"
+                            BorderThickness="0" Height="auto" 
+                            Background="Transparent"
+                            Margin="0,0,0,2">
 
                             <ScrollViewer x:Name="PART_ContentHost" Margin="0" VerticalAlignment="Center"/>
                         </Border>
@@ -34,9 +34,31 @@
     </Style>
 
     <Style x:Key="SearchButtonStyle" TargetType="Button">
-        <Setter Property="Background" Value="CadetBlue"/>
-        <Setter Property="Width" Value="auto"/>
-        <Setter Property="Padding" Value="3"/>
+        <Setter Property="Background" Value="{StaticResource PrimaryColor}"/>
+        <Setter Property="Foreground" Value="White"/>
+        <Setter Property="Width" Value="Auto"/>
+        <Setter Property="Padding" Value="10,5"/>
+        <Setter Property="Cursor" Value="Hand"/>
 
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Border Background="{TemplateBinding Background}"
+                            Padding="{TemplateBinding Padding}">
+                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Background" Value="{StaticResource PrimaryLightColor}"/>
+            </Trigger>
+
+            <Trigger Property="IsPressed" Value="True">
+                <Setter Property="Background" Value="#3730A3"/>
+            </Trigger>
+        </Style.Triggers>
     </Style>
 </ResourceDictionary>

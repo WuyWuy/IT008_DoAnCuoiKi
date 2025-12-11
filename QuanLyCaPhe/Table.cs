@@ -12,12 +12,16 @@ namespace QuanLyCaPhe
         public int Id { get; set; }
         public string? Name { get; set; }
 
+        // Persistent absolute end time in UTC. Null => no timer.
+        public DateTime? EndTimeUtc { get; set; }
+
         public string Status
         {
             get => _status;
             set { _status = value; OnPropertyChanged(); }
         }
 
+        // Countdown in seconds used for UI binding. Updated by the window timer.
         public int Countdown
         {
             get => _countdown;
@@ -31,4 +35,3 @@ namespace QuanLyCaPhe
         }
     }
 }
-

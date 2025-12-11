@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:QuanLyCaPhe.Views.Admin"
         mc:Ignorable="d"
-        Title="AdminWindow" Height="450" Width="800">
+        Title="AdminWindow" Height="auto" Width="850">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="auto"/>
@@ -13,10 +13,13 @@
         </Grid.ColumnDefinitions>
 
         <Border x:Name="Sidebar" Grid.Column="0" Panel.ZIndex="1"
+                CornerRadius="20"
+                Margin="-20, 0, 0, -20"
+                Width="200"
                 MouseEnter="Sidebar_MouseEnter"
                 MouseLeave="Sidebar_MouseLeave"
                 Style="{StaticResource AdminSideBarStyle}">
-
+            
             <StackPanel>
                 <Button x:Name="Homebtn" Content="Trang chủ" 
                         Style="{StaticResource AdminButtonStyle}"
@@ -34,6 +37,13 @@
                         Style="{StaticResource AdminButtonStyle}"
                         Click="Staffbtn_Click"/>
 
+                <Button x:Name="Suplybtn" Content="Hàng hóa"
+                        Style="{StaticResource AdminButtonStyle}"
+                        Click="Suplybtn_Click"/>
+
+                <Button x:Name="Billbtn" Content="Hóa đơn"
+                        Style="{StaticResource AdminButtonStyle}"
+                        Click="Billbtn_Click"/>
                 <Button x:Name="Timelbtn" Content="Ca làm"
                         Style="{StaticResource AdminButtonStyle}"
                         Click="Timelbtn_Click"/>
@@ -45,8 +55,19 @@
 
         </Border>
 
-        <Frame x:Name="MainFrame" Panel.ZIndex="1" 
-               Grid.Column="1" NavigationUIVisibility="Hidden" Background="White" />
+        <Button x:Name="Menubtn" Grid.Column="0" Margin="10" 
+                Background="Transparent"
+                VerticalAlignment="Top" HorizontalAlignment="Right"
+                Panel.ZIndex="999"
+                Style="{StaticResource FabButtonStyle}"
+                Click="Menubtn_Click">
+            <TextBlock Text="&#xE700;" FontFamily="Segoe MDL2 Assets" 
+                       FontSize="20" FontWeight="Bold" Foreground="Black"/>
+        </Button>
+        
+
+        <Frame x:Name="MainFrame" Panel.ZIndex="1" Margin="10, 0, 5, 0"
+               Grid.Column="2" NavigationUIVisibility="Hidden" Background="White" />
 
     </Grid>
 </Window>
