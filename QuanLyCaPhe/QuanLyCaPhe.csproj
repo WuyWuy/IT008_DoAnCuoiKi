@@ -11,6 +11,7 @@
   <ItemGroup>
     <None Remove="Resources\Icons\menu.ico" />
     <None Remove="Resources\Images\coffee-cup.png" />
+    <None Remove="Resources\Images\unnamed.jpg" />
     <None Remove="Views\Staff\icons8-add-64.png" />
     <None Remove="Views\Staff\icons8-coffee-script-48.png" />
     <None Remove="Views\Staff\icons8-delete-64.png" />
@@ -38,6 +39,7 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
     <Resource Include="Resources\Images\coffee-cup.png" />
+    <Resource Include="Resources\Images\unnamed.jpg" />
   </ItemGroup>
 
 </Project>

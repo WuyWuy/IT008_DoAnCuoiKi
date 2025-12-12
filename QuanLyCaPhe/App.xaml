@@ -16,7 +16,20 @@
                 <ResourceDictionary Source="/Resources/Styles/HoverBorderAnimation.xaml"/>
                 <ResourceDictionary Source="/Resources/Styles/ProfitStyles.xaml"/>
                 <ResourceDictionary Source="/Resources/Styles/StaffWindowStyle.xaml"/>
+                <ResourceDictionary Source="/Resources/Styles/Liquid_Glass_Style.xaml"/>
+                <ResourceDictionary Source="/Resources/Styles/ComboBoxStyle.xaml"/>
             </ResourceDictionary.MergedDictionaries>
+            
+            <!--Default Color-->
+            <SolidColorBrush x:Key="PrimaryColor" Color="#4F46E5"/>
+            <SolidColorBrush x:Key="PrimaryLightColor" Color="#6366F1"/>
+            <SolidColorBrush x:Key="BackgroundLight" Color="#F9FAFB"/>
+            <SolidColorBrush x:Key="StatusBusyColor" Color="#EF4444"/>
+            <SolidColorBrush x:Key="StatusBusyLightColor" Color="#FEE2E2"/>
+            <SolidColorBrush x:Key="StatusMultiColor" Color="#F59E0B"/>
+            
+            <!--Default Font-->
+            <FontFamily x:Key="TitleFont">Colonna MT</FontFamily>   
         </ResourceDictionary>
     </Application.Resources>
 </Application>

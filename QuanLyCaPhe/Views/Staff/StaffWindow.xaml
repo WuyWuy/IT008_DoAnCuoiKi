@@ -4,228 +4,161 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:QuanLyCaPhe"
+        xmlns:local1="clr-namespace:QuanLyCaPhe.Views.Components"
         xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
         mc:Ignorable="d"
-        Title="Quản lý quán cà phê" Height="450" Width="" Background="White">
+        Title="Quản lý quán cà phê" 
+        MinHeight="600" MinWidth="1000"
+        WindowStyle="SingleBorderWindow">
 
+    <Window.Background>
+        <SolidColorBrush Color="DeepSkyBlue" Opacity="0.3"/>
+    </Window.Background>
     <Window.Resources>
-        <Style x:Key="OverlayButtonStyle" TargetType="Button">
-            <Setter Property="Background" Value="Transparent"/>
-            <Setter Property="BorderBrush" Value="Transparent"/>
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="Button">
-                        <Grid x:Name="grid_wrap">
-                            <!-- Overlay mờ -->
-                            <Border x:Name="overlay"
-                            Background="Transparent"
-                            Opacity="0"
-                            CornerRadius="6"
-                            />
-
-                            <!-- Nội dung gốc của nút -->
-                            <Border Background="{TemplateBinding Background}"
-                            BorderBrush="{TemplateBinding BorderBrush}"
-                            BorderThickness="{TemplateBinding BorderThickness}">
-                                <ContentPresenter HorizontalAlignment="Center"
-                                          VerticalAlignment="Center"/>
-                            </Border>
-                        </Grid>
-
-                        <ControlTemplate.Triggers>
-                            <!-- Khi hover → overlay mờ -->
-                            <Trigger Property="IsMouseOver" Value="True">
-                                <Setter TargetName="overlay" Property="Background" Value="Black"/>
-                                <Setter TargetName="overlay" Property="Opacity" Value="0.2"/>
-                            </Trigger>
-
-                            <!-- Khi bị disable (ví dụ m muốn làm hiệu ứng cho nút khác) -->
-                            <Trigger Property="IsEnabled" Value="False">
-                                <Setter TargetName="overlay" Property="Background" Value="Gray"/>
-                                <Setter TargetName="overlay" Property="Opacity" Value="0.4"/>
-                            </Trigger>
-                        </ControlTemplate.Triggers>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
         <local:IntGreaterThanZeroToVisibilityConverter x:Key="IntToVis"/>
         <local:SecondsToTimeConverter x:Key="SecondsToTimeConverter"/>
     </Window.Resources>
 
-    <Grid Background="#FF393D3D">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="89*"/>
-            <RowDefinition Height="345*"/>
-        </Grid.RowDefinitions>
+    <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="0*"/>
-            <ColumnDefinition Width="2*"/>
-            <ColumnDefinition Width="3*"/>
-            <ColumnDefinition Width="0*"/>
+            <ColumnDefinition Width="auto"/>
+            <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
         <!-- LEFT PANE: narrow button column + content column with nested grids -->
-        <Grid Margin="0,0,0,-1" Background="#FF067B80" Grid.RowSpan="2" HorizontalAlignment="Left" Width="68" Grid.Column="1">
-            <Grid.RowDefinitions>
-                <!-- sort buttons -->
-                <!-- clock -->
-                <!-- logout -->
-                <RowDefinition Height="154*"/>
-                <RowDefinition Height="200*"/>
-                <RowDefinition Height="Auto"/>
-                <!-- spacer -->
-            </Grid.RowDefinitions>
-
-            <Grid  Background="White" VerticalAlignment="Bottom" Width="64" Margin="0,9,0,0" Grid.Row="1">
-
-                <StackPanel VerticalAlignment="Stretch"  Margin="0,32,0,10">
-                    <Button x:Name="btnSortNormal"  Style="{StaticResource OverlayButtonStyle}" Content="" Click="SortNormal_Click" Width="36" Height="36" Margin="0,6" ToolTip="Sắp xếp theo ID" FontWeight="Bold">
-                        <Button.Background>
-                            <ImageBrush ImageSource="/Resources/Images/coffee-cup.png"/>
-                        </Button.Background>
-                    </Button>
-                    <Button x:Name="btnSortIncrease"  Style="{StaticResource OverlayButtonStyle}" Content="" Click="SortIncrease_Click" Width="36" Height="36" Margin="0,6" ToolTip="Sắp xếp tăng dần theo thời gian còn lại" FontWeight="Bold">
-                        <Button.Background>
-                            <ImageBrush ImageSource="/Resources/Images/coffee-cup.png"/>
-                        </Button.Background>
-                    </Button>
-                    <Button x:Name="btnSortDecrease"  Style="{StaticResource OverlayButtonStyle}" Content="" Click="SortDecrease_Click" Width="36" Height="36" Margin="0,6" ToolTip="Sắp xếp giảm dần theo thời gian còn lại" FontWeight="Bold" BorderBrush="{x:Null}">
-                        <Button.Background>
-                            <ImageBrush ImageSource="/Resources/Images/coffee-cup.png"/>
-                        </Button.Background>
-                    </Button>
-                </StackPanel>
-                <TextBlock HorizontalAlignment="Center" Margin="0,7,0,0" TextWrapping="Wrap" Text="Sort" VerticalAlignment="Top" FontWeight="Bold" FontSize="15"/>
-            </Grid>
-            <Grid HorizontalAlignment="Center" Height="48" VerticalAlignment="Top" Width="0" Margin="0,5,0,0" Grid.Row="1">
-                <Grid HorizontalAlignment="Center" Height="48" VerticalAlignment="Center"/>
-
-            </Grid>
-
-            <!-- Clock placed below sort buttons; foreground set to black as requested. Increase width to avoid wrapping. -->
-            <StackPanel Orientation="Vertical" HorizontalAlignment="Center" Width="68" Margin="0,91,0,0" Height="48">
-                <TextBlock x:Name="tbClockTime" FontSize="14" FontWeight="Bold" Foreground="White" HorizontalAlignment="Center" TextAlignment="Center" />
-                <TextBlock x:Name="tbClockDayMonth" FontSize="11" Foreground="White" HorizontalAlignment="Center" TextAlignment="Center" />
-                <TextBlock x:Name="tbClockYear" FontSize="11" Foreground="White" HorizontalAlignment="Center" TextAlignment="Center" />
-            </StackPanel>
-            <Grid Height="76" Margin="3,5,2,0" Width="63" Grid.Row="2" ToolTip="Đăng xuất">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition/>
-                </Grid.ColumnDefinitions>
-                <Button x:Name="btnLogout" Style ="{StaticResource OverlayButtonStyle}" Content="" Click="BtnLogout_Click"
-                        Width="54" Height="60" HorizontalAlignment="Right" ToolTip="Đăng xuất" FontWeight="Bold" BorderBrush="{x:Null}" RenderTransformOrigin="0.5,0.5" Margin="0,5,6,0" VerticalAlignment="Top">
-                    <Button.RenderTransform>
-                        <TransformGroup>
-                            <ScaleTransform/>
-                            <SkewTransform/>
-                            <RotateTransform Angle="-0.166"/>
-                            <TranslateTransform/>
-                        </TransformGroup>
-                    </Button.RenderTransform>
-                    <Button.Background>
-                        <ImageBrush ImageSource="/Resources/Images/coffee-cup.png"/>
-                    </Button.Background>
-                </Button>
-            </Grid>
-        </Grid>
-        <!-- LEFT PANE: narrow button column + content column with nested grids -->
-        <Grid Grid.ColumnSpan="3" Height="90" VerticalAlignment="Top"  Background="#FF067B80">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="2*"/>
-                <ColumnDefinition Width="3*"/>
-            </Grid.ColumnDefinitions>
-            <Grid HorizontalAlignment="Left" Height="90" VerticalAlignment="Center"  Width="320" Margin="10,0,0,0" Grid.ColumnSpan="2">
-                <TextBlock HorizontalAlignment="Left" Height="86" TextWrapping="Wrap" VerticalAlignment="Top" Width="180" Foreground="White" FontSize="30" FontWeight="Bold" Margin="10,0,0,0"><Run Text="Quản lý "/><LineBreak/><Run Text="quán cà phê"/></TextBlock>
-                <Grid HorizontalAlignment="Left" Height="75" Margin="195,5,0,0" VerticalAlignment="Top" Width="90" RenderTransformOrigin="1.786,0.273">
-                    <Grid.Background>
-                        <ImageBrush ImageSource="/Resources/Images/coffee-cup.png"/>
-                    </Grid.Background>
-                </Grid>
-            </Grid>
-            <Grid Grid.Column="1" HorizontalAlignment="Left" Height="34" Margin="330,0,0,0" VerticalAlignment="Top" Width="150"/>
-            <StackPanel Grid.Column="1" HorizontalAlignment="Right" Height="34" VerticalAlignment="Top" Width="145" Background="White"/>
-        </Grid>
-        <!-- LEFT PANE: narrow button column + content column with nested grids -->
-        <Grid Grid.Column="0" Margin="68,29,0,0" Grid.RowSpan="2" Grid.ColumnSpan="2">
-
-            <!-- Row0: blank spacer (1) -->
-
-            <!-- Content column: title, subtitle, tables -->
-
-            <!-- top blank row (1) + main area row (2) -->
+        <Grid Grid.Column="0">
+            <!-- main area row -->
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
-                <RowDefinition Height="61*"/>
-                <RowDefinition Height="20*"/>
+                <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
 
             <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="60"/>
+                <!-- N/I/D column -->
                 <ColumnDefinition Width="*"/>
                 <!-- content column -->
-                <!-- N/I/D column -->
             </Grid.ColumnDefinitions>
 
-            <Grid Grid.Row="1" Margin="10,65,0,0" Grid.RowSpan="2">
+            <!-- Narrow left column: sort buttons, clock, spacer, logout -->
+            <Grid Grid.Row="1" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Stretch">
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="6*"/>
-                    <RowDefinition Height="67*"/>
+                    <RowDefinition Height="Auto"/>
+                    <!-- sort buttons -->
+                    <RowDefinition Height="Auto"/>
+                    <!-- clock -->
+                    <RowDefinition Height="*"/>
+                    <!-- spacer -->
+                    <RowDefinition Height="Auto"/>
+                    <!-- logout -->
                 </Grid.RowDefinitions>
 
-                <!-- Title area -->
-                <!-- Subtitle area -->
-                <Grid Margin="0,27,0,0"/>
+                
 
-                <TextBlock VerticalAlignment="Top"
-                               FontSize="20" Text="Danh sách quản lý bàn" Foreground="White" Height="38" Grid.RowSpan="2"  HorizontalAlignment="Center" Margin="0,5,0,0"/>
+                <!-- Clock placed below sort buttons; foreground set to black as requested. Increase width to avoid wrapping. -->
+                <StackPanel Grid.Row="1" Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,4" Width="72">
+                    <TextBlock x:Name="tbClockTime" FontSize="14" FontWeight="Bold" Foreground="Black" HorizontalAlignment="Center" TextAlignment="Center" />
+                    <TextBlock x:Name="tbClockDayMonth" FontSize="11" Foreground="Black" HorizontalAlignment="Center" TextAlignment="Center" />
+                    <TextBlock x:Name="tbClockYear" FontSize="11" Foreground="Black" HorizontalAlignment="Center" TextAlignment="Center" />
+                </StackPanel>
+
+                <Button x:Name="btnLogout" Grid.Row="3" Content="L" Click="BtnLogout_Click"
+                        Width="36" Height="36" Margin="0,8" HorizontalAlignment="Center" VerticalAlignment="Bottom" ToolTip="Log out" FontWeight="Bold"/>
+            </Grid>
+
+            <!-- Content column: title, tables -->
+            <Grid Grid.Row="1" Grid.Column="1">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="1.25*"/>
+                    <RowDefinition Height="4*"/>
+                </Grid.RowDefinitions>
+                
+                <!-- Title-->
+                <Grid Grid.Row="0">
+                    <Border Style="{StaticResource RunningGlowBorderStyle}"
+                            Margin="10, 10, 10, 10">
+                        <TextBlock Text="LTTQ Coffee" FontSize="36" FontWeight="Bold" FontFamily="{StaticResource TitleFont}"
+                                   HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    </Border>
+                </Grid>
+
                 <!-- Tables area -->
-                <Grid Grid.Row="1" >
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
-                    </Grid.ColumnDefinitions>
-                    <!-- ListBox fills available space and uses a UniformGrid so items size uniformly to fill area -->
-                    <ListBox x:Name="lbTables"
-                             ItemsSource="{Binding DanhSachBan}"
-                             Style="{StaticResource CafeTableListBoxStyle}" d:ItemsSource="{d:SampleData ItemCount=5}">
+                <Grid Grid.Row="1">
+                    <Border Style="{StaticResource LiquidGlassStyle}" 
+                            Margin="0, 5, 10, 0" Padding="10, 10, 5, 20"
+                            Width="auto" MinWidth="360" MaxWidth="360">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="auto"/>
+                                <RowDefinition Height="40"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            
+                            <!-- Subtiltle -->
+                            <TextBlock Text="Danh sách bàn" FontSize="30" FontWeight="Bold" FontFamily="{StaticResource TitleFont}"
+                                       HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            
+                            <!-- Sort ComboBox-->
+                            <ComboBox x:Name="cbSort" Grid.Row="1"
+                                      Style="{StaticResource ComboBoxStyle}"
+                                      Width="180"
+                                      VerticalAlignment="Center" HorizontalAlignment="Left" IsReadOnly="True"
+                                      SelectionChanged="cbSort_SelectionChanged">
+                                <TextBlock Text="Mặc định A-Z"/>
+                                <TextBlock Text="Tăng dần - thời gian"/>
+                                <TextBlock Text="Giảm dần - thời gian"/>
+                            </ComboBox>
+                            <!-- Blank Line-->
+                            <Border Grid.Row="1" Style="{StaticResource RunningGlowBorderStyle}" 
+                                    Width="360" Height="0.6" 
+                                    HorizontalAlignment="Center" VerticalAlignment="Bottom"/>
+                            <!-- ListBox fills available space -->
+                            <ListBox x:Name="lbTables" Grid.Row="2"
+                                     ItemsSource="{Binding DanhSachBan}"
+                                     Style="{StaticResource CafeTableListBoxStyle}" d:ItemsSource="{d:SampleData ItemCount=6}">
+                                <ListBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <Button Tag="{Binding Id}"
+                                                Click="Table_Click"
+                                                PreviewMouseLeftButtonDown="Table_PreviewMouseLeftButtonDown"
+                                                Style="{StaticResource TableCardButtonStyle}">
 
-                        <ListBox.ItemTemplate>
-                            <DataTemplate>
-                                <Button Tag="{Binding Id}"
-                                        Click="Table_Click"
-                                        PreviewMouseLeftButtonDown="Table_PreviewMouseLeftButtonDown"
-                                        Style="{StaticResource TableCardButtonStyle}"
-                                        HorizontalAlignment="Stretch"
-                                        VerticalAlignment="Stretch">
-                                    <StackPanel HorizontalAlignment="Center">
+                                            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                                                <TextBlock Text="{Binding Name}" 
+                                                           FontWeight="Bold" 
+                                                           FontSize="15" 
+                                                           HorizontalAlignment="Center"
+                                                           Margin="0,0,0,2"/>
 
-                                        <StackPanel.Background>
-                                            <ImageBrush/>
-                                        </StackPanel.Background>
-                                        <Image Source="/Resources/Images/coffee-cup.png"
-                                               Width="24"
-                                               Height="24"
-                                               Margin="0,0,0,4"
-                                               Stretch="Uniform" HorizontalAlignment="Center" />
-                                        <TextBlock Text="{Binding Name}" HorizontalAlignment="Center" FontWeight="SemiBold"/>
-                                        <TextBlock Text="{Binding Countdown, Converter={StaticResource SecondsToTimeConverter}}"
-                                                   HorizontalAlignment="Center" FontSize="11"
-                                                   Visibility="{Binding Countdown, Converter={StaticResource IntToVis}}"/>
-                                    </StackPanel>
-                                </Button>
-                            </DataTemplate>
-                        </ListBox.ItemTemplate>
-
-                    </ListBox>
+                                                <Border Background="#15000000" CornerRadius="4" Padding="6,2"
+                                                        Visibility="{Binding Countdown, Converter={StaticResource IntToVis}}">
+                                                    <TextBlock Text="{Binding Countdown, Converter={StaticResource SecondsToTimeConverter}}"
+                                                               FontSize="12"
+                                                               FontWeight="SemiBold"
+                                                               HorizontalAlignment="Center"/>
+                                                </Border>
+                                            </StackPanel>
+                                        </Button>
+                                    </DataTemplate>
+                                </ListBox.ItemTemplate>
+                            </ListBox>
+                            <!-- Add table-->
+                            <Button x:Name="btnAddTable" Grid.Row="2" Panel.ZIndex="999"
+                                    Style="{StaticResource FabButtonStyle}" 
+                                    HorizontalAlignment="Right" VerticalAlignment="Bottom"
+                                    Margin="0, 0, 5, 0">
+                                <TextBlock Text="&#xE710;" FontFamily="Segoe MDL2 Assets" 
+                                           FontSize="20" FontWeight="Bold" Foreground="White"/>
+                            </Button>
+                        </Grid>
+                    </Border>
                 </Grid>
             </Grid>
-            <!-- Narrow left column: sort buttons, clock, spacer, logout -->
 
         </Grid>
 
-        <!-- LEFT PANE: narrow button column + content column with nested grids -->
-
         <!-- RIGHT PANE unchanged -->
-        <Grid Grid.Column="2" Grid.RowSpan="2">
+        <Grid Grid.Column="1">
             <Grid.RowDefinitions>
                 <RowDefinition Height="1.25*"/>
                 <RowDefinition Height="3*"/>
@@ -241,28 +174,18 @@
 
                 <Grid Grid.Row="0">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition/>
+                        <ColumnDefinition Width="5*"/>
+                        <ColumnDefinition Width="1*"/>
+                        <ColumnDefinition Width="1*"/>
                     </Grid.ColumnDefinitions>
 
-                    <Label Content="Bàn số:" VerticalAlignment="Center" FontSize="20" Foreground="Black" Margin="333,0,0,0" Height="35" RenderTransformOrigin="0.5,0.5" HorizontalAlignment="Left">
-                        <Label.RenderTransform>
-                            <TransformGroup>
-                                <ScaleTransform/>
-                                <SkewTransform/>
-                                <RotateTransform Angle="-0.63"/>
-                                <TranslateTransform/>
-                            </TransformGroup>
-                        </Label.RenderTransform>
-                    </Label>
-                    <TextBlock x:Name="tbTableNumber" Text="1" HorizontalAlignment="Right" Width="68" TextAlignment="Center"
-                               VerticalAlignment="Top" FontSize="25" Height="34" Foreground="Black" Margin="412,0,0,0">
-                        <TextBlock.Background>
-                            <ImageBrush/>
-                        </TextBlock.Background>
-                    </TextBlock>
+                    <Label Grid.Column="1" Content="Bàn số:" HorizontalAlignment="Right" VerticalAlignment="Bottom" FontSize="15"/>
+                    <TextBlock x:Name="tbTableNumber" Grid.Column="2" Text="1" HorizontalAlignment="Center"
+                               Background="LightGray" Width="50" TextAlignment="Center"
+                               VerticalAlignment="Bottom" FontSize="25"/>
                 </Grid>
 
-                <Grid Margin="0,34,0,11" Grid.RowSpan="3">
+                <Grid Grid.Row="1">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="0.25*"/>
                         <ColumnDefinition Width="2*"/>
@@ -279,9 +202,9 @@
                             <RowDefinition/>
                         </Grid.RowDefinitions>
 
-                        <Label Grid.Row="0" Content="Đồ order" FontSize="12" VerticalAlignment="Top" Foreground="#FFFFF6F6" Margin="0,-7,0,0"/>
-                        <ComboBox x:Name="cbOrder"   Height="28" VerticalAlignment="Top"
-                                  IsEditable="True"  IsTextSearchEnabled="False" StaysOpenOnEdit="True" Margin="0,19,0,0" Grid.RowSpan="2" IsReadOnly="False" />
+                        <Label Grid.Row="0" Content="Đồ order" FontSize="12" VerticalAlignment="Center"/>
+                        <ComboBox x:Name="cbOrder" Grid.Row="1" SelectionChanged="ComboBox_SelectionChanged_2" Height="28" VerticalAlignment="Top"
+                                  IsEditable="True" IsTextSearchEnabled="False" StaysOpenOnEdit="True" />
                     </Grid>
 
                     <Grid Grid.Column="3">
@@ -290,115 +213,132 @@
                             <RowDefinition/>
                         </Grid.RowDefinitions>
 
-                        <Label Grid.Row="0" Content="Số lượng" FontSize="12" VerticalAlignment="Top" Foreground="#FFFFFEFE" Margin="0,-7,0,0"/>
-                        <xctk:IntegerUpDown x:Name="iudAmmount" ValueChanged="iudAmmount_ValueChanged" Margin="0,19,0,0" Grid.RowSpan="2" VerticalAlignment="Top" Height="29" />
+                        <Label Grid.Row="0" Content="Số lượng" FontSize="12" VerticalAlignment="Center"/>
+
+                        <xctk:IntegerUpDown x:Name="iudAmmount" Grid.Row="1" 
+                                            ValueChanged="iudAmmount_ValueChanged" Height="28" VerticalAlignment="Top"/>
                     </Grid>
 
                     <Grid Grid.Column="5">
-                        <Button x:Name="btnAdd" Content=" " Style="{StaticResource OverlayButtonStyle}" VerticalAlignment="Top" Height="58" Click="btnAdd_Click" RenderTransformOrigin="0.542,0.586" BorderBrush="{x:Null}" HorizontalAlignment="Center" Width="69" Margin="0,-5,0,0">
-                            <Button.Background>
-                                <ImageBrush ImageSource="/Resources/Images/coffee-cup.png"/>
-                            </Button.Background>
-                        </Button>
+                        <Grid.RowDefinitions>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
+                        
+                        <Label Grid.Row="0" Content="" FontSize="12" VerticalAlignment="Center"/>
+                        <Button Grid.Row="1" x:Name="btnAdd" Content="Thêm món" 
+                                VerticalAlignment="Top" Height="28" Click="btnAdd_Click"/>
                     </Grid>
 
                     <Grid Grid.Column="6">
-                        <Button x:Name="btnDelete" Content=""  Style="{StaticResource OverlayButtonStyle}" VerticalAlignment="Top" Height="59" Click="btnDelete_Click" BorderBrush="{x:Null}" HorizontalAlignment="Center" Width="59" Margin="0,-5,0,0">
-                            <Button.Background>
-                                <ImageBrush ImageSource="/Resources/Images/coffee-cup.png"/>
-                            </Button.Background>
-                        </Button>
+                        <Grid.RowDefinitions>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
+                        
+                        <Label Grid.Row="0" Content="" FontSize="12" VerticalAlignment="Center"/>
+                        <Button Grid.Row="1" x:Name="btnDelete" Content="Xóa" 
+                                VerticalAlignment="Top" Height="28" Width="50" Click="btnDelete_Click"/>
                     </Grid>
                 </Grid>
             </Grid>
 
-            <Grid Margin="0,89,0,65" Grid.RowSpan="3">
-                <DataGrid x:Name="dtgdOrder"
-                          AutoGenerateColumns="False"
-                          IsReadOnly="True"
-                          ColumnWidth="*"
-                          Style="{StaticResource CardStyleDataGridStyle}">
-                    <DataGrid.Columns>
-                        <DataGridTextColumn Header="ID" Binding="{Binding ID}" Width="50" />
-                        <DataGridTextColumn Header="Món" Binding="{Binding Mon}" />
-                        <DataGridTextColumn Header="Đơn giá" Binding="{Binding Gia}" />
-                        <DataGridTextColumn Header="Số lượng" Binding="{Binding SoLuong}" />
-                        <DataGridTextColumn Header="Thành tiền" Binding="{Binding ThanhTien}" />
-                    </DataGrid.Columns>
-                </DataGrid>
+            <Grid Grid.Row="1">
+                <Border Style="{StaticResource LiquidGlassStyle}"  
+                        Margin="0, 5, 10, 0" Padding="10, 10, 5, 10">
+                    <DataGrid Name="dtgdOrder"
+                              AutoGenerateColumns="False"
+                              IsReadOnly="True"
+                              ColumnWidth="*"
+                              Style="{StaticResource CardStyleDataGridStyle}" Height="312" VerticalAlignment="Bottom">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="ID" Binding="{Binding ID}" Width="50" />
+                            <DataGridTextColumn Header="Món" Binding="{Binding Mon}" />
+                            <DataGridTextColumn Header="Đơn giá" Binding="{Binding Gia}" />
+                            <DataGridTextColumn Header="Số lượng" Binding="{Binding SoLuong}" />
+                            <DataGridTextColumn Header="Thành tiền" Binding="{Binding ThanhTien}" />
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </Border>
             </Grid>
 
-            <Grid Grid.Row="2" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,10,0,0" Height="73" Width="480">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="5*"/>
-                    <ColumnDefinition Width="11*"/>
-                </Grid.ColumnDefinitions>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="43*"/>
-                    <RowDefinition Height="40*"/>
-                </Grid.RowDefinitions>
+            <Grid Grid.Row="2">
+                <Border Style="{StaticResource LiquidGlassStyle}"
+                        Margin="0, 5, 10, 0" Padding="20, 10, 20, 10">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="3*"/>
+                            <RowDefinition Height="4*"/>
+                        </Grid.RowDefinitions>
 
-                <Grid Grid.Row="0" HorizontalAlignment="Left" Grid.ColumnSpan="2" Margin="26,0,0,5" Width="302">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto"/>
-                        <ColumnDefinition Width="Auto"/>
-                        <ColumnDefinition Width="2*"/>
-                        <ColumnDefinition Width="3*"/>
-                    </Grid.ColumnDefinitions>
+                        <Grid Grid.Row="0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="2*"/>
+                                <ColumnDefinition Width="3*"/>
+                            </Grid.ColumnDefinitions>
 
-                    <Label Content="Số giờ:" Grid.Column="0" HorizontalAlignment="Center" FontSize="15" Margin="5,0,10,0" VerticalAlignment="Top" Foreground="White"/>
+                            <Label Content="Số giờ:" Grid.Column="0" HorizontalAlignment="Left" FontSize="15" Margin="5,0,10,0" VerticalAlignment="Center"/>
 
-                    <StackPanel x:Name="spHours" Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,11,0,0">
-                        <RadioButton x:Name="rbHour1" GroupName="Hours" Content="1" Tag="6000"
-                                     Checked="HourRadio_Checked"
-                                     PreviewMouseLeftButtonDown="HourRadio_PreviewMouseLeftButtonDown"
-                                     ToolTip="1 hour (6.000 VNĐ)" Margin="4,0" FontSize="13" Foreground="White"/>
-                        <RadioButton x:Name="rbHour3" GroupName="Hours" Content="3" Tag="12000"
-                                     Checked="HourRadio_Checked"
-                                     PreviewMouseLeftButtonDown="HourRadio_PreviewMouseLeftButtonDown"
-                                     ToolTip="3 hours (12.000 VNĐ)" Margin="6,0" FontSize="13" Background="White" Foreground="White"/>
-                        <RadioButton x:Name="rbHour6" GroupName="Hours" Content="6" Tag="18000"
-                                     Checked="HourRadio_Checked"
-                                     PreviewMouseLeftButtonDown="HourRadio_PreviewMouseLeftButtonDown"
-                                     ToolTip="6 hours (20.000 VNĐ)" Margin="6,0" FontSize="13" Foreground="White" Background="White"/>
-                        <RadioButton x:Name="rbHour12" GroupName="Hours" Content="12" Tag="25000"
-                                     Checked="HourRadio_Checked"
-                                     PreviewMouseLeftButtonDown="HourRadio_PreviewMouseLeftButtonDown"
-                                     ToolTip="12 hours (35.000 VNĐ)" Margin="6,0" FontSize="13" Foreground="White" Background="White"/>
-                    </StackPanel>
+                            <StackPanel x:Name="spHours" Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,11,0,0">
+                                <RadioButton x:Name="rbHour1" GroupName="Hours" Content="1" Tag="6000"
+                                             Checked="HourRadio_Checked"
+                                             PreviewMouseLeftButtonDown="HourRadio_PreviewMouseLeftButtonDown"
+                                             ToolTip="1 hour (6.000 VNĐ)" Margin="4,0" FontSize="13"/>
+                                <RadioButton x:Name="rbHour3" GroupName="Hours" Content="3" Tag="12000"
+                                             Checked="HourRadio_Checked"
+                                             PreviewMouseLeftButtonDown="HourRadio_PreviewMouseLeftButtonDown"
+                                             ToolTip="3 hours (12.000 VNĐ)" Margin="6,0" FontSize="13"/>
+                                <RadioButton x:Name="rbHour6" GroupName="Hours" Content="6" Tag="18000"
+                                             Checked="HourRadio_Checked"
+                                             PreviewMouseLeftButtonDown="HourRadio_PreviewMouseLeftButtonDown"
+                                             ToolTip="6 hours (20.000 VNĐ)" Margin="6,0" FontSize="13"/>
+                                <RadioButton x:Name="rbHour12" GroupName="Hours" Content="12" Tag="25000"
+                                             Checked="HourRadio_Checked"
+                                             PreviewMouseLeftButtonDown="HourRadio_PreviewMouseLeftButtonDown"
+                                             ToolTip="12 hours (35.000 VNĐ)" Margin="6,0" FontSize="13"/>
+                            </StackPanel>
 
-                    <Label Grid.Column="2" Content="Tổng tiền:" VerticalAlignment="Top" FontSize="15" Foreground="White" Grid.ColumnSpan="2" Margin="0,4,0,0" />
+                            <StackPanel Grid.Column="2" Grid.ColumnSpan="2" Orientation="Horizontal" HorizontalAlignment="Right">
+                                <Label Content="Tổng tiền:" HorizontalAlignment="Right" VerticalAlignment="Center" FontSize="15" />
 
-                    <TextBlock x:Name="tbSum" Grid.Column="3"
-                               Background="LightGray" TextAlignment="Center" FontSize="22"
-                               FontWeight="Bold" Margin="45,6,-152,0" VerticalAlignment="Top"/>
-                </Grid>
+                                <TextBlock Name="tbSum" 
+                                           Padding="3, 0, 6, 0"
+                                           HorizontalAlignment="Right" VerticalAlignment="Center"
+                                           Background="LightGray" 
+                                           MinWidth="150" MaxWidth="300"
+                                           TextAlignment="Right" FontSize="22" FontWeight="Bold">
+                                </TextBlock>
+                            </StackPanel>
+                        </Grid>
 
-                <Grid HorizontalAlignment="Left" Grid.Column="1" Margin="330,35,0,0" Grid.RowSpan="2" Width="0">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="7*"/>
-                        <ColumnDefinition Width="8*"/>
-                        <ColumnDefinition Width="5*"/>
-                        <ColumnDefinition Width="12*"/>
-                    </Grid.ColumnDefinitions>
+                        <Grid Grid.Row="1">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="7*"/>
+                                <ColumnDefinition Width="8*"/>
+                                <ColumnDefinition Width="5*"/>
+                                <ColumnDefinition Width="12*"/>
+                            </Grid.ColumnDefinitions>
 
-                    <Grid Grid.Column="0">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="11*"/>
-                            <ColumnDefinition Width="15*"/>
-                        </Grid.ColumnDefinitions>
+                            <Grid Grid.Column="0" Grid.ColumnSpan="2">
+                                <StackPanel Orientation="Horizontal">
+                                    <Label Content="Chuyển bàn:" FontSize="15" VerticalAlignment="Center" HorizontalAlignment="Left" Grid.ColumnSpan="2"/>
+                                    <ComboBox x:Name="cbxSwapTable" Height="30" Width="90" HorizontalAlignment="Left" SelectionChanged="ComboBox_SelectionChanged_3" />
+                                </StackPanel>
+                            </Grid>
+
+
+                            <Grid Grid.Column="6">
+                                <Button x:Name="btnPurchase" Content="Thanh toán" FontSize="15"
+                                        VerticalAlignment="Center" HorizontalAlignment="Right"
+                                        Height="30" Width="130"
+                                        Click="Button_Click_1"/>
+                            </Grid>
+                        </Grid>
                     </Grid>
-
-                    <Grid Grid.Column="1"/>
-
-                    <Grid Grid.Column="6"/>
-                </Grid>
-                <Label Content="Chuyển bàn:" FontSize="15" VerticalAlignment="Center" HorizontalAlignment="Left" Foreground="White" Margin="48,0,0,0" Grid.Row="1" Height="30" Width="92"/>
-                <ComboBox x:Name="cbxSwapTable" SelectionChanged="ComboBox_SelectionChanged_3" Margin="13,10,227,5" Grid.Row="1" Grid.Column="1" />
-                <Button x:Name="btnPurchase" Content="Thanh toán"
-                                Click="Button_Click_1" FontSize="15" Margin="220,5,20,3" Grid.Row="1" Grid.Column="1"/>
+                </Border>
             </Grid>
-
         </Grid>
     </Grid>
 </Window>

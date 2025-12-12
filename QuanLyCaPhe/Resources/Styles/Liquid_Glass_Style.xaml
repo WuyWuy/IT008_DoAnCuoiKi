@@ -1,0 +1,81 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <Style x:Key="LiquidGlassStyle" TargetType="Border">
+        <Setter Property="CornerRadius" Value="20"/>
+        <Setter Property="BorderThickness" Value="1.2"/>
+        <Setter Property="SnapsToDevicePixels" Value="True"/>
+
+        <Setter Property="BorderBrush">
+            <Setter.Value>
+                <LinearGradientBrush StartPoint="0,0" EndPoint="0,1" Opacity="1">
+                    <GradientStop Color="#50FFFFFF" Offset="0"/>
+                    <GradientStop Color="#10FFFFFF" Offset="0.5"/>
+                    <GradientStop Color="#30FFFFFF" Offset="1"/>
+                </LinearGradientBrush>
+            </Setter.Value>
+        </Setter>
+
+        <Setter Property="Background">
+            <Setter.Value>
+                <RadialGradientBrush GradientOrigin="-0.2,-0.2" Center="0.5,0.5" RadiusX="1.5" RadiusY="1.5" Opacity="0.6">
+
+                    <GradientStop Color="#20FFFFFF" Offset="0"/>
+
+                    <GradientStop Color="#05FFFFFF" Offset="0.5"/>
+
+                    <GradientStop Color="#10FFFFFF" Offset="1"/>
+
+                </RadialGradientBrush>
+            </Setter.Value>
+        </Setter>
+
+        <Setter Property="Effect">
+            <Setter.Value>
+                <DropShadowEffect Color="#4F46E5" 
+                                  Opacity="0.12" 
+                                  BlurRadius="12" 
+                                  ShadowDepth="5" 
+                                  Direction="300"/>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+
+    <Style x:Key="RunningGlowBorderStyle" TargetType="Border">
+        <Setter Property="CornerRadius" Value="24"/>
+        <Setter Property="BorderThickness" Value="3"/>
+        <Setter Property="Background" Value="#10FFFFFF"/>
+        <Setter Property="BorderBrush">
+            <Setter.Value>
+                <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                    <LinearGradientBrush.RelativeTransform>
+                        <RotateTransform CenterX="0.5" CenterY="0.5" Angle="0"/>
+                    </LinearGradientBrush.RelativeTransform>
+                    <GradientStop Color="White" Offset="0.0"/>
+                    <GradientStop Color="#206366F1" Offset="0.5"/>
+                    <GradientStop Color="LightGray" Offset="1.0"/>
+                </LinearGradientBrush>
+            </Setter.Value>
+        </Setter>
+
+        <Setter Property="Effect">
+            <Setter.Value>
+                <DropShadowEffect Color="#4F46E5" BlurRadius="15" ShadowDepth="0" Opacity="0.6"/>
+            </Setter.Value>
+        </Setter>
+
+        <Style.Triggers>
+            <EventTrigger RoutedEvent="Loaded">
+                <BeginStoryboard>
+                    <Storyboard>
+                        <DoubleAnimation Storyboard.TargetProperty="(Border.BorderBrush).(Brush.RelativeTransform).(RotateTransform.Angle)"
+                                     From="0" To="360" 
+                                     Duration="0:0:2" 
+                                     RepeatBehavior="Forever"/>
+                    </Storyboard>
+                </BeginStoryboard>
+            </EventTrigger>
+        </Style.Triggers>
+    </Style>
+</ResourceDictionary>
