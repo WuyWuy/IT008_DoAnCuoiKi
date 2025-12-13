@@ -13,31 +13,47 @@
         </Setter>
     </Style>
 
-    <Style x:Key="LoginTextBoxStyle" TargetType="TextBox">
-        <Setter Property="Width" Value="320"/>
-        <Setter Property="Height" Value="40"/>
-        <Setter Property="FontSize" Value="15"/>
-        <Setter Property="Padding" Value="15,0"/>
-        <Setter Property="VerticalContentAlignment" Value="Center"/>
-        <Setter Property="Background" Value="#F5F5F5"/>
-        <Setter Property="BorderBrush" Value="Transparent"/>
+    <SolidColorBrush x:Key="PrimaryColorBrush" Color="#4F46E5"/>
+    <SolidColorBrush x:Key="GrayBorderBrush" Color="#D1D5DB"/>
+    <SolidColorBrush x:Key="HoverBorderBrush" Color="#6B7280"/>
+    <Style x:Key="MaterialTextBoxStyle" TargetType="TextBox">
+        <Setter Property="Height" Value="30"/>
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="BorderBrush" Value="{StaticResource GrayBorderBrush}"/>
+        <Setter Property="Foreground" Value="#1E1B4B"/>
+        <Setter Property="BorderThickness" Value="0,0,0,1"/>
+        <Setter Property="Padding" Value="0,0,0,4"/>
+        <Setter Property="VerticalContentAlignment" Value="Bottom"/>
+        <Setter Property="CaretBrush" Value="{StaticResource PrimaryColorBrush}"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="TextBox">
-                    <Border x:Name="border" 
-                            Background="{TemplateBinding Background}" 
-                            BorderBrush="{TemplateBinding BorderBrush}" 
-                            BorderThickness="2" 
-                            CornerRadius="22">
-                        <ScrollViewer x:Name="PART_ContentHost" Margin="0"/>
-                    </Border>
+                    <Grid>
+                        <Border x:Name="border"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            SnapsToDevicePixels="True">
+                            <ScrollViewer x:Name="PART_ContentHost" 
+                                      Focusable="false"
+                                      HorizontalScrollBarVisibility="Hidden"
+                                      VerticalScrollBarVisibility="Hidden"/>
+                        </Border>
+                    </Grid>
+
                     <ControlTemplate.Triggers>
-                        <Trigger Property="IsKeyboardFocused" Value="True">
-                            <Setter TargetName="border" Property="BorderBrush" Value="#0984e3"/>
-                            <Setter TargetName="border" Property="Background" Value="White"/>
-                        </Trigger>
                         <Trigger Property="IsMouseOver" Value="True">
-                            <Setter TargetName="border" Property="Background" Value="White"/>
+                            <Setter TargetName="border" Property="BorderBrush" Value="{StaticResource HoverBorderBrush}"/>
+                        </Trigger>
+
+                        <Trigger Property="IsKeyboardFocused" Value="True">
+                            <Setter TargetName="border" Property="BorderBrush" Value="{StaticResource PrimaryColorBrush}"/>
+                            <Setter TargetName="border" Property="BorderThickness" Value="0,0,0,2"/>
+                        </Trigger>
+
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter Property="Opacity" Value="0.5"/>
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
@@ -45,32 +61,45 @@
         </Setter>
     </Style>
 
-    <Style x:Key="LoginPasswordBoxStyle" TargetType="PasswordBox">
-        <Setter Property="Width" Value="320"/>
-        <Setter Property="Height" Value="40"/>
-        <Setter Property="FontSize" Value="15"/>
-        <Setter Property="Padding" Value="15,0"/>
-        <Setter Property="VerticalContentAlignment" Value="Center"/>
-        <Setter Property="Background" Value="#F5F5F5"/>
-        <Setter Property="BorderBrush" Value="Transparent"/>
+    <Style x:Key="MaterialPasswordBoxStyle" TargetType="PasswordBox">
+        <Setter Property="Height" Value="30"/>
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="BorderBrush" Value="{StaticResource GrayBorderBrush}"/>
+        <Setter Property="Foreground" Value="#1E1B4B"/>
+        <Setter Property="BorderThickness" Value="0,0,0,1"/>
+        <Setter Property="Padding" Value="0,0,0,4"/>
+        <Setter Property="VerticalContentAlignment" Value="Bottom"/>
+        <Setter Property="CaretBrush" Value="{StaticResource PrimaryColorBrush}"/>
         <Setter Property="PasswordChar" Value="●"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="PasswordBox">
-                    <Border x:Name="border" 
-                            Background="{TemplateBinding Background}" 
-                            BorderBrush="{TemplateBinding BorderBrush}" 
-                            BorderThickness="2" 
-                            CornerRadius="22">
-                        <ScrollViewer x:Name="PART_ContentHost" Margin="0"/>
-                    </Border>
+                    <Grid>
+                        <Border x:Name="border"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            SnapsToDevicePixels="True">
+                            <ScrollViewer x:Name="PART_ContentHost" 
+                                      Focusable="false"
+                                      HorizontalScrollBarVisibility="Hidden"
+                                      VerticalScrollBarVisibility="Hidden"/>
+                        </Border>
+                    </Grid>
+
                     <ControlTemplate.Triggers>
-                        <Trigger Property="IsKeyboardFocused" Value="True">
-                            <Setter TargetName="border" Property="BorderBrush" Value="#0984e3"/>
-                            <Setter TargetName="border" Property="Background" Value="White"/>
-                        </Trigger>
                         <Trigger Property="IsMouseOver" Value="True">
-                            <Setter TargetName="border" Property="Background" Value="White"/>
+                            <Setter TargetName="border" Property="BorderBrush" Value="{StaticResource HoverBorderBrush}"/>
+                        </Trigger>
+
+                        <Trigger Property="IsKeyboardFocused" Value="True">
+                            <Setter TargetName="border" Property="BorderBrush" Value="{StaticResource PrimaryColorBrush}"/>
+                            <Setter TargetName="border" Property="BorderThickness" Value="0,0,0,2"/>
+                        </Trigger>
+
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter Property="Opacity" Value="0.5"/>
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
