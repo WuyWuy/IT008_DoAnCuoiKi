@@ -4,6 +4,7 @@
              xmlns:local="clr-namespace:QuanLyCaPhe"
              xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
              StartupUri="Views/Staff/StaffWindow.xaml">
+            
     <Application.Resources>
         <ResourceDictionary>
             
@@ -18,6 +19,7 @@
                 <ResourceDictionary Source="/Resources/Styles/StaffWindowStyle.xaml"/>
                 <ResourceDictionary Source="/Resources/Styles/Liquid_Glass_Style.xaml"/>
                 <ResourceDictionary Source="/Resources/Styles/ComboBoxStyle.xaml"/>
+                <ResourceDictionary Source="/Resources/Styles/NumbericBox.xaml"/>
             </ResourceDictionary.MergedDictionaries>
             
             <!--Default Color-->

@@ -129,6 +129,9 @@ namespace QuanLyCaPhe.Views.Staff
 
             // set initial clock text
             UpdateClock();
+
+            //set đefault Sort combobox
+            cbSort.SelectedIndex = 0;
         }
 
         private void StaffWindow_Closing(object? sender, CancelEventArgs e)
@@ -400,7 +403,7 @@ namespace QuanLyCaPhe.Views.Staff
 
         public bool IsValid(bool requireHour = true)
         {
-            if (string.IsNullOrWhiteSpace(iudAmmount.Text))
+            if (string.IsNullOrWhiteSpace(iudAmmount.Value.ToString()))
             {
                 MessageBox.Show("Hãy nhập số lượng", "Order thất bại", MessageBoxButton.OK, MessageBoxImage.Error);
                 return false;
@@ -437,7 +440,7 @@ namespace QuanLyCaPhe.Views.Staff
             var d = cbOrder.SelectedItem as Drink;
             if (d == null) return;
 
-            int amount = iudAmmount.Value ?? 1;
+            int amount = iudAmmount.Value;
             if (amount <= 0) amount = 1;
 
             var existed = OrderList.FirstOrDefault(x => x.Name == d.Name);
@@ -493,7 +496,7 @@ namespace QuanLyCaPhe.Views.Staff
             iudAmmount.Value = ParseIntFromFormatted(item.Quantity);
         }
 
-        private void iudAmmount_ValueChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
+        private void iudAmmount_ValueChanged(object sender, RoutedEventArgs e)
         {
             if (iudAmmount.Value <= 0) iudAmmount.Value = 1;
         }
