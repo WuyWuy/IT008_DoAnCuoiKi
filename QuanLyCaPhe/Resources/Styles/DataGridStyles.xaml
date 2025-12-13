@@ -120,7 +120,6 @@
     </Style>
 
     <Style x:Key="CardRowType" TargetType="DataGridRow">
-        <Setter Property="Background" Value="White"/>
         <Setter Property="Margin" Value="3.6"/>
         <Setter Property="Padding" Value="10"/>
         <Setter Property="BorderBrush" Value="#E5E7EB"/>
@@ -134,8 +133,7 @@
                             Background="{TemplateBinding Background}"
                             BorderBrush="{TemplateBinding BorderBrush}"
                             BorderThickness="{TemplateBinding BorderThickness}"
-                            CornerRadius="8"
-                            SnapsToDevicePixels="True">
+                            CornerRadius="8">
                         <SelectiveScrollingGrid>
                             <SelectiveScrollingGrid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto"/>
@@ -204,7 +202,7 @@
         <Setter Property="ColumnHeaderStyle">
             <Setter.Value>
                 <Style TargetType="DataGridColumnHeader">
-                    <Setter Property="Background" Value="White"/>
+                    <Setter Property="Background" Value="Transparent"/>
                     <Setter Property="Foreground" Value="#4F46E5"/>
                     <Setter Property="FontWeight" Value="SemiBold"/>
                     <Setter Property="FontSize" Value="13"/>
