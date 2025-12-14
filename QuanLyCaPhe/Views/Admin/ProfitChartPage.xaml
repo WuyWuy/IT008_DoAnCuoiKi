@@ -5,31 +5,17 @@
       Title="Biểu đồ doanh thu">
 
     <Grid Background="#F9FAFB">
-
         <!-- Header -->
-        <StackPanel Margin="30,20,30,0" VerticalAlignment="Top">
-            <TextBlock Text="BÁO CÁO DOANH THU QUÁN CAFE" 
-                       FontSize="24" FontWeight="Bold"
-                       Foreground="#111827"/>
-            <TextBlock Text="Dữ liệu 6 tháng gần nhất - Cập nhật: 15/12/2024"
-                       FontSize="14" Foreground="#6B7280"
-                       Margin="0,5,0,20"/>
-        </StackPanel>
-
+       
         <!-- Biểu đồ 3 đường -->
-        <Border Margin="30,80,30,30"
+        <Border Margin="0"
                 Background="White" 
                 CornerRadius="12"
                 Padding="25"
                 BorderBrush="#E5E7EB"
                 BorderThickness="1">
 
-            <Border.Effect>
-                <DropShadowEffect BlurRadius="15" 
-                                  ShadowDepth="3" 
-                                  Opacity="0.12" 
-                                  Color="Black"/>
-            </Border.Effect>
+
 
             <Grid>
                 <Grid.RowDefinitions>
@@ -53,7 +39,7 @@
                                     LegendLocation="Top"
                                     Hoverable="True"
                                     DisableAnimations="False"
-                                    AnimationsSpeed="0:0:0.3">
+                                    AnimationsSpeed="0:0:0.002">
 
                     <!-- Cấu hình trục X -->
                     <lvc:CartesianChart.AxisX>
@@ -87,40 +73,7 @@
 
                 </lvc:CartesianChart>
 
-                <!-- Thống kê nhanh -->
-                <StackPanel Grid.Row="1" VerticalAlignment="Bottom" 
-                            HorizontalAlignment="Right" 
-                            Margin="0,0,0,10">
-                    <Border Background="#F3F4F6" CornerRadius="6" Padding="10">
-                        <StackPanel>
-                            <TextBlock Text="📊 Thống kê 6 tháng" 
-                                       FontWeight="SemiBold"
-                                       Foreground="#374151"/>
-                            <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
-                                <Rectangle Width="8" Height="8" Fill="#10B981" 
-                                           VerticalAlignment="Center" Margin="0,0,5,0"/>
-                                <TextBlock Text="Thu nhập TB: " Foreground="#6B7280"/>
-                                <TextBlock Text="14.05M ₫" Foreground="#065F46" 
-                                           FontWeight="SemiBold"/>
-                            </StackPanel>
-                            <StackPanel Orientation="Horizontal">
-                                <Rectangle Width="8" Height="8" Fill="#EF4444" 
-                                           VerticalAlignment="Center" Margin="0,0,5,0"/>
-                                <TextBlock Text="Chi phí TB: " Foreground="#6B7280"/>
-                                <TextBlock Text="8.6M ₫" Foreground="#991B1B" 
-                                           FontWeight="SemiBold"/>
-                            </StackPanel>
-                            <StackPanel Orientation="Horizontal">
-                                <Rectangle Width="8" Height="8" Fill="#3B82F6" 
-                                           VerticalAlignment="Center" Margin="0,0,5,0"/>
-                                <TextBlock Text="Lợi nhuận TB: " Foreground="#6B7280"/>
-                                <TextBlock Text="5.45M ₫" Foreground="#1E40AF" 
-                                           FontWeight="SemiBold"/>
-                            </StackPanel>
-                        </StackPanel>
-                    </Border>
-                </StackPanel>
-
+               
             </Grid>
         </Border>
 

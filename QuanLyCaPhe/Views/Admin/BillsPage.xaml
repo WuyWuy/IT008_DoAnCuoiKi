@@ -28,33 +28,44 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="0.15*"/>
-            <RowDefinition Height="0.1*"/>
+            <RowDefinition Height="auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
+        <!--________________________________Hóa đơn__________________________________-->
         <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" 
-                   Text="Hóa Đơn" 
-                   Style="{StaticResource AdminTextBlockStyle}"/>
-        
+                   Padding="10" Foreground="{StaticResource PrimaryLightColor}"
+                   Text="Hóa Đơn" FontSize="36" FontWeight="Bold"/>
+
         <Grid Grid.Row="1">
-            <StackPanel Orientation="Horizontal">
-                <comp:ExcelControl VerticalAlignment="Bottom" Margin="3"/>
-
-            </StackPanel>
-
+            <comp:ExcelControl HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="3"/>
+            
             <comp:SearchBar HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="3"/>
         </Grid>
 
-        <DataGrid x:Name="Billsdg" Grid.Row="2"
-                  AutoGenerateColumns="False" CanUserAddRows="False" IsReadOnly="True" SelectionMode="Single"
-                  Style="{StaticResource CardStyleDataGridStyle}">
-            <!--Chổ này thêm hộ tao tại ch có DB. với thêm cái Window để hiện dữ liệu CTHD lên-->
-            <!--Nên chổ này chắc chỉ cần ID, ngày , giờ, tên nhân viên thui ha ??-->
-            <DataGrid.Columns> 
-                                
-            </DataGrid.Columns>
+        <Border Style="{StaticResource LiquidGlassStyle}" 
+                Grid.Row="2" Margin="4" Padding="4, 4, 4 ,10">
+            <DataGrid x:Name="Billsdg" Grid.Row="2"
+          AutoGenerateColumns="False" CanUserAddRows="False" IsReadOnly="True" SelectionMode="Single"
+          Style="{StaticResource CardStyleDataGridStyle}">
 
-        </DataGrid>
+                <DataGrid.RowStyle>
+                    <Style TargetType="DataGridRow" BasedOn="{StaticResource CardRowType}">
+                        <Setter Property="ContextMenu" Value="{StaticResource ContextMenu}"/>
+                    </Style>
+                </DataGrid.RowStyle>
+
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="ID" Binding="{Binding Id}" Width="auto"/>
+                    <DataGridTextColumn Header="Tên nhân viên" Binding="{Binding StaffName}" Width="*"/>
+                    <DataGridTextColumn Header="Thời gian" Binding="{Binding Time}" Width="auto"/>
+                    <DataGridTextColumn Header="Bàn số" Binding="{Binding Quantity}" Width="auto"/>
+                    <DataGridTextColumn Header="Tổng đơn" Binding="{Binding Price}" Width="auto"/>
+                </DataGrid.Columns>
+
+
+            </DataGrid>
+        </Border>
 
         <Button x:Name="BtnAdd" Grid.Row="2" Panel.ZIndex="999"
         Style="{StaticResource FabButtonStyle}"

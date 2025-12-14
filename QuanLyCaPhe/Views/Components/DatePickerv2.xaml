@@ -3,23 +3,123 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:QuanLyCaPhe.Views.Components"
-             mc:Ignorable="d">
-    <Border BorderBrush="Black">
-        <StackPanel Orientation="Horizontal">
-            <Button x:Name="Prevbtn">
-                <TextBlock Text="&#xE76B;" FontFamily="Segoe MDL2 Assets" 
-                   FontSize="16" Foreground="#555"
-                   HorizontalAlignment="Center" VerticalAlignment="Center"/>
+             mc:Ignorable="d" 
+             Height="44" Width="150">
+
+    <UserControl.Resources>
+        <Style x:Key="NavButtonStyle" TargetType="Button">
+            <Setter Property="Width" Value="30"/>
+            <Setter Property="Height" Value="30"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="bd"
+                                Background="{TemplateBinding Background}"
+                                CornerRadius="4"
+                                SnapsToDevicePixels="True">
+                            <ContentPresenter HorizontalAlignment="Center" 
+                                              VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="bd" Property="Background" Value="#EEF2FF"/>
+                                <Setter Property="Foreground" Value="#4F46E5"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="bd" Property="Background" Value="#E0E7FF"/>
+                                <Setter Property="Foreground" Value="#4338CA"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="TransparentTextBoxStyle" TargetType="TextBox">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="FontSize" Value="15"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Foreground" Value="#1E1B4B"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+            <Setter Property="Padding" Value="1"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="TextBox">
+                        <Border x:Name="border" 
+                                Background="{TemplateBinding Background}" 
+                                BorderThickness="{TemplateBinding BorderThickness}" 
+                                BorderBrush="{TemplateBinding BorderBrush}" 
+                                SnapsToDevicePixels="True">
+                            <ScrollViewer x:Name="PART_ContentHost" Focusable="false" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Hidden"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Foreground" Value="#4F46E5"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </UserControl.Resources>
+
+    <Border Background="White" 
+            CornerRadius="8" 
+            BorderThickness="1" 
+            BorderBrush="Transparent">
+
+        <Border.Effect>
+            <DropShadowEffect Color="#4F46E5" Opacity="0.12" BlurRadius="14" ShadowDepth="4" Direction="270"/>
+        </Border.Effect>
+
+        <Grid Margin="4">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+
+            <Button x:Name="Prevbtn" 
+                    Grid.Column="0"
+                    Style="{StaticResource NavButtonStyle}">
+                <TextBlock Text="&#xE76B;" 
+                           FontFamily="Segoe MDL2 Assets" 
+                           FontSize="12" 
+                           Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}"/>
             </Button>
-            <TextBox x:Name="Monthtb" Text="12" FontSize="16"/>
-            <Border BorderBrush="Blue" Width="1" Height="auto"/>
-            <TextBox x:Name="Yeartb" Text="2012" FontSize="16"/>
-            <Button x:Name="Nextbtn">
-                <TextBlock Text="&#xE76C;" FontFamily="Segoe MDL2 Assets" 
-                   FontSize="16" Foreground="#555"
-                   HorizontalAlignment="Center" VerticalAlignment="Center"/>
+
+            <TextBox x:Name="Monthtb" 
+                     Grid.Column="1"
+                     Text="12"
+                     Style="{StaticResource TransparentTextBoxStyle}"/>
+
+            <Border Grid.Column="2" 
+                    Width="1" 
+                    Height="16" 
+                    Background="#E5E7EB" 
+                    VerticalAlignment="Center"
+                    Margin="2,0"/>
+
+            <TextBox x:Name="Yeartb" 
+                     Grid.Column="3"
+                     Text="2025"
+                     Style="{StaticResource TransparentTextBoxStyle}"/>
+
+            <Button x:Name="Nextbtn" 
+                    Grid.Column="4"
+                    Style="{StaticResource NavButtonStyle}">
+                <TextBlock Text="&#xE76C;" 
+                           FontFamily="Segoe MDL2 Assets" 
+                           FontSize="12" 
+                           Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}"/>
             </Button>
-        </StackPanel>
+        </Grid>
     </Border>
 </UserControl>

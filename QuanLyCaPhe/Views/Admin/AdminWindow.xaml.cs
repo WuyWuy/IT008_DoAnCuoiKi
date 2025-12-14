@@ -11,6 +11,8 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using System.Windows.Media.Animation;
+using QuanLyCaPhe.Views.SharedPage;
 
 namespace QuanLyCaPhe.Views.Admin
 {
@@ -22,7 +24,7 @@ namespace QuanLyCaPhe.Views.Admin
         public AdminWindow()
         {
             InitializeComponent();
-            Loaded += AdminWindow_Loaded;
+            this.Loaded += AdminWindow_Loaded;
         }
 
         private void AdminWindow_Loaded(object sender, RoutedEventArgs e)
@@ -52,7 +54,7 @@ namespace QuanLyCaPhe.Views.Admin
 
         private void Timelbtn_Click(object sender, RoutedEventArgs e)
         {
-            MainFrame.Navigate(new TimeLinePage());
+            MainFrame.Navigate(new SchedulePage());
         }
 
         private void Profitbtn_Click(object sender, RoutedEventArgs e)
@@ -82,7 +84,25 @@ namespace QuanLyCaPhe.Views.Admin
 
         private void Menubtn_Click(object sender, RoutedEventArgs e)
         {
-            Sidebar.Visibility = (Sidebar.Visibility == Visibility.Visible) ? Visibility.Collapsed : Visibility.Visible;
+            double targetWidth = Sidebar.ActualWidth > 10 ? 0 : 250;
+
+            // Tạo Animation thay đổi chiều rộng
+            DoubleAnimation widthAnimation = new DoubleAnimation();
+            widthAnimation.To = targetWidth;
+            widthAnimation.Duration = TimeSpan.FromMilliseconds(300); 
+
+            // Thêm hiệu ứng gia tốc (Easing) cho mượt (Gia tốc đầu và cuối)
+            widthAnimation.EasingFunction = new PowerEase { EasingMode = EasingMode.EaseInOut, Power = 3 };
+
+            // Bắt đầu chạy
+            Sidebar.BeginAnimation(FrameworkElement.WidthProperty, widthAnimation);
+
+            // Fade
+            DoubleAnimation opacityAnimation = new DoubleAnimation();
+            opacityAnimation.To = targetWidth > 0 ? 1 : 0; 
+            opacityAnimation.Duration = TimeSpan.FromMilliseconds(200);
+
+            Sidebar.BeginAnimation(UIElement.OpacityProperty, opacityAnimation);
         }
     }
 }

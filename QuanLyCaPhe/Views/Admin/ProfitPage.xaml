@@ -12,23 +12,25 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="0.15*"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <TextBlock Grid.Row="0" Grid.ColumnSpan="3" Text="Doanh Thu" Style="{StaticResource AdminTextBlockStyle}"/>
+        <!--________________________________Doanh số__________________________________-->
+        <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" 
+                   Padding="10" Foreground="{StaticResource PrimaryLightColor}"
+                   Text="Doanh Số" FontSize="36" FontWeight="Bold"/>
 
-        
-        
+
+
         <StackPanel Grid.Row="2" Orientation="Horizontal">
             <comp:DatePickerv2 VerticalAlignment="Bottom" Margin="3"/>
             <comp:ExcelControl VerticalAlignment="Bottom" Margin="3"/>
             
         </StackPanel>
 
-        <comp:SearchBar Grid.Row="2" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="3"/>
         <Grid Grid.Row="3" Margin="0,20,0,20">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
@@ -59,10 +61,14 @@
             </Border>
         </Grid>
 
-        <!---->
-        <Frame Grid.Row="4" x:Name="ChartFrame">
-            
-        </Frame>
+        <!-- Chart -->
+        <Border Grid.Row="4" Grid.RowSpan="2"
+        Padding="10" Margin="10"
+        BorderThickness="1"
+        Background="White"
+        Style="{StaticResource RunningGlowBorderStyle}">
+            <Frame x:Name="ChartFrame"/>
+        </Border>
 
     </Grid>
 </Page>

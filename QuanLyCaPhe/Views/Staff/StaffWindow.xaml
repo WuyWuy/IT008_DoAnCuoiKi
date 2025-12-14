@@ -126,7 +126,7 @@
                 <Grid Grid.Row="0">
                     <Border Style="{StaticResource RunningGlowBorderStyle}"
                             Margin="10, 10, 10, 10">
-                        <TextBlock Text="LTTQ Coffee" FontSize="36" FontWeight="Bold" FontFamily="{StaticResource TitleFont}"
+                        <TextBlock Text="{StaticResource TenQuan}" FontSize="36" FontWeight="Bold" FontFamily="{StaticResource TitleFont}"
                                    HorizontalAlignment="Center" VerticalAlignment="Center"/>
                     </Border>
                 </Grid>

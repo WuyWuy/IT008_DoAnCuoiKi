@@ -28,13 +28,15 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="0.15*"/>
-            <RowDefinition Height="0.1*"/>
+            <RowDefinition Height="auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        
+
+        <!--________________________________Tiêu đề__________________________________-->
         <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" 
-                   Text="Hàng Hóa" Style="{StaticResource AdminTextBlockStyle}"/>
-        
+                   Padding="10" Foreground="{StaticResource PrimaryLightColor}"
+                   Text="Hàng Hóa" FontSize="36" FontWeight="Bold"/>
+
         <Grid Grid.Row="1">
             <StackPanel Orientation="Horizontal">
                 <comp:ExcelControl VerticalAlignment="Bottom" Margin="3"/>
@@ -42,19 +44,22 @@
 
             <comp:SearchBar HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="3"/>
         </Grid>
-        
-        <DataGrid Grid.Row="2" x:Name="dgExpense" AutoGenerateColumns="False" IsReadOnly="True" 
+
+        <Border Style="{StaticResource LiquidGlassStyle}" 
+                Grid.Row="2" Margin="4" Padding="4, 4, 4 ,10">
+            <DataGrid Grid.Row="2" x:Name="dgExpense" AutoGenerateColumns="False" IsReadOnly="True" 
                   Style="{StaticResource CardStyleDataGridStyle}"
                   HeadersVisibility="Column" GridLinesVisibility="Horizontal">
-            <!--chổ này cũng chưa có DB nốt với thêm cái Models nha đặt tên đại đại đi xong hết ae mình hiệu chỉnh sau-->
-            <DataGrid.Columns>
-                <DataGridTextColumn Header="Mã Phiếu" Binding="{Binding ImportId}" Width="auto"/>
-                <DataGridTextColumn Header="Ngày Nhập" Binding="{Binding ImportDate, StringFormat=dd/MM/yyyy}" Width="auto"/>
-                <DataGridTextColumn Header="Nguyên Liệu" Binding="{Binding IngredientName}" Width="auto"/>
-                <DataGridTextColumn Header="Số Lượng" Binding="{Binding Quantity}" Width="auto"/>
-                <DataGridTextColumn Header="Thành Tiền" Binding="{Binding Cost, StringFormat={}{0:N0} đ}" Width="auto" FontWeight="Bold" Foreground="Red"/>
-            </DataGrid.Columns>
-        </DataGrid>
+                <!--chổ này cũng chưa có DB nốt với thêm cái Models nha đặt tên đại đại đi xong hết ae mình hiệu chỉnh sau-->
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Mã Phiếu" Binding="{Binding ImportId}" Width="auto"/>
+                    <DataGridTextColumn Header="Ngày Nhập" Binding="{Binding ImportDate, StringFormat=dd/MM/yyyy}" Width="auto"/>
+                    <DataGridTextColumn Header="Nguyên Liệu" Binding="{Binding IngredientName}" Width="auto"/>
+                    <DataGridTextColumn Header="Số Lượng" Binding="{Binding Quantity}" Width="auto"/>
+                    <DataGridTextColumn Header="Thành Tiền" Binding="{Binding Cost, StringFormat={}{0:N0} đ}" Width="auto" FontWeight="Bold" Foreground="Red"/>
+                </DataGrid.Columns>
+            </DataGrid>
+        </Border>
 
         <Button x:Name="BtnAdd" Grid.Row="2" Panel.ZIndex="999"
         Style="{StaticResource FabButtonStyle}"

@@ -5,7 +5,13 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:QuanLyCaPhe.Views.Admin"
         mc:Ignorable="d"
-        Title="AdminWindow" Height="auto" Width="850">
+        Title="AdminWindow"
+        MinHeight="600" MinWidth="1000"
+        WindowStyle="SingleBorderWindow">
+    <Window.Background>
+        <SolidColorBrush Color="AliceBlue" Opacity=".7"/>
+    </Window.Background>
+    
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="auto"/>
@@ -16,8 +22,8 @@
                 CornerRadius="20"
                 Margin="-20, 0, 0, -20"
                 Width="200"
-                MouseEnter="Sidebar_MouseEnter"
-                MouseLeave="Sidebar_MouseLeave"
+                Background="RosyBrown"
+                ClipToBounds="True"
                 Style="{StaticResource AdminSideBarStyle}">
             
             <StackPanel>
@@ -67,7 +73,7 @@
         
 
         <Frame x:Name="MainFrame" Panel.ZIndex="1" Margin="10, 0, 5, 0"
-               Grid.Column="2" NavigationUIVisibility="Hidden" Background="White" />
+               Grid.Column="2" NavigationUIVisibility="Hidden" Background="Transparent" />
 
     </Grid>
 </Window>
