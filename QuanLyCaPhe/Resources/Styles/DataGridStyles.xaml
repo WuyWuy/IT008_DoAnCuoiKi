@@ -27,7 +27,7 @@
             <Setter.Value>
                 <ControlTemplate TargetType="ScrollBar">
                     <Grid x:Name="GridRoot" Background="{TemplateBinding Background}">
-                        <Track x:Name="PART_Track" IsDirectionReversed="true">
+                        <Track x:Name="PART_Track" IsDirectionReversed="False">
                             <Track.DecreaseRepeatButton>
                                 <RepeatButton Command="{x:Static ScrollBar.LineUpCommand}"/>
                             </Track.DecreaseRepeatButton>
@@ -60,10 +60,24 @@
                             </Track.Thumb>
                         </Track>
                     </Grid>
+
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="Orientation" Value="Vertical">
+                            <Setter TargetName="PART_Track" Property="Orientation" Value="Vertical"/>
+                            <Setter TargetName="PART_Track" Property="IsDirectionReversed" Value="True"/>
+                            <Setter Property="Width" Value="10"/>
+                        </Trigger>
+
+                        <Trigger Property="Orientation" Value="Horizontal">
+                            <Setter TargetName="PART_Track" Property="Orientation" Value="Horizontal"/>
+                            <Setter TargetName="PART_Track" Property="IsDirectionReversed" Value="False"/>
+                            <Setter Property="Height" Value="10"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
-
+        
         <Style.Triggers>
             <Trigger Property="Orientation" Value="Vertical">
                 <Setter Property="Width" Value="10"/>
@@ -78,6 +92,7 @@
     </Style>
 
     <Style x:Key="ModernDataGridScrollViewer" TargetType="ScrollViewer">
+        <Setter Property="PanningMode" Value="Both"/>
         <Setter Property="VerticalScrollBarVisibility" Value="Auto"/>
         <Setter Property="HorizontalScrollBarVisibility" Value="Auto"/>
         <Setter Property="Padding" Value="0"/>
@@ -120,11 +135,13 @@
     </Style>
 
     <Style x:Key="CardRowType" TargetType="DataGridRow">
-        <Setter Property="Margin" Value="3.6"/>
+        <Setter Property="Margin" Value="3.6, 3"/>
         <Setter Property="Padding" Value="10"/>
         <Setter Property="BorderBrush" Value="#E5E7EB"/>
         <Setter Property="BorderThickness" Value="1"/>
         <Setter Property="SnapsToDevicePixels" Value="True"/>
+        <Setter Property="FontFamily" Value="Segoe UI"/>
+        <Setter Property="FontSize" Value="13"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="DataGridRow">

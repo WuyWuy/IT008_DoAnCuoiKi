@@ -160,5 +160,6 @@
         <Setter Property="Padding" Value="0, 60, 0, 0"/>
         <Setter Property="BorderBrush" Value="Black"/>
         <Setter Property="BorderThickness" Value="1"/>
+        
     </Style>
 </ResourceDictionary>

@@ -1,43 +1,54 @@
-﻿using System;
+﻿using QuanLyCaPhe.DAO;
+using QuanLyCaPhe.Models;
+using QuanLyCaPhe.Views.Admin.DetailWindow;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace QuanLyCaPhe.Views.Admin
 {
-    /// <summary>
-    /// Interaction logic for BillsPage.xaml
-    /// </summary>
     public partial class BillsPage : Page
     {
         public BillsPage()
         {
             InitializeComponent();
+            Loaded += BillsPage_Loaded;
         }
 
-        private void BtnEdit_Click(object sender, RoutedEventArgs e)
+        private void BillsPage_Loaded(object sender, RoutedEventArgs e)
         {
-
+            LoadData();
         }
 
-        private void BtnDelete_Click(object sender, RoutedEventArgs e)
+        private void LoadData()
         {
-
+            // Gọi hàm lấy danh sách từ DAO
+            Billsdg.ItemsSource = BillDAO.Instance.GetListBills();
         }
 
-        private void BtnAdd_Click(object sender, RoutedEventArgs e)
+        // --- XỬ LÝ MENU CHUỘT PHẢI "XEM CHI TIẾT" ---
+        private void BtnInfo_Click(object sender, RoutedEventArgs e)
         {
+            // Lấy dòng đang chọn trong DataGrid
+            Bill selectedBill = Billsdg.SelectedItem as Bill;
 
+            if (selectedBill != null)
+            {
+                // Mở cửa sổ Detail và truyền object Bill vào
+                BillDetailWindow f = new BillDetailWindow(selectedBill);
+                f.ShowDialog();
+            }
+        }
+
+        // --- XỬ LÝ TÌM KIẾM ---
+        private void SearchBar_Clicked(object sender, string keyword)
+        {
+            Billsdg.ItemsSource = BillDAO.Instance.SearchBill(keyword);
+        }
+
+        private void Billsdg_LoadingRow(object sender, DataGridRowEventArgs e)
+        {
+            e.Row.Header = (e.Row.GetIndex() + 1).ToString();
         }
     }
 }

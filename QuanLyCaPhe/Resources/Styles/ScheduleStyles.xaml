@@ -1,0 +1,64 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:sys="clr-namespace:System;assembly=mscorlib">
+
+    <SolidColorBrush x:Key="PrimaryColor" Color="#4F46E5"/>
+    <SolidColorBrush x:Key="PrimaryLightColor" Color="#6366F1"/>
+    <SolidColorBrush x:Key="BackgroundLight" Color="#F9FAFB"/>
+    <SolidColorBrush x:Key="BorderLight" Color="#E5E7EB"/>
+    <SolidColorBrush x:Key="HoverBackground" Color="#F8FAFF"/>
+    <SolidColorBrush x:Key="SelectedBackground" Color="#EEF2FF"/>
+    
+    <Style x:Key="HeaderTextStyle" TargetType="TextBlock">
+        <Setter Property="FontWeight" Value="SemiBold"/>
+        <Setter Property="Foreground" Value="{StaticResource PrimaryColor}"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
+        <Setter Property="HorizontalAlignment" Value="Center"/>
+        <Setter Property="FontSize" Value="13"/>
+    </Style>
+
+    <Style x:Key="HeaderBorderStyle" TargetType="Border">
+        <Setter Property="BorderBrush" Value="{StaticResource PrimaryColor}"/>
+        <Setter Property="BorderThickness" Value="0,0,0,2"/>
+        <Setter Property="Padding" Value="0,10"/>
+        <Setter Property="Background" Value="Transparent"/>
+    </Style>
+
+    <Style x:Key="GridCellStyle" TargetType="Border">
+        <Setter Property="BorderBrush" Value="{StaticResource BorderLight}"/>
+        <Setter Property="BorderThickness" Value="0,0,1,1"/>
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="Cursor" Value="Hand"/>
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Background" Value="{StaticResource HoverBackground}"/>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <Style x:Key="ShiftBlockStyle" TargetType="Border">
+        <Setter Property="CornerRadius" Value="8"/>
+        <Setter Property="Margin" Value="2,10,2,10"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="BorderBrush" Value="{StaticResource PrimaryColor}"/>
+        <Setter Property="Background" Value="{StaticResource SelectedBackground}"/>
+        <Setter Property="Effect">
+            <Setter.Value>
+                <DropShadowEffect Color="#4F46E5" BlurRadius="10" ShadowDepth="2" Opacity="0.15" Direction="270"/>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="GlassPopupStyle" TargetType="Border">
+        <Setter Property="Background" Value="White"/>
+        <Setter Property="CornerRadius" Value="12"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="BorderBrush" Value="{StaticResource BorderLight}"/>
+        <Setter Property="Effect">
+            <Setter.Value>
+                <DropShadowEffect Color="#4F46E5" BlurRadius="20" ShadowDepth="0" Opacity="0.1"/>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+</ResourceDictionary>

@@ -1,100 +1,73 @@
-﻿using QuanLyCaPhe.Views.Admin;
+﻿using QuanLyCaPhe.DAO;
+using QuanLyCaPhe.Models;
+using QuanLyCaPhe.Views.Admin;
 using QuanLyCaPhe.Views.Staff;
 using System;
-using System.Text.RegularExpressions;
 using System.Windows;
-using System.Windows.Controls;
+using System.Windows.Input;
 
 namespace QuanLyCaPhe.Views.Login
 {
     public partial class LoginWindow : Window
     {
-        private readonly UserStore _store;
-
         public LoginWindow()
         {
             InitializeComponent();
 
-            _store = new UserStore();
 
-            // ensure table exists
-            _store.EnsureUsersTable();
+            this.MouseDown += (s, e) => { if (e.LeftButton == MouseButtonState.Pressed) this.DragMove(); };
         }
 
         private void BtnLogin_Click(object sender, RoutedEventArgs e)
         {
-            tbLoginStatus.Text = string.Empty;
+            string email = txtEmail.Text.Trim();
+            string password = txtPassword.Password;
 
-            var email = txtLoginEmail.Text.Trim();
-            var pwd = pbLoginPassword.Password;
-
-            if (string.IsNullOrWhiteSpace(email) || string.IsNullOrWhiteSpace(pwd))
+            if (string.IsNullOrWhiteSpace(email) || string.IsNullOrWhiteSpace(password))
             {
-                tbLoginStatus.Text = "Email and password required.";
+                tbStatus.Text = "Vui lòng nhập đầy đủ Email và Mật khẩu!";
                 return;
             }
 
             try
             {
-                var ok = _store.ValidateUserCredentials(email, pwd);
-                if (ok) //________________________________remember delete me !! || email == "admin@test.com"
+                if (UserDAO.Instance.Login(email, password))
                 {
-                    tbLoginStatus.Foreground = System.Windows.Media.Brushes.Green;
-                    tbLoginStatus.Text = "Login successful.";
-                    // TODO: open main window or proceed;
-                    MessageBoxResult result = MessageBox.Show
-                    (
-                        "Mày là Admin à -_-",
-                        "Demo Admin or Staff",
-                        MessageBoxButton.YesNo
-                    );
-                    if (result == MessageBoxResult.Yes)
+                    tbStatus.Text = "";
+
+                    int userId = UserDAO.Instance.GetIdByEmail(email);
+
+
+                    string role = UserDAO.Instance.GetUserRole(userId); 
+
+                    Hide();
+
+                    if (role == "Admin")
                     {
-                        AdminWindow f = new AdminWindow();
-                        f.Show();
+                        AdminWindow adminWin = new AdminWindow();
+                        adminWin.Show();
                     }
                     else
                     {
-                        StaffWindow f = new StaffWindow();
-                        f.Show();
-                    }    
-                    this.Close();
+                        StaffWindow staffWin = new StaffWindow();
+                        staffWin.Show();
+                    }
+
                 }
                 else
                 {
-                    tbLoginStatus.Foreground = System.Windows.Media.Brushes.Red;
-                    tbLoginStatus.Text = "Invalid email or password.";
+                    tbStatus.Text = "Email hoặc mật khẩu không chính xác!";
                 }
             }
             catch (Exception ex)
             {
-                tbLoginStatus.Foreground = System.Windows.Media.Brushes.Red;
-                tbLoginStatus.Text = "Login failed: " + ex.Message;
+                tbStatus.Text = "Lỗi kết nối: " + ex.Message;
             }
         }
 
-        private void BtnClearLogin_Click(object sender, RoutedEventArgs e)
+        private void BtnClose_Click(object sender, RoutedEventArgs e)
         {
-            txtLoginEmail.Clear();
-            pbLoginPassword.Clear();
-            tbLoginStatus.Text = string.Empty;
-        }
-
-        
-
-        private static bool IsValidEmail(string email)
-        {
-            if (string.IsNullOrEmpty(email)) return false;
-            // basic RFC-like validation
-            var rx = new Regex(@"^[^@\s]+@[^@\s]+\.[^@\s]+$", RegexOptions.Compiled);
-            return rx.IsMatch(email);
-        }
-
-        private static bool IsValidPhone(string phone)
-        {
-            if (string.IsNullOrWhiteSpace(phone)) return false;
-            var digits = new string(phone.Where(char.IsDigit).ToArray());
-            return digits.Length >= 7 && digits.Length <= 15;
+            Application.Current.Shutdown();
         }
     }
 }

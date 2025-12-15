@@ -10,114 +10,152 @@
 
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="0.5*"/>
-            <ColumnDefinition Width="0.25*"/>
-            <ColumnDefinition Width="0.25*"/>
+            <ColumnDefinition Width="2*"/>
+            <ColumnDefinition Width="1*"/>
+            <ColumnDefinition Width="1*"/>
         </Grid.ColumnDefinitions>
 
         <Grid.RowDefinitions>
-            <RowDefinition Height="0.15*"/>
-            <RowDefinition Height="0.15*"/>
-            <RowDefinition Height="0.15*"/>
-            <RowDefinition Height="0.65*"/>
+            <RowDefinition Height="15*"/>
+            <RowDefinition Height="15*"/>
+            <RowDefinition Height="15*"/>
+            <RowDefinition Height="65*"/>
         </Grid.RowDefinitions>
-        
+
         <!--________________________________Chữ Chào Mừng__________________________________-->
-        <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" Text="Trang Chủ" FontSize="36"/>
+        <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" 
+                   Padding="10" Foreground="{StaticResource PrimaryLightColor}"
+                   Text="Trang Chủ" FontSize="36" FontWeight="Bold"/>
         <!--________________________________Panel Chào mừng________________________________-->
-        <Border Grid.Row="1" Grid.Column="0" Grid.RowSpan="2"
-                Style="{StaticResource HelloPanelStyle}">
+        <Border Grid.Row="1" Grid.Column="0" Grid.RowSpan="2" 
+                Width="auto" Padding="10"
+                Margin="10, 0"
+                Background="White"
+                Style="{StaticResource RunningGlowBorderStyle}">
             <Grid>
-                <StackPanel Orientation="Vertical" VerticalAlignment="Center">
-                    <TextBlock Text="Chào Mày!!" FontSize="30" HorizontalAlignment="Left"/>
-                    <TextBlock Text="Chào mừng đến Cam, giờ thì m lên bàn ngồi đợi t quất roi" 
+                <StackPanel Orientation="Vertical" VerticalAlignment="Center" HorizontalAlignment="Center">
+                    <TextBlock Text="Xin chào!!" FontSize="30" HorizontalAlignment="Left"/>
+                    <TextBlock Text="{Binding Source = {StaticResource TenQuan}, StringFormat='Chào mừng đến {0}'}" 
                         TextWrapping="Wrap" FontSize="15" Width="200" 
                         HorizontalAlignment="Left"/>
                 </StackPanel>
-                <Image Source="/Resources/Images/LuomXX.png" Width="auto" MaxWidth="100" VerticalAlignment="Center" HorizontalAlignment="Right"/>
-
             </Grid>
         </Border>
 
         <!--________________________________Panel Tổng quan________________________________-->
-        <!--___________________________Món ăn__________________________________-->
-        <Border Grid.Row="1" Grid.Column="1"
-                Style="{StaticResource HelloPanelStyle}">
-            <StackPanel Orientation="Horizontal">
-                <Image Source="/Resources/Images/LuomXX.png" Width="auto" VerticalAlignment="Center" HorizontalAlignment="Right"/>
-                <StackPanel Orientation="Vertical">
-                    <TextBlock Text="Món ăn" FontSize="13" HorizontalAlignment="Left" Margin="3, 3, 3, 0"/>
-                    <TextBlock Text="-10000000000" FontSize="16" HorizontalAlignment="Center"/>
-                </StackPanel>
-                
-            </StackPanel>
-        </Border>
-        <!--___________________________Nhân viên_______________________________-->
-        <Border Grid.Row="1" Grid.Column="2"
-                Style="{StaticResource HelloPanelStyle}">
-            <StackPanel Orientation="Horizontal">
-                <Image Source="/Resources/Images/LuomXX.png" Width="auto" VerticalAlignment="Center" HorizontalAlignment="Left"/>
-                <StackPanel Orientation="Vertical">
-                    <TextBlock Text="Nhân viên" FontSize="13" HorizontalAlignment="Left" Margin="3, 3, 3, 0"/>
-                    <TextBlock Text="-10000000000" FontSize="16" HorizontalAlignment="Center"/>
-                </StackPanel>
-
-            </StackPanel>
-        </Border>
-
-        <!--___________________________Thập nhập_______________________________-->
-        <Border Grid.Row="2" Grid.Column="1"
-                Style="{StaticResource HelloPanelStyle}">
-            <StackPanel Orientation="Horizontal">
-                <Image Source="/Resources/Images/LuomXX.png" Width="auto" VerticalAlignment="Center" HorizontalAlignment="Left"/>
-                <StackPanel Orientation="Vertical">
-                    <TextBlock Text="Thu nhập" FontSize="13" HorizontalAlignment="Left" Margin="3, 3, 3, 0"/>
-                    <TextBlock Text="10000000000" FontSize="16" HorizontalAlignment="Center"/>
-                </StackPanel>
-
-            </StackPanel>
-        </Border>
-
-        <!--___________________________Chi tiêu________________________________-->
-        <Border Grid.Row="2" Grid.Column="2"
-                Style="{StaticResource HelloPanelStyle}">
-            <StackPanel Orientation="Horizontal">
-                <Image Source="/Resources/Images/LuomXX.png" Width="auto" VerticalAlignment="Center" HorizontalAlignment="Left"/>
-                <StackPanel Orientation="Vertical">
-                    <TextBlock Text="Chi tiêu" FontSize="13" HorizontalAlignment="Left" Margin="3, 3, 3, 0"/>
-                    <TextBlock Text="10000000000" FontSize="16" HorizontalAlignment="Center"/>
-                </StackPanel>
-
-            </StackPanel>
-        </Border>
-        <!--________________________________Panel ff________________________________-->
-        <Border Grid.Row="3" Grid.Column="0" Grid.RowSpan="2"
-                Style="{StaticResource HelloPanelStyle}">
+        <!-- Món -->
+        <Border Grid.Row="1" Grid.Column="1" 
+                Padding="10"
+                Margin="4"
+                Background="#FF9F43" Opacity="0.9"
+                Style="{StaticResource RunningGlowBorderStyle}">
             <Grid>
-                <StackPanel Orientation="Vertical" VerticalAlignment="Center">
-                    <TextBlock Text="Chào Mày!!" FontSize="30" HorizontalAlignment="Left"/>
-                    <TextBlock Text="Chào mừng đến Cam, giờ thì m lên bàn ngồi đợi t quất roi" 
-                               TextWrapping="Wrap" FontSize="15" Width="200" 
-                               HorizontalAlignment="Left"/>
-                </StackPanel>
-                <Image Source="/Resources/Images/LuomXX.png" Width="auto" MaxWidth="100" VerticalAlignment="Center" HorizontalAlignment="Right"/>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
 
+                <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                    <TextBlock Text="Tổng món ăn"/>
+                    <TextBlock Name="tbProductCount" Text="12" FontSize="16"/>
+                </StackPanel>
+
+                <Path Grid.Column="1" 
+                      Data="M11,9H9V2H7V9H5V2H3V9C3,11.12 4.66,12.84 6.75,12.97V22H9.25V12.97C11.34,12.84 13,11.12 13,9V2H11V9M16,6V14H18.5V22H21V2C18.24,2 16,4.24 16,6Z" 
+                      Fill="Black" Opacity="0.6" 
+                      Stretch="Uniform" Height="40" Width="40" VerticalAlignment="Center"/>
             </Grid>
+        </Border>
+        <!-- Nhân viên -->
+        <Border Grid.Row="1" Grid.Column="2" 
+                Padding="10"
+                Margin="4"
+                Background="#54A0FF" Opacity="0.6"
+                Style="{StaticResource RunningGlowBorderStyle}">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                    <TextBlock Text="Nhân viên"/>
+                    <TextBlock Name="tbStaffCount" Text="5" FontSize="16"/>
+                </StackPanel>
+
+                <Path Grid.Column="1" 
+                      Data="M12,4A4,4 0 0,1 16,8A4,4 0 0,1 12,12A4,4 0 0,1 8,8A4,4 0 0,1 12,4M12,14C16.42,14 20,15.79 20,18V20H4V18C4,15.79 7.58,14 12,14Z" 
+                      Fill="Black" Opacity="0.6" 
+                      Stretch="Uniform" Height="40" Width="40" VerticalAlignment="Center"/>
+            </Grid>
+        </Border>
+        <!-- Thu nhập -->
+        <Border Grid.Row="2" Grid.Column="1"
+                Padding="10"
+                Margin="4"
+                Background="#1DD1A1" Opacity="0.6"
+                BorderThickness="1"
+                Style="{StaticResource RunningGlowBorderStyle}">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                    <TextBlock Text="Thu nhập"/>
+                    <TextBlock Name="tbIncome" Text="{Binding IncomeValue, StringFormat={}{0:N0} đ, FallbackValue='10,000,000'}" FontSize="16"/>
+                </StackPanel>
+
+                <Path Grid.Column="1" 
+                      Data="M16,6L18.29,8.29L13.41,13.17L9.41,9.17L2,16.59L3.41,18L9.41,12L13.41,16L19.71,9.71L22,12V6H16Z" 
+                      Fill="Black" Opacity="0.6" 
+                      Stretch="Uniform" Height="40" Width="40" VerticalAlignment="Center"/>
+            </Grid>
+        </Border>
+        <!-- Chi tiêu -->
+        <Border Grid.Row="2" Grid.Column="2"
+                Padding="10"
+                Margin="4"
+                Background="#FF6B6B" Opacity="0.6" 
+                BorderThickness="1"
+                Style="{StaticResource RunningGlowBorderStyle}">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                    <TextBlock Text="Chi tiêu"/>
+                    <TextBlock Name="tbExpense" Text="{Binding ExpenseValue, StringFormat={}{0:N0} đ, FallbackValue='5,000,000'}" FontSize="16"/>
+                </StackPanel>
+
+                <Path Grid.Column="1" 
+                      Data="M21,18V19A2,2 0 0,1 19,21H5C3.89,21 3,20.1 3,19V5A2,2 0 0,1 5,3H19A2,2 0 0,1 21,5V6H12C10.89,6 10,6.9 10,8V16A2,2 0 0,0 12,18M12,16H22V8H12M16,13.5A1.5,1.5 0 0,1 14.5,12A1.5,1.5 0 0,1 16,10.5A1.5,1.5 0 0,1 17.5,12A1.5,1.5 0 0,1 16,13.5Z" 
+                      Fill="Black" Opacity="0.6" 
+                      Stretch="Uniform" Height="40" Width="40" VerticalAlignment="Center"/>
+            </Grid>
+        </Border>
+        <!--________________________________Mini Chart Frame_______________________________-->
+        <Border Grid.Row="3" Grid.Column="0" Grid.RowSpan="2"
+                Padding="10"
+                Margin="10"
+                Background="White"
+                Style="{StaticResource RunningGlowBorderStyle}">
+            <Frame x:Name="MiniChart"/>
         </Border>
 
         <!--________________________________Panel ff________________________________-->
         <Border Grid.Row="3" Grid.Column="1" Grid.RowSpan="2" Grid.ColumnSpan="2"
-                Style="{StaticResource HelloPanelStyle}">
-            <Grid>
-                <StackPanel Orientation="Vertical" VerticalAlignment="Center">
-                    <TextBlock Text="Chào Mày!!" FontSize="30" HorizontalAlignment="Left"/>
-                    <TextBlock Text="Chào mừng đến Cam, giờ thì m lên bàn ngồi đợi t quất roi" 
-                        TextWrapping="Wrap" FontSize="15" Width="200" 
-                        HorizontalAlignment="Left"/>
-                </StackPanel>
-                <Image Source="/Resources/Images/LuomXX.png" Width="auto" MaxWidth="100" VerticalAlignment="Center" HorizontalAlignment="Right"/>
-
-            </Grid>
+                Padding="10"
+                Margin="10"
+                Background="White"
+                Style="{StaticResource RunningGlowBorderStyle}">
+            <Frame Width="auto" x:Name="LastBill" 
+                   NavigationUIVisibility="Hidden" 
+                   HorizontalAlignment="Stretch"
+                   VerticalAlignment="Top"/>
         </Border>
     </Grid>
 </Page>

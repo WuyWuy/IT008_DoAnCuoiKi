@@ -28,43 +28,52 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="0.15*"/>
-            <RowDefinition Height="0.1*"/>
+            <RowDefinition Height="auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
+        <!--________________________________Món__________________________________-->
         <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" 
-                   Text="Món" 
-                   Style="{StaticResource AdminTextBlockStyle}"/>
+                   Padding="10" Foreground="{StaticResource PrimaryLightColor}"
+                   Text="Món" FontSize="36" FontWeight="Bold"/>
 
         <Grid Grid.Row="1">
-            <comp:ExcelControl VerticalAlignment="Bottom" Margin="3"/>
-            <comp:SearchBar HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="3"/>
+            <comp:ExcelControl x:Name="IETable" Clicked="IETable_Clicked"
+                HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="3"/>
+            <comp:SearchBar x:Name="SearchBar" Clicked="SearchBar_Clicked"
+                            HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="3"/>
         </Grid>
 
-        <DataGrid x:Name="Productsdg" Grid.Row="2" 
-          AutoGenerateColumns="False" 
-          IsReadOnly="True" 
-          SelectionMode="Single"
-          Style="{StaticResource CardStyleDataGridStyle}">
+        <Border Style="{StaticResource LiquidGlassStyle}" 
+                Grid.Row="2" Margin="4" Padding="4, 4, 4 ,10">
+            <Grid>
+                <DataGrid x:Name="Productsdg" Grid.Row="2" 
+                          AutoGenerateColumns="False" 
+                          IsReadOnly="True" 
+                          SelectionMode="Single"
+                          LoadingRow="Productsdg_LoadingRow"
+                          Style="{StaticResource CardStyleDataGridStyle}">
 
-            <DataGrid.RowStyle>
-                <Style TargetType="DataGridRow" BasedOn="{StaticResource CardRowType}">
-                    <Setter Property="ContextMenu" Value="{StaticResource ContextMenu}"/>
-                </Style>
-            </DataGrid.RowStyle>
-            <DataGrid.Columns>
-                <DataGridTextColumn Header="ID" Binding="{Binding Id}" Width="auto"/>
-                <DataGridTextColumn Header="Tên món" Binding="{Binding ProName}" Width="*"/>
-                <DataGridTextColumn Header="Giá bán" Binding="{Binding Price, StringFormat={}{0:N0}đ}" Width="auto"/>
-            </DataGrid.Columns>
-        </DataGrid>
+                    <DataGrid.RowStyle>
+                        <Style TargetType="DataGridRow" BasedOn="{StaticResource CardRowType}">
+                            <Setter Property="ContextMenu" Value="{StaticResource ContextMenu}"/>
+                        </Style>
+                    </DataGrid.RowStyle>
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="STT" Binding="{Binding RelativeSource={RelativeSource AncestorType=DataGridRow}, Path=Header}" Width="auto"/>
+                        <DataGridTextColumn Header="Tên món" Binding="{Binding ProName}" Width="*"/>
+                        <DataGridTextColumn Header="Giá bán" Binding="{Binding Price, StringFormat={}{0:N0}đ}" Width="*"/>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </Grid>
+        </Border>
 
         <Button x:Name="BtnAdd" Grid.Row="2" Panel.ZIndex="999"
-                Style="{StaticResource FabButtonStyle}"
-                HorizontalAlignment="Right" VerticalAlignment="Bottom"
-                Click="BtnAdd_Click">
+         Style="{StaticResource FabButtonStyle}"
+         HorizontalAlignment="Right" VerticalAlignment="Bottom"
+         Click="BtnAdd_Click">
             <TextBlock Text="&#xE710;" FontFamily="Segoe MDL2 Assets" 
-               FontSize="20" FontWeight="Bold" Foreground="White"/>
+                FontSize="20" FontWeight="Bold" Foreground="White"/>
         </Button>
     </Grid>
 </Page>

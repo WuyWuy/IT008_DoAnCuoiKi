@@ -22,7 +22,7 @@ namespace QuanLyCaPhe
                     [Email] NVARCHAR(256) NOT NULL UNIQUE,
                     [Phone] NVARCHAR(50) NULL,
                     [Address] NVARCHAR(500) NULL,
-                    [Gender] NVARCHAR(20) NULL,
+                    [Gender] NVARC+-HAR(20) NULL,
                     [PasswordHash] NVARCHAR(MAX) NOT NULL,
                     [PasswordSalt] NVARCHAR(MAX) NOT NULL,
                     [CreatedAt] DATETIME2 NOT NULL DEFAULT SYSUTCDATETIME()

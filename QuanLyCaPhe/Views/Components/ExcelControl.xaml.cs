@@ -20,9 +20,20 @@ namespace QuanLyCaPhe.Views.Components
     /// </summary>
     public partial class ExcelControl : UserControl
     {
+        public event EventHandler<string> Clicked;
         public ExcelControl()
         {
             InitializeComponent();
+        }
+
+        private void Importbtn_Click(object sender, RoutedEventArgs e)
+        {
+            Clicked?.Invoke(this, "Import");
+        }
+
+        private void Exportbtn_Click(object sender, RoutedEventArgs e)
+        {
+            Clicked?.Invoke(this, "Export");
         }
     }
 }

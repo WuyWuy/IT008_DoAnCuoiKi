@@ -1,150 +1,167 @@
-﻿using QuanLyCaPhe.DataAccess;
+﻿using QuanLyCaPhe.DAO;
 using QuanLyCaPhe.Models;
 using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+using System.Collections.Generic;
+using QuanLyCaPhe.Helpers;
+using QuanLyCaPhe.Views.Admin.DetailWindow;
+using Microsoft.Win32;
 
 namespace QuanLyCaPhe.Views.Admin
 {
-    /// <summary>
-    /// Interaction logic for ProductsPage.xaml
-    /// </summary>
     public partial class ProductsPage : Page
     {
-        public ObservableCollection<Products> ProductsList { get; set; }
+        // --- Khởi tạo & load ---
+        public List<Product> ProductsList { get; set; }
+
         public ProductsPage()
         {
             InitializeComponent();
-
-
-            // Khởi tạo collection
-            ProductsList = new ObservableCollection<Products>();
-
-            // Gán ItemsSource cho DataGrid
-            Productsdg.ItemsSource = ProductsList;
-
-            // Thêm dữ liệu demo
-            LoadDemoData();
+            Loaded += ProductsPage_Loaded;
         }
 
-        private void LoadDemoData()
+        private void ProductsPage_Loaded(object sender, RoutedEventArgs e)
         {
-            // Thêm 10 sản phẩm demo
-            ProductsList.Add(new Products { Id = 1, ProName = "Cà phê đen đá", Price = 25000 });
-            ProductsList.Add(new Products { Id = 2, ProName = "Cà phê sữa đá", Price = 30000 });
-            ProductsList.Add(new Products { Id = 3, ProName = "Cà phê bạc xỉu", Price = 35000 });
-            ProductsList.Add(new Products { Id = 4, ProName = "Trà đào cam sả", Price = 40000 });
-            ProductsList.Add(new Products { Id = 5, ProName = "Trà vải", Price = 38000 });
-            ProductsList.Add(new Products { Id = 6, ProName = "Sinh tố bơ", Price = 45000 });
-            ProductsList.Add(new Products { Id = 7, ProName = "Sinh tố xoài", Price = 42000 });
-            ProductsList.Add(new Products { Id = 8, ProName = "Nước ép cam", Price = 35000 });
-            ProductsList.Add(new Products { Id = 9, ProName = "Nước ép dưa hấu", Price = 32000 });
-            ProductsList.Add(new Products { Id = 10, ProName = "Bánh mì chảo", Price = 55000 });
-            ProductsList.Add(new Products { Id = 11, ProName = "Bánh croissant", Price = 28000 });
-            ProductsList.Add(new Products { Id = 12, ProName = "Mì Ý sốt bò bằm", Price = 65000 });
-            ProductsList.Add(new Products { Id = 13, ProName = "Kem matcha", Price = 38000 });
-            ProductsList.Add(new Products { Id = 14, ProName = "Kem chocolate", Price = 38000 });
-            ProductsList.Add(new Products { Id = 15, ProName = "Bánh tiramisu", Price = 45000 });
+            LoadData();
         }
 
-        // Sự kiện Click MENU SỬA
+        private void LoadData()
+        {
+            try
+            {
+                ProductsList = ProductDAO.Instance.GetListProduct();
+                Productsdg.ItemsSource = ProductsList;
+            }
+            catch
+            {
+                MessageBox.Show("mày đây r con chó");
+            }
+        }
+
+        // --- Đếm STT --- 
+        private void Productsdg_LoadingRow(object sender, DataGridRowEventArgs e)
+        {
+            e.Row.Header = (e.Row.GetIndex() + 1).ToString();
+        }
+
+        // --- Tìm kiếm ---
+        private void SearchBar_Clicked(object sender, string e)
+        {
+            Productsdg.ItemsSource = ProductDAO.Instance.SearchProductByName(SearchBar.Text);
+        }
+
+        // --- Thêm Mới ---
+        private void BtnAdd_Click(object sender, RoutedEventArgs e)
+        {
+            var f = new ProductDetailWindow();
+            if (f.ShowDialog() == true)
+            {
+                LoadData();
+            }
+        }
+
+        // --- Sửa Món ---
         private void BtnEdit_Click(object sender, RoutedEventArgs e)
         {
-            // 1. Lấy MenuItem (sender) và truy cập DataContext để có đối tượng Products
             var menuItem = sender as MenuItem;
-            var selectedProduct = menuItem?.DataContext as Products; // Sửa lỗi ở đây!
+            var selectedProduct = menuItem?.DataContext as Product;
 
             if (selectedProduct == null)
             {
-                // Điều này có thể xảy ra nếu ContextMenu không được click trên một Row hợp lệ
                 MessageBox.Show("Vui lòng chọn món cần sửa!");
                 return;
             }
 
-            // Đảm bảo hàng được chọn trong DataGrid (chỉ để highlight)
-            Productsdg.SelectedItem = selectedProduct;
-
-            // Mở cửa sổ sửa (Truyền món đó vào)
-            // Giả định ProductDetailWindow là tên cửa sổ của bạn
             var f = new ProductDetailWindow(selectedProduct);
-
-            // Khi cửa sổ ProductDetailWindow đóng với kết quả OK (true), chúng ta cần tải lại dữ liệu.
-            // LƯU Ý: Nếu bạn chỉ sửa dữ liệu trong đối tượng selectedProduct và không cần tải lại toàn bộ DB,
-            // bạn không cần gọi LoadDemoData() vì ObservableCollection sẽ tự cập nhật.
             if (f.ShowDialog() == true)
             {
-                // Nếu cửa sổ ProductDetailWindow có logic cập nhật trực tiếp vào DB,
-                // và bạn muốn refresh DataGrid:
-                LoadDemoData(); // Nếu bạn muốn refresh lại hoàn toàn từ DB, hãy gọi hàm tải dữ liệu thực tế ở đây.
-                // Nếu không có logic cập nhật, bạn có thể chỉ cần làm mới giao diện (nếu cần)
+                LoadData();
             }
         }
 
-        // Sự kiện Click MENU XÓA
+        // --- Xóa Món ---
         private void BtnDelete_Click(object sender, RoutedEventArgs e)
         {
-            // 1. Lấy MenuItem (sender) và truy cập DataContext để có đối tượng Products
             var menuItem = sender as MenuItem;
-            var selectedProduct = menuItem?.DataContext as Products; // Sửa lỗi ở đây!
+            var selectedProduct = menuItem?.DataContext as Product;
 
             if (selectedProduct == null) return;
 
-            // Hỏi cho chắc
             var result = MessageBox.Show($"Bạn có chắc muốn xóa món '{selectedProduct.ProName}' không?",
-                                         "Xác nhận xóa",
-                                         MessageBoxButton.YesNo,
-                                         MessageBoxImage.Warning);
+                                         "Xác nhận xóa", MessageBoxButton.YesNo, MessageBoxImage.Warning);
 
             if (result == MessageBoxResult.Yes)
             {
+                if (ProductDAO.Instance.DeleteProduct(selectedProduct.Id))
+                {
+                    MessageBox.Show("Đã xóa thành công!");
+                    LoadData();
+                }
+                else
+                {
+                    MessageBox.Show("Không thể xóa món này (Có thể món đã từng được bán trong hóa đơn).",
+                                    "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+            }
+            
+        }
+
+        // --- Click nút Import/Export Excel ---
+        private void IETable_Clicked(object sender, string e)
+        {
+            if (e == "Import") ImportData();
+            else ExportData();
+        }
+        // --- Import ---
+        private void ImportData()
+        {
+            var ofd = new OpenFileDialog() { Filter = "Excel Files|*.xlsx" };
+
+            if (ofd.ShowDialog() == true)
+            {
                 try
                 {
-                    // 1. Xóa trong Database
-                    // CHÚ Ý: Cần kiểm tra kỹ việc sử dụng String Interpolation trực tiếp trong SQL (SQL Injection)
-                    string sql = $"DELETE FROM Products WHERE Id = {selectedProduct.Id}";
-                    DBHelper.ExecuteNonQuery(sql);
+                    List<Product> importedList = ExcelHelper.ImportList<Product>(ofd.FileName);
 
-                    // 2. Xóa trên giao diện (ObservableCollection tự động cập nhật DataGrid)
-                    ProductsList.Remove(selectedProduct);
+                    int countAdd = 0;
+                    int countUpdate = 0;
+
+                    foreach (var item in importedList)
+                    {
+                        string excelName = item.ProName.Trim();
+                        int existingId = ProductDAO.Instance.GetIdByName(excelName);
+
+                        if (existingId != -1)
+                        {
+                            if (ProductDAO.Instance.UpdateProduct(existingId, excelName, item.Price))
+                                countUpdate++;
+                        }
+                        else
+                        {
+                            if (ProductDAO.Instance.InsertProduct(excelName, item.Price))
+                                countAdd++;
+                        }
+                    }
+
+                    LoadData();
+                    MessageBox.Show($"Xử lý xong!\n- Thêm mới: {countAdd} món\n- Cập nhật giá: {countUpdate} món", "Kết quả");
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show($"Xóa thất bại: {ex.Message}", "Lỗi Database", MessageBoxButton.OK, MessageBoxImage.Error);
+                    MessageBox.Show("Lỗi: " + ex.Message);
                 }
             }
         }
-
-        private void BtnAdd_Click(object sender, RoutedEventArgs e)
+        // --- Export ---
+        private void ExportData()
         {
-            // 1. Lấy MenuItem (sender) và truy cập DataContext để có đối tượng Products
-            var menuItem = sender as MenuItem;
-            var selectedProduct = menuItem?.DataContext as Products; // Sửa lỗi ở đây!
-
-            // Mở cửa sổ sửa (Truyền món đó vào)
-            // Giả định ProductDetailWindow là tên cửa sổ của bạn
-            var f = new ProductDetailWindow();
-
-            // Khi cửa sổ ProductDetailWindow đóng với kết quả OK (true), chúng ta cần tải lại dữ liệu.
-            // LƯU Ý: Nếu bạn chỉ sửa dữ liệu trong đối tượng selectedProduct và không cần tải lại toàn bộ DB,
-            // bạn không cần gọi LoadDemoData() vì ObservableCollection sẽ tự cập nhật.
-            if (f.ShowDialog() == true)
+            var sfd = new SaveFileDialog() { Filter = "Excel|*.xlsx", FileName = "DS_MonAn.xlsx" };
+            if (sfd.ShowDialog() == true)
             {
-                // Nếu cửa sổ ProductDetailWindow có logic cập nhật trực tiếp vào DB,
-                // và bạn muốn refresh DataGrid:
-                LoadDemoData(); // Nếu bạn muốn refresh lại hoàn toàn từ DB, hãy gọi hàm tải dữ liệu thực tế ở đây.
-                // Nếu không có logic cập nhật, bạn có thể chỉ cần làm mới giao diện (nếu cần)
+                var list = ProductDAO.Instance.GetListProduct();
+                ExcelHelper.ExportList<Product>(sfd.FileName, list, "SanPhams");
+                MessageBox.Show("Xuất xong!");
             }
         }
     }

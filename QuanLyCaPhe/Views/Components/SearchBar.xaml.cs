@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Identity.Client;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -20,9 +21,26 @@ namespace QuanLyCaPhe.Views.Components
     /// </summary>
     public partial class SearchBar : UserControl
     {
+        public event EventHandler<string> Clicked;
+        public string Text
+        {
+            get { return Searchtb.Text; }
+            set { Searchtb.Text = value; }
+        }
+
         public SearchBar()
         {
             InitializeComponent();
+        }
+
+        private void Searchbtn_Click(object sender, RoutedEventArgs e)
+        {
+            Clicked?.Invoke(this, Searchtb.Text);
+        }
+
+        private void Searchtb_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            Clicked?.Invoke(this, Searchtb.Text);
         }
     }
 }
