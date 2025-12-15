@@ -32,14 +32,16 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <!--________________________________Chữ Chào Mừng__________________________________-->
+        <!--________________________________Món__________________________________-->
         <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" 
                    Padding="10" Foreground="{StaticResource PrimaryLightColor}"
                    Text="Món" FontSize="36" FontWeight="Bold"/>
 
         <Grid Grid.Row="1">
-            <comp:ExcelControl HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="3"/>
-            <comp:SearchBar HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="3"/>
+            <comp:ExcelControl x:Name="IETable" Clicked="IETable_Clicked"
+                HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="3"/>
+            <comp:SearchBar x:Name="SearchBar" Clicked="SearchBar_Clicked"
+                            HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="3"/>
         </Grid>
 
         <Border Style="{StaticResource LiquidGlassStyle}" 
@@ -49,6 +51,7 @@
                           AutoGenerateColumns="False" 
                           IsReadOnly="True" 
                           SelectionMode="Single"
+                          LoadingRow="Productsdg_LoadingRow"
                           Style="{StaticResource CardStyleDataGridStyle}">
 
                     <DataGrid.RowStyle>
@@ -57,9 +60,9 @@
                         </Style>
                     </DataGrid.RowStyle>
                     <DataGrid.Columns>
-                        <DataGridTextColumn Header="ID" Binding="{Binding Id}" Width="auto"/>
+                        <DataGridTextColumn Header="STT" Binding="{Binding RelativeSource={RelativeSource AncestorType=DataGridRow}, Path=Header}" Width="auto"/>
                         <DataGridTextColumn Header="Tên món" Binding="{Binding ProName}" Width="*"/>
-                        <DataGridTextColumn Header="Giá bán" Binding="{Binding Price, StringFormat={}{0:N0}đ}" Width="auto"/>
+                        <DataGridTextColumn Header="Giá bán" Binding="{Binding Price, StringFormat={}{0:N0}đ}" Width="*"/>
                     </DataGrid.Columns>
                 </DataGrid>
             </Grid>

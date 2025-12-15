@@ -1,46 +1,38 @@
-﻿using QuanLyCaPhe.DAO;
+﻿using Microsoft.Win32;
+using QuanLyCaPhe.DAO;
+using QuanLyCaPhe.Helpers;
 using QuanLyCaPhe.Models;
-using System;
+using QuanLyCaPhe.Views.Admin.DetailWindow;
 using System.Windows;
 using System.Windows.Controls;
-using System.Collections.Generic;
-using QuanLyCaPhe.Helpers;
-using QuanLyCaPhe.Views.Admin.DetailWindow;
-using Microsoft.Win32;
 
 namespace QuanLyCaPhe.Views.Admin
 {
-    public partial class ProductsPage : Page
+    /// <summary>
+    /// Interaction logic for IngredientsPage.xaml
+    /// </summary>
+    public partial class IngredientPage : Page
     {
-        // --- Khởi tạo & load ---
-        public List<Product> ProductsList { get; set; }
+        public List<Ingredient> IngredientList { get; set; }
 
-        public ProductsPage()
+        public IngredientPage()
         {
             InitializeComponent();
-            Loaded += ProductsPage_Loaded;
+            Loaded += IngredientsPage_Loaded;
         }
 
-        private void ProductsPage_Loaded(object sender, RoutedEventArgs e)
+        private void IngredientsPage_Loaded(object sender, RoutedEventArgs e)
         {
             LoadData();
         }
 
         private void LoadData()
         {
-            try
-            {
-                ProductsList = ProductDAO.Instance.GetListProduct();
-                Productsdg.ItemsSource = ProductsList;
-            }
-            catch
-            {
-                MessageBox.Show("mày đây r con chó");
-            }
+            Ingredientsdg.ItemsSource = IngredientDAO.Instance.GetListIngredient();
         }
 
         // --- Đếm STT --- 
-        private void Productsdg_LoadingRow(object sender, DataGridRowEventArgs e)
+        private void Ingredientsdg_LoadingRow(object sender, DataGridRowEventArgs e)
         {
             e.Row.Header = (e.Row.GetIndex() + 1).ToString();
         }
@@ -48,13 +40,13 @@ namespace QuanLyCaPhe.Views.Admin
         // --- Tìm kiếm ---
         private void SearchBar_Clicked(object sender, string e)
         {
-            Productsdg.ItemsSource = ProductDAO.Instance.SearchProductByName(SearchBar.Text);
+            Ingredientsdg.ItemsSource = IngredientDAO.Instance.SearchIngredientByName(SearchBar.Text);
         }
 
         // --- Thêm Mới ---
         private void BtnAdd_Click(object sender, RoutedEventArgs e)
         {
-            var f = new ProductDetailWindow();
+            var f = new IngredientDetailWindow();
             if (f.ShowDialog() == true)
             {
                 LoadData();
@@ -65,15 +57,15 @@ namespace QuanLyCaPhe.Views.Admin
         private void BtnEdit_Click(object sender, RoutedEventArgs e)
         {
             var menuItem = sender as MenuItem;
-            var selectedProduct = menuItem?.DataContext as Product;
+            var selectedIngredient = menuItem?.DataContext as Ingredient;
 
-            if (selectedProduct == null)
+            if (selectedIngredient == null)
             {
                 MessageBox.Show("Vui lòng chọn món cần sửa!");
                 return;
             }
 
-            var f = new ProductDetailWindow(selectedProduct);
+            var f = new IngredientDetailWindow(selectedIngredient);
             if (f.ShowDialog() == true)
             {
                 LoadData();
@@ -84,27 +76,27 @@ namespace QuanLyCaPhe.Views.Admin
         private void BtnDelete_Click(object sender, RoutedEventArgs e)
         {
             var menuItem = sender as MenuItem;
-            var selectedProduct = menuItem?.DataContext as Product;
+            var selectedIngredient = menuItem?.DataContext as Ingredient;
 
-            if (selectedProduct == null) return;
+            if (selectedIngredient == null) return;
 
-            var result = MessageBox.Show($"Bạn có chắc muốn xóa món '{selectedProduct.ProName}' không?",
+            var result = MessageBox.Show($"Bạn có chắc muốn xóa nguyên liệu '{selectedIngredient.IngName}' không?",
                                          "Xác nhận xóa", MessageBoxButton.YesNo, MessageBoxImage.Warning);
 
             if (result == MessageBoxResult.Yes)
             {
-                if (ProductDAO.Instance.DeleteProduct(selectedProduct.Id))
+                try
                 {
+                    IngredientDAO.Instance.DeleteIngredient(selectedIngredient.Id);
                     MessageBox.Show("Đã xóa thành công!");
                     LoadData();
                 }
-                else
+                catch
                 {
-                    MessageBox.Show("Không thể xóa món này (Có thể món đã từng được bán trong hóa đơn).",
+                    MessageBox.Show("Không thể xóa nguyên liệu này.",
                                     "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
             }
-            
         }
 
         // --- Click nút Import/Export Excel ---
@@ -122,30 +114,30 @@ namespace QuanLyCaPhe.Views.Admin
             {
                 try
                 {
-                    List<Product> importedList = ExcelHelper.ImportList<Product>(ofd.FileName);
+                    List<Ingredient> importedList = ExcelHelper.ImportList<Ingredient>(ofd.FileName);
 
                     int countAdd = 0;
                     int countUpdate = 0;
 
                     foreach (var item in importedList)
                     {
-                        string excelName = item.ProName.Trim();
-                        int existingId = ProductDAO.Instance.GetIdByName(excelName);
+                        string excelName = item.IngName.Trim();
+                        int existingId = IngredientDAO.Instance.GetIdByName(excelName);
 
                         if (existingId != -1)
                         {
-                            if (ProductDAO.Instance.UpdateProduct(existingId, excelName, item.Price))
+                            if (IngredientDAO.Instance.UpdateIngredient(existingId, excelName, item.Unit, item.Quantity))
                                 countUpdate++;
                         }
                         else
                         {
-                            if (ProductDAO.Instance.InsertProduct(excelName, item.Price))
+                            if (IngredientDAO.Instance.InsertIngredient(excelName, item.Unit, item.Quantity))
                                 countAdd++;
                         }
                     }
 
                     LoadData();
-                    MessageBox.Show($"Xử lý xong!\n- Thêm mới: {countAdd} món\n- Cập nhật giá: {countUpdate} món", "Kết quả");
+                    MessageBox.Show($"Xử lý xong!\n- Thêm mới: {countAdd} nguyên liệu\n- Cập nhật : {countUpdate} nguyên liệu", "Kết quả");
                 }
                 catch (Exception ex)
                 {
@@ -156,11 +148,11 @@ namespace QuanLyCaPhe.Views.Admin
         // --- Export ---
         private void ExportData()
         {
-            var sfd = new SaveFileDialog() { Filter = "Excel|*.xlsx", FileName = "DS_MonAn.xlsx" };
+            var sfd = new SaveFileDialog() { Filter = "Excel|*.xlsx", FileName = "DS_NguyenLieu.xlsx" };
             if (sfd.ShowDialog() == true)
             {
-                var list = ProductDAO.Instance.GetListProduct();
-                ExcelHelper.ExportList<Product>(sfd.FileName, list, "SanPhams");
+                var list = IngredientDAO.Instance.GetListIngredient();
+                ExcelHelper.ExportList<Ingredient>(sfd.FileName, list, "NguyenLieus");
                 MessageBox.Show("Xuất xong!");
             }
         }

@@ -6,13 +6,9 @@
         xmlns:local="clr-namespace:QuanLyCaPhe.Views.Admin"
         mc:Ignorable="d"
         Title="AdminWindow"
-        MinHeight="600" MinWidth="1000"
+        MinHeight="650" MinWidth="1000"
         WindowStyle="SingleBorderWindow">
-    <Window.Background>
-        <SolidColorBrush Color="AliceBlue" Opacity=".7"/>
-    </Window.Background>
-    
-    <Grid>
+    <Grid Background="Black">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="auto"/>
             <ColumnDefinition Width="*"/>

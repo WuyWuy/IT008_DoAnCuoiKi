@@ -5,42 +5,37 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Collections.Generic;
 using QuanLyCaPhe.Helpers;
-using QuanLyCaPhe.Views.Admin.DetailWindow;
 using Microsoft.Win32;
+using QuanLyCaPhe.Views.Admin.DetailWindow;
+using QuanLyCaPhe.Views.Components;
+using QuanLyCaPhe.DataAccess;
 
 namespace QuanLyCaPhe.Views.Admin
 {
-    public partial class ProductsPage : Page
+    public partial class UserPage : Page
     {
         // --- Khởi tạo & load ---
-        public List<Product> ProductsList { get; set; }
+        public List<User> UserList { get; set; }
 
-        public ProductsPage()
+        public UserPage()
         {
             InitializeComponent();
-            Loaded += ProductsPage_Loaded;
+            Loaded += StaffsPage_Loaded;
         }
 
-        private void ProductsPage_Loaded(object sender, RoutedEventArgs e)
+        private void StaffsPage_Loaded(object sender, RoutedEventArgs e)
         {
             LoadData();
         }
 
         private void LoadData()
         {
-            try
-            {
-                ProductsList = ProductDAO.Instance.GetListProduct();
-                Productsdg.ItemsSource = ProductsList;
-            }
-            catch
-            {
-                MessageBox.Show("mày đây r con chó");
-            }
+            UserList = UserDAO.Instance.GetListUser();
+            Usersdg.ItemsSource = UserList;
         }
 
         // --- Đếm STT --- 
-        private void Productsdg_LoadingRow(object sender, DataGridRowEventArgs e)
+        private void Usersdg_LoadingRow(object sender, DataGridRowEventArgs e)
         {
             e.Row.Header = (e.Row.GetIndex() + 1).ToString();
         }
@@ -48,13 +43,13 @@ namespace QuanLyCaPhe.Views.Admin
         // --- Tìm kiếm ---
         private void SearchBar_Clicked(object sender, string e)
         {
-            Productsdg.ItemsSource = ProductDAO.Instance.SearchProductByName(SearchBar.Text);
+            Usersdg.ItemsSource = UserDAO.Instance.SearchUserByAll(SearchBar.Text);
         }
 
         // --- Thêm Mới ---
         private void BtnAdd_Click(object sender, RoutedEventArgs e)
         {
-            var f = new ProductDetailWindow();
+            var f = new UserDetailWindow();
             if (f.ShowDialog() == true)
             {
                 LoadData();
@@ -65,15 +60,15 @@ namespace QuanLyCaPhe.Views.Admin
         private void BtnEdit_Click(object sender, RoutedEventArgs e)
         {
             var menuItem = sender as MenuItem;
-            var selectedProduct = menuItem?.DataContext as Product;
+            var selectedUser = menuItem?.DataContext as User;
 
-            if (selectedProduct == null)
+            if (selectedUser == null)
             {
                 MessageBox.Show("Vui lòng chọn món cần sửa!");
                 return;
             }
 
-            var f = new ProductDetailWindow(selectedProduct);
+            var f = new UserDetailWindow(selectedUser);
             if (f.ShowDialog() == true)
             {
                 LoadData();
@@ -84,27 +79,26 @@ namespace QuanLyCaPhe.Views.Admin
         private void BtnDelete_Click(object sender, RoutedEventArgs e)
         {
             var menuItem = sender as MenuItem;
-            var selectedProduct = menuItem?.DataContext as Product;
+            var selectedUser = menuItem?.DataContext as User;
 
-            if (selectedProduct == null) return;
+            if (selectedUser == null) return;
 
-            var result = MessageBox.Show($"Bạn có chắc muốn xóa món '{selectedProduct.ProName}' không?",
+            var result = MessageBox.Show($"Bạn có chắc muốn xóa nhân viên '{selectedUser.FullName}' không?",
                                          "Xác nhận xóa", MessageBoxButton.YesNo, MessageBoxImage.Warning);
 
             if (result == MessageBoxResult.Yes)
             {
-                if (ProductDAO.Instance.DeleteProduct(selectedProduct.Id))
+                if (UserDAO.Instance.DeleteUser(selectedUser.Id))
                 {
                     MessageBox.Show("Đã xóa thành công!");
                     LoadData();
                 }
                 else
                 {
-                    MessageBox.Show("Không thể xóa món này (Có thể món đã từng được bán trong hóa đơn).",
+                    MessageBox.Show("Không thể xóa nhân viên này.",
                                     "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
             }
-            
         }
 
         // --- Click nút Import/Export Excel ---
@@ -122,30 +116,30 @@ namespace QuanLyCaPhe.Views.Admin
             {
                 try
                 {
-                    List<Product> importedList = ExcelHelper.ImportList<Product>(ofd.FileName);
+                    List<User> importedList = ExcelHelper.ImportList<User>(ofd.FileName);
 
                     int countAdd = 0;
                     int countUpdate = 0;
 
                     foreach (var item in importedList)
                     {
-                        string excelName = item.ProName.Trim();
-                        int existingId = ProductDAO.Instance.GetIdByName(excelName);
+                        string excelEmail = item.Email.Trim();
+                        int existingId = UserDAO.Instance.GetIdByEmail(excelEmail);
 
                         if (existingId != -1)
                         {
-                            if (ProductDAO.Instance.UpdateProduct(existingId, excelName, item.Price))
+                            if (UserDAO.Instance.UpdateUser(existingId, item.FullName, item.Phone, item.Address, item.Gender, item.RoleName))
                                 countUpdate++;
                         }
                         else
                         {
-                            if (ProductDAO.Instance.InsertProduct(excelName, item.Price))
+                            if (UserDAO.Instance.InsertUser(item.FullName, item.Email, item.Phone, item.Address, item.Gender, Constants.DEFAULT_PASSWORD, item.RoleName))
                                 countAdd++;
                         }
                     }
 
                     LoadData();
-                    MessageBox.Show($"Xử lý xong!\n- Thêm mới: {countAdd} món\n- Cập nhật giá: {countUpdate} món", "Kết quả");
+                    MessageBox.Show($"Xử lý xong!\n- Thêm mới: {countAdd} nhân viên\n- Cập nhật thông tin: {countUpdate} nhân viên", "Kết quả");
                 }
                 catch (Exception ex)
                 {
@@ -156,11 +150,11 @@ namespace QuanLyCaPhe.Views.Admin
         // --- Export ---
         private void ExportData()
         {
-            var sfd = new SaveFileDialog() { Filter = "Excel|*.xlsx", FileName = "DS_MonAn.xlsx" };
+            var sfd = new SaveFileDialog() { Filter = "Excel|*.xlsx", FileName = "DS_NhanVien.xlsx" };
             if (sfd.ShowDialog() == true)
             {
-                var list = ProductDAO.Instance.GetListProduct();
-                ExcelHelper.ExportList<Product>(sfd.FileName, list, "SanPhams");
+                var list = UserDAO.Instance.GetListUser();
+                ExcelHelper.ExportList<User>(sfd.FileName, list, "NhanViens");
                 MessageBox.Show("Xuất xong!");
             }
         }

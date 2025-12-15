@@ -11,15 +11,9 @@
 
     <Page.Resources>
         <ContextMenu x:Key="ContextMenu">
-            <MenuItem x:Name="BtnEdit" Header="Sửa hóa đơn này" Click="BtnEdit_Click">
+            <MenuItem x:Name="BtnInfo" Header="Xem chi tiết" Click="BtnInfo_Click">
                 <MenuItem.Icon>
                     <TextBlock Text="&#xE70F;" FontFamily="Segoe MDL2 Assets"/>
-                </MenuItem.Icon>
-            </MenuItem>
-
-            <MenuItem x:Name="BtnDelete" Header="Xóa hóa đơn này" Foreground="Red" Click="BtnDelete_Click">
-                <MenuItem.Icon>
-                    <TextBlock Text="&#xE74D;" FontFamily="Segoe MDL2 Assets" Foreground="Red"/>
                 </MenuItem.Icon>
             </MenuItem>
         </ContextMenu>
@@ -27,27 +21,26 @@
 
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="0.15*"/>
-            <RowDefinition Height="auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <!--________________________________Hóa đơn__________________________________-->
-        <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" 
-                   Padding="10" Foreground="{StaticResource PrimaryLightColor}"
-                   Text="Hóa Đơn" FontSize="36" FontWeight="Bold"/>
+        <TextBlock Grid.Row="0" Padding="20,10" Foreground="{StaticResource PrimaryLightColor}"
+                   Text="Lịch Sử Hóa Đơn" FontSize="32" FontWeight="Bold"/>
 
-        <Grid Grid.Row="1">
-            <comp:ExcelControl HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="3"/>
-            
-            <comp:SearchBar HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="3"/>
+        <Grid Grid.Row="1" Margin="20,0,20,10">
+            <comp:SearchBar HorizontalAlignment="Right" Clicked="SearchBar_Clicked" Width="300"/>
         </Grid>
 
-        <Border Style="{StaticResource LiquidGlassStyle}" 
-                Grid.Row="2" Margin="4" Padding="4, 4, 4 ,10">
-            <DataGrid x:Name="Billsdg" Grid.Row="2"
-          AutoGenerateColumns="False" CanUserAddRows="False" IsReadOnly="True" SelectionMode="Single"
-          Style="{StaticResource CardStyleDataGridStyle}">
+        <Border Style="{StaticResource LiquidGlassStyle}" Grid.Row="2" Margin="10" Padding="5">
+            <DataGrid x:Name="Billsdg" 
+                      AutoGenerateColumns="False" 
+                      CanUserAddRows="False" 
+                      LoadingRow="Billsdg_LoadingRow"
+                      IsReadOnly="True" 
+                      SelectionMode="Single"
+                      Style="{StaticResource CardStyleDataGridStyle}">
 
                 <DataGrid.RowStyle>
                     <Style TargetType="DataGridRow" BasedOn="{StaticResource CardRowType}">
@@ -56,23 +49,13 @@
                 </DataGrid.RowStyle>
 
                 <DataGrid.Columns>
-                    <DataGridTextColumn Header="ID" Binding="{Binding Id}" Width="auto"/>
-                    <DataGridTextColumn Header="Tên nhân viên" Binding="{Binding StaffName}" Width="*"/>
-                    <DataGridTextColumn Header="Thời gian" Binding="{Binding Time}" Width="auto"/>
-                    <DataGridTextColumn Header="Bàn số" Binding="{Binding Quantity}" Width="auto"/>
-                    <DataGridTextColumn Header="Tổng đơn" Binding="{Binding Price}" Width="auto"/>
+                    <DataGridTextColumn Header="STT" Binding="{Binding RelativeSource={RelativeSource AncestorType=DataGridRow}, Path=Header}" Width="80"/>
+                    <DataGridTextColumn Header="Thời gian" Binding="{Binding DateCheckIn, StringFormat='dd/MM/yyyy HH:mm'}" Width="150"/>
+                    <DataGridTextColumn Header="Bàn" Binding="{Binding TableName}" Width="100"/>
+                    <DataGridTextColumn Header="Nhân viên" Binding="{Binding StaffName}" Width="*"/>
+                    <DataGridTextColumn Header="Tổng tiền" Binding="{Binding TotalPrice, StringFormat={}{0:N0}}" Width="120" FontWeight="Bold"/>
                 </DataGrid.Columns>
-
-
             </DataGrid>
         </Border>
-
-        <Button x:Name="BtnAdd" Grid.Row="2" Panel.ZIndex="999"
-        Style="{StaticResource FabButtonStyle}"
-        HorizontalAlignment="Right" VerticalAlignment="Bottom"
-        Click="BtnAdd_Click">
-            <TextBlock Text="&#xE710;" FontFamily="Segoe MDL2 Assets" 
-               FontSize="20" FontWeight="Bold" Foreground="White"/>
-        </Button>
     </Grid>
 </Page>

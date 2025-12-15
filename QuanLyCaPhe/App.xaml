@@ -22,6 +22,7 @@
                 <ResourceDictionary Source="/Resources/Styles/NumbericBox.xaml"/>
                 <ResourceDictionary Source="/Resources/Styles/LastBillStyle.xaml"/>
                 <ResourceDictionary Source="/Resources/Styles/ScheduleStyles.xaml"/>
+                <ResourceDictionary Source="/Resources/Styles/MAIN_THEME.xaml"/>
             </ResourceDictionary.MergedDictionaries>
             
             <!-- Default Color -->
@@ -37,6 +38,7 @@
             
             <!-- Default Info -->
             <sys:String x:Key="TenQuan">LTTQ Coffee</sys:String>
+            
         </ResourceDictionary>
     </Application.Resources>
 </Application>

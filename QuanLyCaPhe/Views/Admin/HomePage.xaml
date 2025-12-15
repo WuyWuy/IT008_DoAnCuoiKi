@@ -30,7 +30,6 @@
         <Border Grid.Row="1" Grid.Column="0" Grid.RowSpan="2" 
                 Width="auto" Padding="10"
                 Margin="10, 0"
-                BorderThickness="1"
                 Background="White"
                 Style="{StaticResource RunningGlowBorderStyle}">
             <Grid>
@@ -48,7 +47,6 @@
         <Border Grid.Row="1" Grid.Column="1" 
                 Padding="10"
                 Margin="4"
-                BorderThickness="1"
                 Background="#FF9F43" Opacity="0.9"
                 Style="{StaticResource RunningGlowBorderStyle}">
             <Grid>
@@ -72,7 +70,6 @@
         <Border Grid.Row="1" Grid.Column="2" 
                 Padding="10"
                 Margin="4"
-                BorderThickness="1"
                 Background="#54A0FF" Opacity="0.6"
                 Style="{StaticResource RunningGlowBorderStyle}">
             <Grid>
@@ -144,7 +141,6 @@
         <Border Grid.Row="3" Grid.Column="0" Grid.RowSpan="2"
                 Padding="10"
                 Margin="10"
-                BorderThickness="1"
                 Background="White"
                 Style="{StaticResource RunningGlowBorderStyle}">
             <Frame x:Name="MiniChart"/>
@@ -154,7 +150,6 @@
         <Border Grid.Row="3" Grid.Column="1" Grid.RowSpan="2" Grid.ColumnSpan="2"
                 Padding="10"
                 Margin="10"
-                BorderThickness="1"
                 Background="White"
                 Style="{StaticResource RunningGlowBorderStyle}">
             <Frame Width="auto" x:Name="LastBill" 

@@ -13,6 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using System.Windows.Media.Animation;
 using QuanLyCaPhe.Views.SharedPage;
+using DocumentFormat.OpenXml.Drawing.Diagrams;
 
 namespace QuanLyCaPhe.Views.Admin
 {
@@ -25,6 +26,7 @@ namespace QuanLyCaPhe.Views.Admin
         {
             InitializeComponent();
             this.Loaded += AdminWindow_Loaded;
+            //curClick = Homebtn;
         }
 
         private void AdminWindow_Loaded(object sender, RoutedEventArgs e)
@@ -44,12 +46,12 @@ namespace QuanLyCaPhe.Views.Admin
 
         private void Ingredbtn_Click(object sender, RoutedEventArgs e)
         {
-            MainFrame.Navigate(new IngredientsPage());
+            MainFrame.Navigate(new IngredientPage());
         }
 
         private void Staffbtn_Click(object sender, RoutedEventArgs e)
         {
-            MainFrame.Navigate(new StaffPage());
+            MainFrame.Navigate(new UserPage());
         }
 
         private void Timelbtn_Click(object sender, RoutedEventArgs e)
@@ -74,7 +76,7 @@ namespace QuanLyCaPhe.Views.Admin
 
         private void Suplybtn_Click(object sender, RoutedEventArgs e)
         {
-            MainFrame.Navigate(new SuppliesPage());
+            MainFrame.Navigate(new InputInfoPage());
         }
 
         private void Billbtn_Click(object sender, RoutedEventArgs e)

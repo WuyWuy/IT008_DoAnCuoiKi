@@ -13,6 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Threading;
+using QuanLyCaPhe.DAO;
 
 namespace QuanLyCaPhe.Views.Admin
 {
@@ -49,7 +50,7 @@ namespace QuanLyCaPhe.Views.Admin
         {
             LoadOverviewData();
             MiniChart.Navigate(new ProfitChartPage());
-            LastBill.Navigate(new LastBillsPage());
+            LastBill.Navigate(new LastBillPage());
 
         }
 
@@ -60,10 +61,10 @@ namespace QuanLyCaPhe.Views.Admin
                 // --- PHẦN 1: LẤY DỮ LIỆU (Giả lập - Bạn thay thế bằng code gọi Database thật ở đây) ---
 
                 // Ví dụ: int productCount = DataProvider.Ins.DB.Products.Count();
-                int productCount = 42;
+                int productCount = ProductDAO.Instance.GetCountProduct();
 
                 // Ví dụ: int staffCount = DataProvider.Ins.DB.Staffs.Count();
-                int staffCount = 8;
+                int staffCount = UserDAO.Instance.GetCountUser();
 
                 // Ví dụ: decimal totalIncome = DataProvider.Ins.DB.Bills.Sum(x => x.Total);
                 decimal totalIncome = 15600000;

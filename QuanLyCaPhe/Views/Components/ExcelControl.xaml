@@ -75,10 +75,10 @@
         <Button x:Name="Importbtn" Grid.Column="0"
                 Content="Import" 
                 Margin="0, 0, 5, 0"
-                Style="{StaticResource GlassButtonStyle}"/>
+                Style="{StaticResource GlassButtonStyle}" Click="Importbtn_Click"/>
         
         <Button x:Name="Exportbtn" Grid.Column="1"
                 Content="Export"
-                Style="{StaticResource GlassButtonStyle}"/>
+                Style="{StaticResource GlassButtonStyle}" Click="Exportbtn_Click"/>
     </Grid>
 </UserControl>

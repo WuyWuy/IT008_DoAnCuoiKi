@@ -23,12 +23,12 @@ namespace QuanLyCaPhe.Views.Admin
     // =========================================================
     // 2. LOGIC CHÍNH CỦA CỬA SỔ
     // =========================================================
-    public partial class LastBillsPage : Page
+    public partial class LastBillPage : Page
     {
         // Danh sách liên kết với giao diện (ListBox)
         public ObservableCollection<Activity> RecentActivities { get; set; }
 
-        public LastBillsPage()
+        public LastBillPage()
         {
             InitializeComponent();
 
