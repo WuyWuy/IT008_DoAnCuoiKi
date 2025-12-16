@@ -24,5 +24,21 @@ namespace QuanLyCaPhe.Views.Admin
         {
             InitializeComponent();
         }
+
+        private void BtnManageRecipe_Click(object sender, RoutedEventArgs e)
+        {
+            var menuItem = sender as MenuItem;
+            var selectedProduct = menuItem?.DataContext as Product;
+
+            if (selectedProduct == null)
+            {
+                MessageBox.Show("Vui lòng chọn món cần quản lý công thức!");
+                return;
+            }
+
+            var w = new RecipeEditorWindow(selectedProduct.Id, selectedProduct.ProName);
+            w.ShowDialog();
+            // no direct change to products; recipes managed separately
+        }
     }
 }

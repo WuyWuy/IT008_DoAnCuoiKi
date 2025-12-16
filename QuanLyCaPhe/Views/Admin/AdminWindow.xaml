@@ -42,6 +42,11 @@
                 <Button x:Name="Profitbtn" Content="Doanh thu"
                         Style="{StaticResource AdminButtonStyle}"
                         Click="Profitbtn_Click"/>
+                
+                <!-- Logout button -->
+                <Button x:Name="Logoutbtn" Content="Đăng xuất"
+                        Style="{StaticResource AdminButtonStyle}"
+                        Click="Logoutbtn_Click"/>
             </StackPanel>
             
         </Border>
