@@ -93,7 +93,7 @@ namespace QuanLyCaPhe.Views.SharedPage
                         // lock: suppress further upward scrolling
                         e.Handled = true;
                         return;
-                    }
+        }
                 }
                 // otherwise let it scroll normally
             };
@@ -344,8 +344,8 @@ namespace QuanLyCaPhe.Views.SharedPage
                         TimeSpan start = s.StartTime;
                         TimeSpan duration = s.EndTime - s.StartTime;
                         AddShiftToGrid(name, date, start, duration, s.Id, s.UserId);
-                    }
-                }
+            }
+        }
                 catch { }
             }
 
@@ -457,6 +457,7 @@ namespace QuanLyCaPhe.Views.SharedPage
             cbEndMinute.SelectedItem = endTime.Minutes;
 
             PopupOverlay.Visibility = Visibility.Visible;
+            txtName.Focus();
         }
 
         private void Confirm_Click(object sender, RoutedEventArgs e)
@@ -524,6 +525,7 @@ namespace QuanLyCaPhe.Views.SharedPage
             {
                 Text = $"{name}\n{start:hh\\:mm}-{start.Add(duration):hh\\:mm}",
                 FontSize = 10,
+                Foreground = new SolidColorBrush(Color.FromRgb(67, 56, 202)),
                 VerticalAlignment = VerticalAlignment.Center,
                 HorizontalAlignment = HorizontalAlignment.Center,
                 TextAlignment = TextAlignment.Center

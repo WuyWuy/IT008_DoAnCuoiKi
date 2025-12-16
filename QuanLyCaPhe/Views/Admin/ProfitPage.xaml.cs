@@ -23,6 +23,7 @@ namespace QuanLyCaPhe.Views.Admin
         public ProfitPage()
         {
             InitializeComponent();
+            ChartFrame.Navigate(new ProfitChartPage());
         }
     }
 }

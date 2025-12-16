@@ -42,7 +42,7 @@
                 <!-- Top-left corner (label) -->
                 <Border Grid.Row="0" Grid.Column="0" Style="{StaticResource HeaderBorderStyle}" Padding="10,0,0,0">
                     <TextBlock Text="Ngày" VerticalAlignment="Center" Foreground="#6B7280" FontWeight="Bold" />
-                </Border>
+            </Border>
 
                 <!-- Time headers (horizontal scroll synced with content) -->
                 <ScrollViewer x:Name="HeaderScrollViewer" Grid.Row="0" Grid.Column="1" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Disabled" Focusable="False" CanContentScroll="False" Background="Transparent" Padding="0">
@@ -60,7 +60,7 @@
                 <!-- Main scrollable content -->
                 <ScrollViewer x:Name="ContentScrollViewer" Grid.Row="1" Grid.Column="1" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" ScrollChanged="ContentScrollViewer_ScrollChanged" CanContentScroll="False" Background="Transparent" Padding="0">
                     <Grid x:Name="ScheduleGrid" Margin="0" SnapsToDevicePixels="True" UseLayoutRounding="True"/>
-                </ScrollViewer>
+        </ScrollViewer>
             </Grid>
         </Border>
 

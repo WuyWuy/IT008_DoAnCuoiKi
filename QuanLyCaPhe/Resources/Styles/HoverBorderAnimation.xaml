@@ -1,0 +1,20 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <!-- ============================ -->
+    <!-- ANIMATION STYLES -->
+    <!-- ============================ -->
+    <Style x:Key="HoverAnimationStyle" TargetType="Border">
+        <Setter Property="CacheMode" Value="BitmapCache"/>
+        <Setter Property="RenderTransform">
+            <Setter.Value>
+                <ScaleTransform ScaleX="1" ScaleY="1"/>
+            </Setter.Value>
+        </Setter>
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="BorderBrush" Value="Blue"/>
+                <Setter Property="Background" Value="#F8FAFF"/>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+</ResourceDictionary>

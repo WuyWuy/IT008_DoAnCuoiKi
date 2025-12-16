@@ -23,6 +23,21 @@ namespace QuanLyCaPhe.Views.Components
         public DateToDatePicker()
         {
             InitializeComponent();
+            LoadDatePicker(0);
+        }
+
+
+        private void Classify_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (StartDate == null || EndDate == null) return;
+
+            LoadDatePicker(Classify.SelectedIndex);
+        }
+
+        private void LoadDatePicker(int idx)
+        {
+            StartDate.LoadDate(idx);
+            EndDate.LoadDate(idx);
         }
     }
 }

@@ -5,17 +5,21 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:QuanLyCaPhe.Views.Admin"
         mc:Ignorable="d"
-        WindowState="Maximized"
-        Title="AdminWindow" Height="450" Width="800">
-    <Grid>
+        Title="AdminWindow"
+        MinHeight="650" MinWidth="1000"
+        WindowStyle="SingleBorderWindow">
+    <Grid Background="Black">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="auto"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
-        
+
         <Border x:Name="Sidebar" Grid.Column="0" Panel.ZIndex="1"
-                MouseEnter="Sidebar_MouseEnter"
-                MouseLeave="Sidebar_MouseLeave"
+                CornerRadius="20"
+                Margin="-20, 0, 0, -20"
+                Width="200"
+                Background="RosyBrown"
+                ClipToBounds="True"
                 Style="{StaticResource AdminSideBarStyle}">
             
             <StackPanel>
@@ -35,10 +39,17 @@
                         Style="{StaticResource AdminButtonStyle}"
                         Click="Staffbtn_Click"/>
 
+                <Button x:Name="Suplybtn" Content="Hàng hóa"
+                        Style="{StaticResource AdminButtonStyle}"
+                        Click="Suplybtn_Click"/>
+
+                <Button x:Name="Billbtn" Content="Hóa đơn"
+                        Style="{StaticResource AdminButtonStyle}"
+                        Click="Billbtn_Click"/>
                 <Button x:Name="Timelbtn" Content="Ca làm"
                         Style="{StaticResource AdminButtonStyle}"
                         Click="Timelbtn_Click"/>
-                
+
                 <Button x:Name="Profitbtn" Content="Doanh thu"
                         Style="{StaticResource AdminButtonStyle}"
                         Click="Profitbtn_Click"/>
@@ -48,14 +59,22 @@
                         Style="{StaticResource AdminButtonStyle}"
                         Click="Logoutbtn_Click"/>
             </StackPanel>
-            
+
         </Border>
 
-        <Frame x:Name="MainFrame" Panel.ZIndex="1" 
-               Grid.Column="1" NavigationUIVisibility="Hidden"
-               Background="Aqua">
+        <Button x:Name="Menubtn" Grid.Column="0" Margin="10" 
+                Background="Transparent"
+                VerticalAlignment="Top" HorizontalAlignment="Right"
+                Panel.ZIndex="999"
+                Style="{StaticResource FabButtonStyle}"
+                Click="Menubtn_Click">
+            <TextBlock Text="&#xE700;" FontFamily="Segoe MDL2 Assets" 
+                       FontSize="20" FontWeight="Bold" Foreground="Black"/>
+        </Button>
+        
 
-        </Frame>
+        <Frame x:Name="MainFrame" Panel.ZIndex="1" Margin="10, 0, 5, 0"
+               Grid.Column="2" NavigationUIVisibility="Hidden" Background="Transparent" />
 
     </Grid>
 </Window>

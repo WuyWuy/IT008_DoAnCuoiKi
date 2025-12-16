@@ -13,16 +13,27 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace QuanLyCaPhe.Views.Admin
+namespace QuanLyCaPhe.Views.Components
 {
     /// <summary>
-    /// Interaction logic for IngredientsPage.xaml
+    /// Interaction logic for ExcelControl.xaml
     /// </summary>
-    public partial class IngredientsPage : Page
+    public partial class ExcelControl : UserControl
     {
-        public IngredientsPage()
+        public event EventHandler<string> Clicked;
+        public ExcelControl()
         {
             InitializeComponent();
+        }
+
+        private void Importbtn_Click(object sender, RoutedEventArgs e)
+        {
+            Clicked?.Invoke(this, "Import");
+        }
+
+        private void Exportbtn_Click(object sender, RoutedEventArgs e)
+        {
+            Clicked?.Invoke(this, "Export");
         }
     }
 }
