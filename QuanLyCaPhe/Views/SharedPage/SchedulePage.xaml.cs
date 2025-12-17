@@ -457,7 +457,7 @@ namespace QuanLyCaPhe.Views.SharedPage
             cbEndMinute.SelectedItem = endTime.Minutes;
 
             PopupOverlay.Visibility = Visibility.Visible;
-            txtName.Focus();
+            cbName.Focus();
         }
 
         private void Confirm_Click(object sender, RoutedEventArgs e)
