@@ -7,8 +7,9 @@
         mc:Ignorable="d"
         Title="AdminWindow"
         MinHeight="650" MinWidth="1000"
-        WindowStyle="SingleBorderWindow">
-    <Grid Background="Black">
+        WindowStyle="SingleBorderWindow"
+        Background="{StaticResource AppBackground}">
+    <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="auto"/>
             <ColumnDefinition Width="*"/>
@@ -16,13 +17,14 @@
 
         <Border x:Name="Sidebar" Grid.Column="0" Panel.ZIndex="1"
                 CornerRadius="20"
-                Margin="-20, 0, 0, -20"
-                Width="200"
-                Background="RosyBrown"
+                Background="Transparent"
                 ClipToBounds="True"
-                Style="{StaticResource AdminSideBarStyle}">
+                Style="{StaticResource LiquidGlassStyle}"
+                BorderBrush="Black"
+                Width="250"
+                Margin="-20, 0, 0, -20">
             
-            <StackPanel>
+            <StackPanel Margin="0, 100">
                 <Button x:Name="Homebtn" Content="Trang chủ" 
                         Style="{StaticResource AdminButtonStyle}"
                         Click="Homebtn_Click"/>
@@ -53,15 +55,19 @@
                 <Button x:Name="Profitbtn" Content="Doanh thu"
                         Style="{StaticResource AdminButtonStyle}"
                         Click="Profitbtn_Click"/>
-                
-                <!-- Logout button -->
-                <Button x:Name="Logoutbtn" Content="Đăng xuất"
-                        Style="{StaticResource AdminButtonStyle}"
-                        Click="Logoutbtn_Click"/>
             </StackPanel>
 
         </Border>
 
+        <!-- Logout button -->
+        <Button x:Name="Logoutbtn" 
+                VerticalAlignment="Bottom" 
+                HorizontalAlignment="Right"
+                Margin="0, 0, 10, 10"
+                Panel.ZIndex="999"
+                Style="{StaticResource GlassUserButtonStyle}"
+                Click="Logoutbtn_Click"/>
+        
         <Button x:Name="Menubtn" Grid.Column="0" Margin="10" 
                 Background="Transparent"
                 VerticalAlignment="Top" HorizontalAlignment="Right"

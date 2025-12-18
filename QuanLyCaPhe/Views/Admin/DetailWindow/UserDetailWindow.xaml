@@ -1,15 +1,10 @@
 ﻿<Window x:Class="QuanLyCaPhe.Views.Admin.DetailWindow.UserDetailWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:QuanLyCaPhe.Views.Admin.DetailWindow"
-        mc:Ignorable="d"
-        Title="Thông Tin Nhân Viên" Height="725" Width="450"
+        Title="Thông Tin Nhân Viên" Height="750" Width="480"
         WindowStartupLocation="CenterScreen" ResizeMode="NoResize"
-        Background="{StaticResource BackgroundLight}">
-
-    <Border Style="{StaticResource LiquidGlassStyle}" Padding="20" Margin="10">
+        Background="{StaticResource BorderStroke}" >
+    <Border Padding="30">
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
@@ -17,58 +12,70 @@
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
 
-            <TextBlock Text="THÔNG TIN NHÂN VIÊN" 
+            <TextBlock Text="HỒ SƠ NHÂN VIÊN" 
                        HorizontalAlignment="Center" 
-                       FontSize="22" FontWeight="Bold" 
-                       Foreground="{StaticResource PrimaryColor}" 
-                       Margin="0,0,0,20"/>
+                       FontFamily="Segoe UI Light" FontSize="24" FontWeight="Bold" 
+                       Foreground="#0C4A6E" Margin="0,0,0,25"/>
 
-            <StackPanel Grid.Row="1" VerticalAlignment="Top">
+            <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" Padding="0,0,5,0">
+                <StackPanel>
+                    <TextBlock Text="Họ và tên" FontWeight="SemiBold" Margin="0,5,0,5" Foreground="#0C4A6E"/>
+                    <TextBox x:Name="txtFullName" Style="{StaticResource GlassTextStyleInput}"/>
 
-                <TextBlock Text="Họ và tên:" FontWeight="SemiBold" Margin="0,10,0,5" Foreground="#1E1B4B"/>
-                <TextBox x:Name="txtFullName" IsReadOnly="False" Style="{StaticResource GlassTextStyleInput}"/>
+                    <TextBlock Text="Email đăng nhập" FontWeight="SemiBold" Margin="0,15,0,5" Foreground="#0C4A6E"/>
+                    <TextBox x:Name="txtEmail" Style="{StaticResource GlassTextStyleInput}"/>
 
-                <TextBlock Text="Email:" FontWeight="SemiBold" Margin="0,10,0,5" Foreground="#1E1B4B"/>
-                <TextBox x:Name="txtEmail" Style="{StaticResource GlassTextStyleInput}"/>
+                    <Grid Margin="0,15,0,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="15"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Grid.Column="0">
+                            <TextBlock Text="Số điện thoại" FontWeight="SemiBold" Margin="0,0,0,5" Foreground="#0C4A6E"/>
+                            <TextBox x:Name="txtPhone" Style="{StaticResource GlassTextStyleInput}"/>
+                        </StackPanel>
+                        <StackPanel Grid.Column="2">
+                            <TextBlock Text="Giới tính" FontWeight="SemiBold" Margin="0,0,0,5" Foreground="#0C4A6E"/>
+                            <ComboBox x:Name="cboGender" Style="{StaticResource ComboBoxStyle}">
+                                <ComboBoxItem Content="Nam" Tag="Male" IsSelected="True"/>
+                                <ComboBoxItem Content="Nữ" Tag="Female"/>
+                            </ComboBox>
+                        </StackPanel>
+                    </Grid>
 
-                <TextBlock Text="Số điện thoại:" FontWeight="SemiBold" Margin="0,10,0,5" Foreground="#1E1B4B"/>
-                <TextBox x:Name="txtPhone" Style="{StaticResource GlassTextStyleInput}"/>
+                    <TextBlock Text="Địa chỉ" FontWeight="SemiBold" Margin="0,15,0,5" Foreground="#0C4A6E"/>
+                    <TextBox x:Name="txtAddress" Style="{StaticResource GlassTextStyleInput}"/>
 
-                <TextBlock Text="Địa chỉ:" FontWeight="SemiBold" Margin="0,10,0,5" Foreground="#1E1B4B"/>
-                <TextBox x:Name="txtAddress" Style="{StaticResource GlassTextStyleInput}"/>
+                    <Grid Margin="0,15,0,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="15"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Grid.Column="0">
+                            <TextBlock Text="Lương/Giờ (VNĐ)" FontWeight="SemiBold" Margin="0,0,0,5" Foreground="#0C4A6E"/>
+                            <TextBox x:Name="txtHourlyWage" Style="{StaticResource GlassTextStyleInput}"/>
+                        </StackPanel>
+                        <StackPanel Grid.Column="2">
+                            <TextBlock Text="Chức vụ" FontWeight="SemiBold" Margin="0,0,0,5" Foreground="#0C4A6E"/>
+                            <ComboBox x:Name="cboRole" Style="{StaticResource ComboBoxStyle}">
+                                <ComboBoxItem Content="Admin" Tag="Admin"/>
+                                <ComboBoxItem Content="Staff" Tag="Staff" IsSelected="True"/>
+                            </ComboBox>
+                        </StackPanel>
+                    </Grid>
 
-                <TextBlock Text="Giới tính:" FontWeight="SemiBold" Margin="0,10,0,5" Foreground="#1E1B4B"/>
-                <ComboBox x:Name="cboGender" Style="{StaticResource ComboBoxStyle}">
-                    <ComboBoxItem Content="Nam" Tag="Male" IsSelected="True"/>
-                    <ComboBoxItem Content="Nữ" Tag="Female"/>
-                </ComboBox>
-
-                <TextBlock Text="Lương theo giờ (VND):" FontWeight="SemiBold" Margin="0,10,0,5" Foreground="#1E1B4B"/>
-                <TextBox x:Name="txtHourlyWage" Style="{StaticResource GlassTextStyleInput}"/>
-
-                <TextBlock Text="Chức vụ:" FontWeight="SemiBold" Margin="0,10,0,5" Foreground="#1E1B4B"/>
-                <ComboBox x:Name="cboRole" Style="{StaticResource ComboBoxStyle}">
-                    <ComboBoxItem Content="Admin" Tag="Admin"/>
-                    <ComboBoxItem Content="Staff" Tag="Staff" IsSelected="True"/>
-                </ComboBox>
-
-                <StackPanel x:Name="pnlPassword">
-                    <TextBlock Text="Mật khẩu khởi tạo:" FontWeight="SemiBold" Margin="0,10,0,5" Foreground="#1E1B4B"/>
-                    <PasswordBox x:Name="txtPassword" Style="{StaticResource MaterialPasswordBoxStyle}"/>
+                    <StackPanel x:Name="pnlPassword" Margin="0,15,0,0">
+                        <TextBlock Text="Mật khẩu khởi tạo" FontWeight="SemiBold" Margin="0,0,0,5" Foreground="#EF4444"/>
+                        <PasswordBox x:Name="txtPassword" Style="{StaticResource MaterialPasswordBoxStyle}"/>
+                    </StackPanel>
                 </StackPanel>
+            </ScrollViewer>
 
-                
-            </StackPanel>
-
-            <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,20,0,0">
-
-                <Button Content="Lưu lại" Width="100"
-                        Style="{StaticResource GlassButtonStyle}"
-                        Click="BtnSave_Click"/>
-
-                <Button Content="Hủy bỏ" Width="100" Margin="0,0,10,0"
-                        Style="{StaticResource GlassDeleteButtonStyle}"
-                        Click="BtnCancel_Click"/>
+            <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,25,0,0">
+                <Button Content="Lưu Hồ Sơ" Width="120" Style="{StaticResource GlassButtonStyle}" Click="BtnSave_Click"/>
+                <Button Content="Hủy bỏ" Width="100" Margin="10,0,0,0" Style="{StaticResource GlassDeleteButtonStyle}" Click="BtnCancel_Click"/>
             </StackPanel>
         </Grid>
     </Border>

@@ -2,11 +2,6 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:sys="clr-namespace:System;assembly=mscorlib">
 
-    <SolidColorBrush x:Key="PrimaryColor" Color="#4F46E5"/>
-    <SolidColorBrush x:Key="PrimaryLightColor" Color="#6366F1"/>
-    <SolidColorBrush x:Key="BackgroundLight" Color="#F9FAFB"/>
-    <SolidColorBrush x:Key="BorderLight" Color="#E5E7EB"/>
-
     <Style TargetType="RepeatButton">
         <Setter Property="Focusable" Value="false"/>
         <Setter Property="Template">
@@ -48,10 +43,10 @@
                                             <Setter Property="Background" Value="#CBD5E1"/>
                                             <Style.Triggers>
                                                 <Trigger Property="IsMouseOver" Value="True">
-                                                    <Setter Property="Background" Value="{StaticResource PrimaryColor}"/>
+                                                    <Setter Property="Background" Value="{StaticResource TextPrimary}"/>
                                                 </Trigger>
                                                 <Trigger Property="IsDragging" Value="True">
-                                                    <Setter Property="Background" Value="#4338CA"/>
+                                                    <Setter Property="Background" Value="{StaticResource TextSecondary}"/>
                                                 </Trigger>
                                             </Style.Triggers>
                                         </Style>
@@ -141,6 +136,7 @@
         <Setter Property="BorderThickness" Value="1"/>
         <Setter Property="SnapsToDevicePixels" Value="True"/>
         <Setter Property="FontFamily" Value="Segoe UI"/>
+        <Setter Property="Foreground" Value="{StaticResource TextPrimary}"/>
         <Setter Property="FontSize" Value="13"/>
         <Setter Property="Template">
             <Setter.Value>
@@ -171,7 +167,7 @@
                             <Setter TargetName="DGR_Border" Property="Background" Value="#F8FAFF"/>
                         </Trigger>
                         <Trigger Property="IsSelected" Value="True">
-                            <Setter TargetName="DGR_Border" Property="BorderBrush" Value="#4F46E5"/>
+                            <Setter TargetName="DGR_Border" Property="BorderBrush" Value="{StaticResource TextPrimary}"/>
                             <Setter TargetName="DGR_Border" Property="Background" Value="#EEF2FF"/>
                         </Trigger>
                     </ControlTemplate.Triggers>
@@ -220,11 +216,11 @@
             <Setter.Value>
                 <Style TargetType="DataGridColumnHeader">
                     <Setter Property="Background" Value="Transparent"/>
-                    <Setter Property="Foreground" Value="#4F46E5"/>
+                    <Setter Property="Foreground" Value="{StaticResource TextPrimary}"/>
                     <Setter Property="FontWeight" Value="SemiBold"/>
-                    <Setter Property="FontSize" Value="13"/>
+                    <Setter Property="FontSize" Value="14"/>
                     <Setter Property="Padding" Value="16,12"/>
-                    <Setter Property="BorderBrush" Value="#4F46E5"/>
+                    <Setter Property="BorderBrush" Value="{StaticResource TextPrimary}"/>
                     <Setter Property="BorderThickness" Value="0,0,0,2"/>
                 </Style>
             </Setter.Value>

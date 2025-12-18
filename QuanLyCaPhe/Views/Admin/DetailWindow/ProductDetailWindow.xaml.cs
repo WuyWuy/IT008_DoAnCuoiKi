@@ -1,5 +1,7 @@
 ﻿using QuanLyCaPhe.DAO;
 using QuanLyCaPhe.Models;
+using QuanLyCaPhe.Views.Components; // <-- Import Custom MessageBox
+using System; // Thêm System để dùng Exception
 using System.Windows;
 
 namespace QuanLyCaPhe.Views.Admin.DetailWindow
@@ -16,17 +18,15 @@ namespace QuanLyCaPhe.Views.Admin.DetailWindow
             if (_editingProduct != null) // Chế độ Sửa
             {
                 txtName.Text = _editingProduct.ProName;
-                // Format tiền tệ cho đẹp, bỏ các ký tự không phải số khi lưu
                 txtPrice.Text = _editingProduct.Price.ToString("G29");
             }
         }
 
         private void BtnSave_Click(object sender, RoutedEventArgs e)
         {
-            // 1. Validate dữ liệu
             if (string.IsNullOrWhiteSpace(txtName.Text))
             {
-                MessageBox.Show("Vui lòng nhập tên món!");
+                JetMoonMessageBox.Show("Vui lòng nhập tên món!", "Thiếu thông tin", MsgType.Warning);
                 return;
             }
 
@@ -35,41 +35,37 @@ namespace QuanLyCaPhe.Views.Admin.DetailWindow
 
             if (!decimal.TryParse(txtPrice.Text, out price))
             {
-                MessageBox.Show("Giá tiền phải là số!");
+                JetMoonMessageBox.Show("Giá tiền phải là số hợp lệ!", "Lỗi nhập liệu", MsgType.Error);
                 return;
             }
 
-            // --- BẮT ĐẦU KHỐI TRY-CATCH AN TOÀN ---
             try
             {
                 bool result = false;
 
-                if (_editingProduct == null) // Thêm mới
+                if (_editingProduct == null)
                 {
                     result = ProductDAO.Instance.InsertProduct(name, price);
                 }
-                else // Sửa
+                else
                 {
                     result = ProductDAO.Instance.UpdateProduct(_editingProduct.Id, name, price);
                 }
 
-                // Nếu chạy đến đây nghĩa là không bị lỗi sập app
                 if (result)
                 {
-                    MessageBox.Show("Lưu thành công!", "Thông báo");
+                    JetMoonMessageBox.Show("Lưu thông tin món thành công!", "Hoàn tất", MsgType.Success);
                     this.DialogResult = true;
                     this.Close();
                 }
                 else
                 {
-                    MessageBox.Show("Không thể lưu (Có thể do dữ liệu không hợp lệ).", "Lỗi");
+                    JetMoonMessageBox.Show("Không thể lưu dữ liệu. Vui lòng thử lại.", "Lỗi", MsgType.Error);
                 }
             }
             catch (Exception ex)
             {
-                // --- ĐÂY LÀ CHỖ QUAN TRỌNG NHẤT ---
-                // Thay vì crash, nó sẽ hiện thông báo lỗi chi tiết ra cho bạn đọc
-                MessageBox.Show("Lỗi hệ thống: " + ex.Message, "Crash Report", MessageBoxButton.OK, MessageBoxImage.Error);
+                JetMoonMessageBox.Show("Lỗi hệ thống:\n" + ex.Message, "Crash Report", MsgType.Error);
             }
         }
 

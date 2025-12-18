@@ -22,6 +22,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Page Remove="Resources\Styles\MAINSTYLE.xaml" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="ClosedXML" Version="0.105.0" />
     <PackageReference Include="Extended.Wpf.Toolkit" Version="5.0.0" />
     <PackageReference Include="LiveCharts.Wpf" Version="0.9.7" />
@@ -31,7 +35,6 @@
 
   <ItemGroup>
     <Folder Include="Databases\" />
-    <Folder Include="Resources\Fonts\" />
     <Folder Include="ViewModels\" />
   </ItemGroup>
 
@@ -41,6 +44,7 @@
     </Resource>
     <Resource Include="Resources\Images\coffee-cup.png" />
     <Resource Include="Resources\Images\unnamed.jpg" />
+    <Resource Include="Resources\Styles\MAINSTYLE.xaml" />
   </ItemGroup>
 
 </Project>

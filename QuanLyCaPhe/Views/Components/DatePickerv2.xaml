@@ -26,11 +26,11 @@
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsMouseOver" Value="True">
                                 <Setter TargetName="bd" Property="Background" Value="#EEF2FF"/>
-                                <Setter Property="Foreground" Value="#4F46E5"/>
+                                <Setter Property="Foreground" Value="{StaticResource TextPrimary}"/>
                             </Trigger>
                             <Trigger Property="IsPressed" Value="True">
                                 <Setter TargetName="bd" Property="Background" Value="#E0E7FF"/>
-                                <Setter Property="Foreground" Value="#4338CA"/>
+                                <Setter Property="Foreground" Value="{StaticResource TextPrimary}"/>
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
@@ -59,7 +59,7 @@
                         </Border>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsMouseOver" Value="True">
-                                <Setter Property="Foreground" Value="#4F46E5"/>
+                                <Setter Property="Foreground" Value="{StaticResource TextPrimary}"/>
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
@@ -72,10 +72,6 @@
             CornerRadius="8" 
             BorderThickness="1" 
             BorderBrush="Transparent">
-
-        <Border.Effect>
-            <DropShadowEffect Color="#4F46E5" Opacity="0.12" BlurRadius="14" ShadowDepth="4" Direction="270"/>
-        </Border.Effect>
 
         <Grid Margin="4">
             <Grid.ColumnDefinitions>

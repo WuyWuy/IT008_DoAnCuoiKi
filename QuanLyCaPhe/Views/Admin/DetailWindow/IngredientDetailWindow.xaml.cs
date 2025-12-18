@@ -1,5 +1,6 @@
 ﻿using QuanLyCaPhe.DAO;
 using QuanLyCaPhe.Models;
+using QuanLyCaPhe.Views.Components; // <-- Import
 using System;
 using System.Windows;
 
@@ -26,7 +27,7 @@ namespace QuanLyCaPhe.Views.Admin.DetailWindow
         {
             if (string.IsNullOrWhiteSpace(txtIngName.Text) || string.IsNullOrWhiteSpace(txtUnit.Text))
             {
-                MessageBox.Show("Vui lòng nhập tên và đơn vị tính!");
+                JetMoonMessageBox.Show("Vui lòng nhập tên và đơn vị tính!", "Thiếu thông tin", MsgType.Warning);
                 return;
             }
 
@@ -35,7 +36,7 @@ namespace QuanLyCaPhe.Views.Admin.DetailWindow
 
             if (!double.TryParse(txtQuantity.Text, out double quantity))
             {
-                MessageBox.Show("Số lượng phải là số!");
+                JetMoonMessageBox.Show("Số lượng tồn kho phải là số!", "Lỗi nhập liệu", MsgType.Error);
                 return;
             }
 
@@ -45,26 +46,26 @@ namespace QuanLyCaPhe.Views.Admin.DetailWindow
                 {
                     if (IngredientDAO.Instance.InsertIngredient(name, unit, quantity))
                     {
-                        MessageBox.Show("Thêm nguyên liệu thành công!");
+                        JetMoonMessageBox.Show("Thêm nguyên liệu thành công!", "Hoàn tất", MsgType.Success);
                         DialogResult = true;
                         Close();
                     }
-                    else MessageBox.Show("Thêm thất bại!");
+                    else JetMoonMessageBox.Show("Thêm nguyên liệu thất bại!", "Lỗi", MsgType.Error);
                 }
-                else 
+                else
                 {
                     if (IngredientDAO.Instance.UpdateIngredient(_ingredient.Id, name, unit, quantity))
                     {
-                        MessageBox.Show("Cập nhật thành công!");
+                        JetMoonMessageBox.Show("Cập nhật nguyên liệu thành công!", "Hoàn tất", MsgType.Success);
                         DialogResult = true;
                         Close();
                     }
-                    else MessageBox.Show("Cập nhật thất bại!");
+                    else JetMoonMessageBox.Show("Cập nhật thất bại!", "Lỗi", MsgType.Error);
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Lỗi: " + ex.Message);
+                JetMoonMessageBox.Show("Lỗi hệ thống: " + ex.Message, "Lỗi", MsgType.Error);
             }
         }
 

@@ -1,0 +1,68 @@
+﻿<Window x:Class="QuanLyCaPhe.Views.SharedPage.ScheduleRegisterWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Đăng Ký Ca Làm" Height="480" Width="400"
+        WindowStartupLocation="CenterScreen" ResizeMode="NoResize"
+        Background="{StaticResource AppBackground}">
+
+    <Border Style="{StaticResource DynamicGlassStyle}" Padding="30" Margin="15">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <TextBlock Text="ĐĂNG KÝ CA LÀM" 
+                       HorizontalAlignment="Center" 
+                       FontFamily="Segoe UI Light" FontSize="24" FontWeight="Bold" 
+                       Foreground="#0C4A6E" Margin="0,0,0,25"/>
+
+            <StackPanel Grid.Row="1" VerticalAlignment="Top">
+
+                <TextBlock Text="Chọn nhân viên" FontWeight="SemiBold" Margin="0,0,0,5" Foreground="#0C4A6E"/>
+                <ComboBox x:Name="cbName" Style="{StaticResource ComboBoxStyle}" Height="38" Margin="0,0,0,15"/>
+
+                <TextBlock Text="Ngày làm việc" FontWeight="SemiBold" Margin="0,0,0,5" Foreground="#0C4A6E"/>
+                <TextBox x:Name="txtDate" IsReadOnly="True" 
+                         Style="{StaticResource GlassTextStyleInput}" 
+                         Background="#40FFFFFF" Margin="0,0,0,15"/>
+
+                <TextBlock Text="Giờ bắt đầu" FontWeight="SemiBold" Margin="0,0,0,5" Foreground="#0C4A6E"/>
+                <TextBox x:Name="txtStartTime" IsReadOnly="True" 
+                         Style="{StaticResource GlassTextStyleInput}" 
+                         Background="#40FFFFFF" Margin="0,0,0,15"/>
+
+                <TextBlock Text="Giờ kết thúc (HH:mm)" FontWeight="SemiBold" Margin="0,0,0,5" Foreground="#0C4A6E"/>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="15"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <ComboBox x:Name="cbEndHour" Grid.Column="0" Style="{StaticResource ComboBoxStyle}" Height="38"/>
+
+                    <TextBlock Text=":" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Center" 
+                               FontSize="16" FontWeight="Bold" Foreground="#0C4A6E"/>
+
+                    <ComboBox x:Name="cbEndMinute" Grid.Column="2" Style="{StaticResource ComboBoxStyle}" Height="38"/>
+                </Grid>
+
+                <TextBlock x:Name="txtError" Text="" 
+                           Foreground="#EF4444" FontSize="13" FontWeight="SemiBold" 
+                           Margin="0,10,0,0" TextWrapping="Wrap"/>
+            </StackPanel>
+
+            <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,20,0,0">
+                <Button Content="Hủy bỏ" Click="Cancel_Click" 
+                        Style="{StaticResource GlassDeleteButtonStyle}" 
+                        Width="90"/>
+
+                <Button Content="Xác nhận" Click="Confirm_Click" 
+                        Style="{StaticResource GlassButtonStyle}" 
+                        Width="110" Margin="10,0,0,0"/>
+            </StackPanel>
+        </Grid>
+    </Border>
+</Window>

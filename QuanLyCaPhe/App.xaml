@@ -9,36 +9,22 @@
 
     <Application.Resources>
         <ResourceDictionary>
-            
+
             <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/Resources/Styles/MAINSTYLE.xaml"/>
                 <ResourceDictionary Source="/Resources/Styles/LoginStyles.xaml"/>
                 <ResourceDictionary Source="/Resources/Styles/AdminStyles.xaml"/>
                 <ResourceDictionary Source="/Resources/Styles/HomePage_Admin.xaml"/>
                 <ResourceDictionary Source="/Resources/Styles/DataGridStyles.xaml"/>
                 <ResourceDictionary Source="/Resources/Styles/HoverBorderAnimation.xaml"/>
                 <ResourceDictionary Source="/Resources/Styles/ProfitStyles.xaml"/>
-                <ResourceDictionary Source="/Resources/Styles/StaffWindowStyle.xaml"/>
-                <ResourceDictionary Source="/Resources/Styles/Liquid_Glass_Style.xaml"/>
-                <ResourceDictionary Source="/Resources/Styles/ComboBoxStyle.xaml"/>
-                <ResourceDictionary Source="/Resources/Styles/NumbericBox.xaml"/>
+                <ResourceDictionary Source="/Resources/Styles/TableListBoxStyle.xaml"/>
+                <ResourceDictionary Source="/Resources/Styles/LiquidGlassStyle.xaml"/>
                 <ResourceDictionary Source="/Resources/Styles/LastBillStyle.xaml"/>
                 <ResourceDictionary Source="/Resources/Styles/ScheduleStyles.xaml"/>
-                <ResourceDictionary Source="/Resources/Styles/MAIN_THEME.xaml"/>
             </ResourceDictionary.MergedDictionaries>
             
-            <!-- Default Color -->
-            <SolidColorBrush x:Key="PrimaryColor" Color="#4F46E5"/>
-            <SolidColorBrush x:Key="PrimaryLightColor" Color="#6366F1"/>
-            <SolidColorBrush x:Key="BackgroundLight" Color="#F9FAFB"/>
-            <SolidColorBrush x:Key="StatusBusyColor" Color="#EF4444"/>
-            <SolidColorBrush x:Key="StatusBusyLightColor" Color="#FEE2E2"/>
-            <SolidColorBrush x:Key="StatusMultiColor" Color="#F59E0B"/>
             
-            <!-- Default Font -->
-            <FontFamily x:Key="TitleFont">Colonna MT</FontFamily>  
-            
-            <!-- Default Info -->
-            <sys:String x:Key="TenQuan">LTTQ Coffee</sys:String>
             
         </ResourceDictionary>
     </Application.Resources>

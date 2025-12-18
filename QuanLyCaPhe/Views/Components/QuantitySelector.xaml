@@ -17,13 +17,13 @@
                         <Grid Background="Transparent">
                             <Path x:Name="Arrow" 
                                   Data="{Binding Content, RelativeSource={RelativeSource TemplatedParent}}" 
-                                  Fill="#4F46E5" 
+                                  Fill="{StaticResource TextPrimary}" 
                                   HorizontalAlignment="Center" VerticalAlignment="Center"
                                   Stretch="Uniform" Width="8"/>
                         </Grid>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsMouseOver" Value="True">
-                                <Setter TargetName="Arrow" Property="Fill" Value="#6366F1"/>
+                                <Setter TargetName="Arrow" Property="Fill" Value="{StaticResource AccentColor}"/>
                             </Trigger>
                             <Trigger Property="IsPressed" Value="True">
                                 <Setter TargetName="Arrow" Property="Fill" Value="#1E1B4B"/>
@@ -81,9 +81,6 @@
             </Grid>
         </Grid>
 
-        <Border.Effect>
-            <DropShadowEffect Color="#4F46E5" Opacity="0.15" BlurRadius="10" ShadowDepth="3" Direction="270"/>
-        </Border.Effect>
     </Border>
 
     <UserControl.Triggers>
@@ -91,7 +88,7 @@
             <BeginStoryboard>
                 <Storyboard>
                     <ColorAnimation Storyboard.TargetName="BaseBorder" Storyboard.TargetProperty="(Border.Background).(SolidColorBrush.Color)" To="#F8FAFF" Duration="0:0:0.1"/>
-                    <ColorAnimation Storyboard.TargetName="BaseBorder" Storyboard.TargetProperty="(Border.BorderBrush).(SolidColorBrush.Color)" To="#6366F1" Duration="0:0:0.1"/>
+                    <ColorAnimation Storyboard.TargetName="BaseBorder" Storyboard.TargetProperty="(Border.BorderBrush).(SolidColorBrush.Color)" To="#0EA5E9" Duration="0:0:0.1"/>
                 </Storyboard>
             </BeginStoryboard>
         </EventTrigger>

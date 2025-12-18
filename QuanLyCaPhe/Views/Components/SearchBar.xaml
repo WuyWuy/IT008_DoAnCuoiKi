@@ -14,7 +14,7 @@
             <Setter Property="VerticalContentAlignment" Value="Center"/>
             <Setter Property="Padding" Value="15,0,5,0"/>
             <Setter Property="Foreground" Value="#1E1B4B"/>
-            <Setter Property="CaretBrush" Value="#4F46E5"/>
+            <Setter Property="CaretBrush" Value="{StaticResource TextPrimary}"/>
         </Style>
 
         <Style x:Key="GlassSearchBtn" TargetType="Button">
@@ -35,11 +35,11 @@
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsMouseOver" Value="True">
                                 <Setter TargetName="bd" Property="Background" Value="#F8FAFF"/>
-                                <Setter Property="Foreground" Value="#4F46E5"/>
+                                <Setter Property="Foreground" Value="{StaticResource TextPrimary}"/>
                             </Trigger>
                             <Trigger Property="IsPressed" Value="True">
                                 <Setter TargetName="bd" Property="Background" Value="#EEF2FF"/>
-                                <Setter Property="Foreground" Value="#4338CA"/>
+                                <Setter Property="Foreground" Value="{StaticResource TextPrimary}"/>
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
@@ -52,10 +52,6 @@
             CornerRadius="24"
             BorderThickness="1"
             BorderBrush="Transparent">
-
-        <Border.Effect>
-            <DropShadowEffect Color="#4F46E5" Opacity="0.12" BlurRadius="15" ShadowDepth="4" Direction="270"/>
-        </Border.Effect>
 
         <Grid Height="44">
             <Grid.ColumnDefinitions>

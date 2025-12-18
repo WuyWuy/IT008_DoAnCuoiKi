@@ -24,14 +24,13 @@
 
         <!--________________________________Chữ Chào Mừng__________________________________-->
         <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" 
-                   Padding="10" Foreground="{StaticResource PrimaryLightColor}"
-                   Text="Trang Chủ" FontSize="36" FontWeight="Bold"/>
+                   Padding="10" Text="Trang Chủ" Style="{StaticResource FontHeader}"/>
         <!--________________________________Panel Chào mừng________________________________-->
         <Border Grid.Row="1" Grid.Column="0" Grid.RowSpan="2" 
                 Width="auto" Padding="10"
                 Margin="10, 0"
                 Background="White"
-                Style="{StaticResource RunningGlowBorderStyle}">
+                Style="{StaticResource DynamicGlassStyle}">
             <Grid>
                 <StackPanel Orientation="Vertical" VerticalAlignment="Center" HorizontalAlignment="Center">
                     <TextBlock Text="Xin chào!!" FontSize="30" HorizontalAlignment="Left"/>
@@ -48,7 +47,7 @@
                 Padding="10"
                 Margin="4"
                 Background="#FF9F43" Opacity="0.9"
-                Style="{StaticResource RunningGlowBorderStyle}">
+                Style="{StaticResource  DynamicGlassStyle}">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
@@ -71,7 +70,7 @@
                 Padding="10"
                 Margin="4"
                 Background="#54A0FF" Opacity="0.6"
-                Style="{StaticResource RunningGlowBorderStyle}">
+                Style="{StaticResource DynamicGlassStyle}">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
@@ -95,7 +94,7 @@
                 Margin="4"
                 Background="#1DD1A1" Opacity="0.6"
                 BorderThickness="1"
-                Style="{StaticResource RunningGlowBorderStyle}">
+                Style="{StaticResource DynamicGlassStyle}">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
@@ -119,7 +118,7 @@
                 Margin="4"
                 Background="#FF6B6B" Opacity="0.6" 
                 BorderThickness="1"
-                Style="{StaticResource RunningGlowBorderStyle}">
+                Style="{StaticResource DynamicGlassStyle}">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
@@ -142,7 +141,7 @@
                 Padding="10"
                 Margin="10"
                 Background="White"
-                Style="{StaticResource RunningGlowBorderStyle}">
+                Style="{StaticResource DynamicGlassStyle}">
             <Frame x:Name="MiniChart"/>
         </Border>
 
@@ -151,7 +150,7 @@
                 Padding="10"
                 Margin="10"
                 Background="White"
-                Style="{StaticResource RunningGlowBorderStyle}">
+                Style="{StaticResource DynamicGlassStyle}">
             <Frame Width="auto" x:Name="LastBill" 
                    NavigationUIVisibility="Hidden" 
                    HorizontalAlignment="Stretch"

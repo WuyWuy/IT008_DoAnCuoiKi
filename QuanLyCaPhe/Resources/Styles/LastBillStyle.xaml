@@ -50,5 +50,6 @@
         <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto"/>
         <Setter Property="ScrollViewer.CanContentScroll" Value="False"/>
     </Style>
-
+    
+    
 </ResourceDictionary>

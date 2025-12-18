@@ -5,17 +5,12 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:QuanLyCaPhe"
         xmlns:local1="clr-namespace:QuanLyCaPhe.Views.Components"
-    
         xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
         mc:Ignorable="d"
         Title="Quản lý quán cà phê" 
         MinHeight="600" MinWidth="1000"
+        Background="{StaticResource AppBackground}"
         WindowStyle="SingleBorderWindow">
-
-    <Window.Background>
-        <!-- DeepSkyBlue-->
-        <SolidColorBrush Color="Wheat" Opacity="0.7"/>
-    </Window.Background>
     <Window.Resources>
         <local:IntGreaterThanZeroToVisibilityConverter x:Key="IntToVis"/>
         <local:SecondsToTimeConverter x:Key="SecondsToTimeConverter"/>
@@ -55,16 +50,12 @@
                         Width="52" 
                         Height="68"
                         Background="White"
-                        BorderBrush="#4F46E5"
+                        BorderBrush="{StaticResource TextPrimary}"
                         BorderThickness="1"
                         CornerRadius="8"
                         SnapsToDevicePixels="True"
                         Margin="0,10,0,0"
                         Padding="0, 0, 0, 10">
-
-                    <Border.Effect>
-                        <DropShadowEffect Color="#4F46E5" Opacity="0.15" BlurRadius="8" ShadowDepth="2" Direction="270"/>
-                    </Border.Effect>
 
                     <Grid>
                         <Grid.RowDefinitions>
@@ -78,7 +69,7 @@
                                    Text="12:00"
                                    FontSize="15" 
                                    FontWeight="Bold" 
-                                   Foreground="#4F46E5" 
+                                   Foreground="{StaticResource TextPrimary}" 
                                    HorizontalAlignment="Center" 
                                    VerticalAlignment="Center" 
                                    Margin="0,2,0,0"/>
@@ -93,7 +84,7 @@
                            Text="01-01"
                            FontSize="10" 
                            FontWeight="SemiBold"
-                           Foreground="#1E1B4B" 
+                           Foreground="{StaticResource AccentColor}" 
                            HorizontalAlignment="Center"/>
 
                             <TextBlock x:Name="tbClockYear" 
@@ -124,17 +115,38 @@
                 
                 <!-- Title-->
                 <Grid Grid.Row="0">
-                    <Border Style="{StaticResource RunningGlowBorderStyle}"
-                            Margin="10, 10, 10, 10">
-                        <TextBlock Text="{StaticResource TenQuan}" FontSize="36" FontWeight="Bold" FontFamily="{StaticResource TitleFont}"
-                                   HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                    </Border>
+                    <Grid Width="300" Height="auto" Margin="0, 20">
+                        <Border Style="{StaticResource LiquidGlassStyle}"/>
+
+                        <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+                            <TextBlock Text="JetMoon" 
+                                       FontFamily="Segoe UI Light" 
+                                       FontSize="32" 
+                                       Foreground="#0C4A6E"
+                                       HorizontalAlignment="Center"/>
+
+                            <Grid Width="150" Margin="0,-5,0,0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+
+                                <Separator Grid.Column="0" Background="#94A3B8" Opacity="0.5"/>
+
+                                <Path Grid.Column="1" Fill="#0C4A6E" Width="10" Height="10" Margin="5,0"
+                                      Data="M12,2C12,2 12,2 12,2C17.5,2.05 22,6.5 22,12C22,12 22,12 22,12C21.95,17.5 17.5,22 12,22C12,22 12,22 12,22C6.5,21.95 2,17.5 2,12C2,12 2,12 2,12C2.05,6.5 6.5,2 12,2M6.14,14.63L7.71,15.2C8.63,12.87 11.66,12.18 13.57,14.47L14.73,13.5C12.1,10.37 7.41,11.41 6.14,14.63M10.84,5.43L9.67,6.4C12.3,9.53 17,8.47 18.27,5.27L16.7,4.7C15.77,7.03 12.75,7.72 10.84,5.43Z"/>
+
+                                <Separator Grid.Column="2" Background="#94A3B8" Opacity="0.5"/>
+                            </Grid>
+                        </StackPanel>
+                    </Grid>
                 </Grid>
 
                 <!-- Tables area -->
                 <Grid Grid.Row="1">
                     <Border Style="{StaticResource LiquidGlassStyle}" 
-                            Margin="0, 5, 10, 0" Padding="10, 10, 5, 20"
+                            Margin="0, 5, 10, 10" Padding="10, 10, 5, 20"
                             Width="auto" MinWidth="360" MaxWidth="360">
                         <Grid>
                             <Grid.RowDefinitions>
@@ -144,7 +156,7 @@
                             </Grid.RowDefinitions>
                             
                             <!-- Subtiltle -->
-                            <TextBlock Text="Danh sách bàn" FontSize="30" FontWeight="Bold" FontFamily="{StaticResource TitleFont}"
+                            <TextBlock Text="Danh sách bàn" Style="{StaticResource  FontHeaderMedium}" 
                                        HorizontalAlignment="Center" VerticalAlignment="Center"/>
                             
                             <!-- Sort ComboBox-->
@@ -153,14 +165,14 @@
                                       Width="180"
                                       VerticalAlignment="Center" HorizontalAlignment="Left" IsReadOnly="True"
                                       SelectionChanged="cbSort_SelectionChanged">
-                                <TextBlock Text="Mặc định A-Z"/>
-                                <TextBlock Text="Tăng dần - thời gian"/>
-                                <TextBlock Text="Giảm dần - thời gian"/>
+                                
+                                
                             </ComboBox>
                             <!-- Blank Line-->
                             <Border Grid.Row="1" Style="{StaticResource RunningGlowBorderStyle}" 
                                     Width="360" Height="0.6" 
                                     HorizontalAlignment="Center" VerticalAlignment="Bottom"/>
+                            
                             <!-- ListBox fills available space -->
                             <ListBox x:Name="lbTables" Grid.Row="2"
                                      ItemsSource="{Binding DanhSachBan}"
@@ -214,18 +226,14 @@
                 </Grid.RowDefinitions>
 
                 <Border Grid.Column="5" Grid.ColumnSpan="2"
-        Height="40"
-        HorizontalAlignment="Right" 
-        VerticalAlignment="Bottom"
-        Margin="0,0,10,0"
-        CornerRadius="6"
-        BorderBrush="#4F46E5"
-        BorderThickness="1"
-        SnapsToDevicePixels="True">
-
-                    <Border.Effect>
-                        <DropShadowEffect Color="#4F46E5" Opacity="0.2" BlurRadius="10" ShadowDepth="3" Direction="270"/>
-                    </Border.Effect>
+                        Height="40"
+                        HorizontalAlignment="Right" 
+                        VerticalAlignment="Bottom"
+                        Margin="0,0,10,0"
+                        CornerRadius="6"
+                        BorderBrush="{StaticResource TextPrimary}"
+                        BorderThickness="1"
+                        SnapsToDevicePixels="True">
 
                     <Grid>
                         <Grid.ColumnDefinitions>
@@ -234,36 +242,36 @@
                         </Grid.ColumnDefinitions>
 
                         <Border Grid.Column="0" 
-                Background="#4F46E5"
-                CornerRadius="5,0,0,5"
-                Padding="12,0">
+                                Background="{StaticResource TextPrimary}"
+                                CornerRadius="5,0,0,5"
+                                Padding="12,0">
                             <TextBlock Text="BÀN"
-                       Foreground="White"
-                       FontWeight="Bold"
-                       FontSize="13"
-                       VerticalAlignment="Center"
-                       HorizontalAlignment="Center"/>
+                                       Foreground="White"
+                                       FontWeight="Bold"
+                                       FontSize="13"
+                                       VerticalAlignment="Center"
+                                       HorizontalAlignment="Center"/>
                         </Border>
 
                         <Border Grid.Column="1" 
-                Background="White"
-                CornerRadius="0,5,5,0"
-                Padding="10,0"
-                MinWidth="40">
+                                Background="White"
+                                CornerRadius="0,5,5,0"
+                                Padding="10,0"
+                                MinWidth="40">
 
                             <TextBox x:Name="tbTableNumber"
-                     Text="01"
-                     Style="{x:Null}" 
-                     Background="Transparent"
-                     BorderThickness="0"
-                     Foreground="#4F46E5"
-                     FontWeight="Bold"
-                     FontSize="20"
-                     VerticalAlignment="Center"
-                     HorizontalAlignment="Center"
-                     TextAlignment="Center"
-                     IsReadOnly="True"
-                     Cursor="Arrow"/>
+                                     Text="01"
+                                     Style="{x:Null}" 
+                                     Background="Transparent"
+                                     BorderThickness="0"
+                                     Foreground="{StaticResource TextPrimary}"
+                                     FontWeight="Bold"
+                                     FontSize="20"
+                                     VerticalAlignment="Center"
+                                     HorizontalAlignment="Center"
+                                     TextAlignment="Center"
+                                     IsReadOnly="True"
+                                     Cursor="Arrow"/>
                         </Border>
                     </Grid>
                 </Border>
@@ -271,12 +279,12 @@
                 <Grid Grid.Row="1">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="0.25*"/>
+                        <ColumnDefinition Width="5*"/>
+                        <ColumnDefinition Width="0.2*"/>
                         <ColumnDefinition Width="2*"/>
-                        <ColumnDefinition Width="0.25*"/>
-                        <ColumnDefinition Width="2*"/>
-                        <ColumnDefinition Width="0.5*"/>
-                        <ColumnDefinition/>
-                        <ColumnDefinition/>
+                        <ColumnDefinition Width="0.1*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="auto"/>
                     </Grid.ColumnDefinitions>
 
                     <Grid Grid.Column="1">
@@ -285,12 +293,14 @@
                             <RowDefinition/>
                         </Grid.RowDefinitions>
 
-                        <Label Grid.Row="0" Content="Đồ order" FontSize="12" VerticalAlignment="Center"/>
-                        <!-- QuanLyCaPhe\Views\Staff\StaffWindow.xaml -->
+                        <Label Grid.Row="0" VerticalAlignment="Bottom">
+                            <TextBlock Text="Chọn Món" Style="{StaticResource FontBody}"/>
+                        </Label>
                         <ComboBox x:Name="cbOrder" Grid.Row="1"
                                   Style="{StaticResource ComboBoxStyle}"
                                   SelectionChanged="ComboBox_SelectionChanged_2" Height="36" VerticalAlignment="Top"
-                                  IsEditable="True" IsTextSearchEnabled="False" StaysOpenOnEdit="False" MouseDoubleClick="cbOrder_MouseDoubleClick"/>
+                                  IsEditable="True" IsTextSearchEnabled="False" StaysOpenOnEdit="False" 
+                                  MouseDoubleClick="cbOrder_MouseDoubleClick"/>
                     </Grid>
 
                     <Grid Grid.Column="3">
@@ -299,7 +309,9 @@
                             <RowDefinition/>
                         </Grid.RowDefinitions>
 
-                        <Label Grid.Row="0" Content="Số lượng" FontSize="12" VerticalAlignment="Center"/>
+                        <Label Grid.Row="0" VerticalAlignment="Bottom">
+                            <TextBlock Text="Số lượng" Style="{StaticResource FontBody}"/>
+                        </Label>
 
                         <local1:QuantitySelector x:Name="iudAmmount" Grid.Row="1"
                                                  HorizontalAlignment="Left"
@@ -314,7 +326,8 @@
                         
                         <Label Grid.Row="0" Content="" FontSize="12" VerticalAlignment="Center"/>
                         <Button Style="{StaticResource GlassButtonStyle}"
-                                Grid.Row="1" x:Name="btnAdd" Content="Thêm món" 
+                                Margin="0, 0, 10, 0"
+                                Grid.Row="1" x:Name="btnAdd" Content="Thêm" 
                                 VerticalAlignment="Top" Height="36" Click="btnAdd_Click"/>
                     </Grid>
 
@@ -325,8 +338,10 @@
                         </Grid.RowDefinitions>
                         
                         <Label Grid.Row="0" Content="" FontSize="12" VerticalAlignment="Center"/>
-                        <Button Grid.Row="1" x:Name="btnDelete" Content="Xóa" 
-                                Style="{StaticResource GlassButtonStyle}"
+                        <Button Grid.Row="1" x:Name="btnDelete" Content="Xóa"
+                                Margin="0, 0, 10, 0"
+                                HorizontalAlignment="Right"
+                                Style="{StaticResource GlassDeleteButtonStyle}"
                                 VerticalAlignment="Top" Height="36" Width="50" Click="btnDelete_Click"/>
                     </Grid>
                 </Grid>
@@ -354,7 +369,7 @@
 
             <Grid Grid.Row="2">
                 <Border Style="{StaticResource LiquidGlassStyle}"
-                        Margin="0, 5, 10, 0" Padding="20, 10, 20, 10">
+                        Margin="0, 5, 10, 10" Padding="20, 10, 20, 10">
                     <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="3*"/>
@@ -369,7 +384,9 @@
                                 <ColumnDefinition Width="3*"/>
                             </Grid.ColumnDefinitions>
 
-                            <Label Content="Số giờ:" Grid.Column="0" HorizontalAlignment="Left" FontSize="15" Margin="5,0,10,0" VerticalAlignment="Center"/>
+                            <Label Grid.Column="0" HorizontalAlignment="Left" FontSize="15" Margin="5,0,10,0" VerticalAlignment="Center">
+                                <TextBlock Text="Giờ" Style="{StaticResource FontBody}"/>
+                            </Label>
 
                             <StackPanel x:Name="spHours" Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,11,0,0">
                                 <RadioButton x:Name="rbHour1" GroupName="Hours" Content="1" Tag="6000"
@@ -390,14 +407,16 @@
                                              ToolTip="12 hours (35.000 VNĐ)" Margin="6,0" FontSize="13"/>
                             </StackPanel>
 
-                            <StackPanel Grid.Column="2" Grid.ColumnSpan="2" Orientation="Horizontal" HorizontalAlignment="Right">
-                                <Label Content="Tổng tiền:" HorizontalAlignment="Right" VerticalAlignment="Center" FontSize="15" />
+                            <StackPanel Grid.Column="2" Grid.ColumnSpan="2" Orientation="Horizontal"  HorizontalAlignment="Right">
+                                <Label HorizontalAlignment="Right" VerticalAlignment="Center">
+                                    <TextBlock Text="Tổng tiền: " Style="{StaticResource FontBody}"/>
+                                </Label>
 
                                 <TextBox Name="tbSum"
                                          Style="{StaticResource GlassTextStyle}"
                                          Padding="3, 0, 6, 0"
+                                         Background="Transparent"
                                          HorizontalAlignment="Right" VerticalAlignment="Center"
-                                         Background="LightGray" 
                                          MinWidth="150" MaxWidth="300"
                                          TextAlignment="Right" FontSize="22" FontWeight="Bold">
                                 </TextBox>
@@ -414,7 +433,9 @@
 
                             <Grid Grid.Column="0" Grid.ColumnSpan="2">
                                 <StackPanel Orientation="Horizontal">
-                                    <Label Content="Chuyển bàn:" FontSize="15" VerticalAlignment="Center" HorizontalAlignment="Left" Grid.ColumnSpan="2"/>
+                                    <Label HorizontalAlignment="Left" VerticalAlignment="Center" Grid.ColumnSpan="2">
+                                        <TextBlock Text="Chuyền bàn" Style="{StaticResource FontBody}"/>
+                                    </Label>
                                     <ComboBox x:Name="cbxSwapTable" 
                                               Style="{StaticResource ComboBoxStyle}"
                                               Height="30" Width="90" HorizontalAlignment="Left" 

@@ -117,15 +117,13 @@ namespace QuanLyCaPhe.Views.Admin
         {
             // stop timers / cleanup if needed...
             // If user is logging out, do not shut down the application; simply allow close so LoginWindow can show.
-            if (_isLoggingOut)
-            {
-                return;
-            }
-
-            // When debugging, closing the main admin window should stop the app so Visual Studio stops debugging.
-            if (System.Diagnostics.Debugger.IsAttached)
+            if (!_isLoggingOut)
             {
                 Application.Current.Shutdown();
+            }
+            else
+            {
+                return;
             }
         }
         private void Logoutbtn_Click(object sender, RoutedEventArgs e)
