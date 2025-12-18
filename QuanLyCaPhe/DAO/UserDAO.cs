@@ -70,13 +70,13 @@ namespace QuanLyCaPhe.DAO
         }
 
         // --- Đăng ký ---
-        public bool InsertUser(string name, string email, string phone, string address, string gender, string rawPassword, string role)
+        public bool InsertUser(string name, string email, string phone, string address, string gender, string rawPassword, string role, decimal hourlyWage)
         {
             // Tự động mã hóa mật khẩu trước khi lưu
             var (hash, salt) = GeneratePasswordHash(rawPassword);
 
-            string query = "INSERT INTO Users (FullName, Email, Phone, Address, Gender, PasswordHash, PasswordSalt, RoleName, IsActive) " +
-                           "VALUES (@name, @email, @phone, @address, @gender, @hash, @salt, @role, 1)";
+            string query = "INSERT INTO Users (FullName, Email, Phone, Address, Gender, PasswordHash, PasswordSalt, RoleName, IsActive, HourlyWage) " +
+                           "VALUES (@name, @email, @phone, @address, @gender, @hash, @salt, @role, 1, @hourly)";
 
             return DBHelper.ExecuteNonQuery(query, new SqlParameter[] {
                 new SqlParameter("@name", name),
@@ -86,7 +86,8 @@ namespace QuanLyCaPhe.DAO
                 new SqlParameter("@gender", gender),
                 new SqlParameter("@hash", hash), 
                 new SqlParameter("@salt", salt), 
-                new SqlParameter("@role", role)
+                new SqlParameter("@role", role),
+                new SqlParameter("@hourly", hourlyWage)
             }) > 0;
         }
 
@@ -179,15 +180,16 @@ namespace QuanLyCaPhe.DAO
         }
 
         // --- Sửa ---
-        public bool UpdateUser(int id, string name, string phone, string address, string gender, string role)
+        public bool UpdateUser(int id, string name, string phone, string address, string gender, string role, decimal hourlyWage)
         {
-            string query = "UPDATE Users SET FullName = @name, Phone = @phone, Address = @addr, Gender = @gender, RoleName = @role WHERE Id = @id";
+            string query = "UPDATE Users SET FullName = @name, Phone = @phone, Address = @addr, Gender = @gender, RoleName = @role, HourlyWage = @hourly WHERE Id = @id";
             return DBHelper.ExecuteNonQuery(query, new SqlParameter[] {
                 new SqlParameter("@name", name),
                 new SqlParameter("@phone", phone),
                 new SqlParameter("@addr", address),
                 new SqlParameter("@gender", gender),
                 new SqlParameter("@role", role),
+                new SqlParameter("@hourly", hourlyWage),
                 new SqlParameter("@id", id)
             }) > 0;
         }

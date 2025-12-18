@@ -286,10 +286,11 @@
                         </Grid.RowDefinitions>
 
                         <Label Grid.Row="0" Content="Đồ order" FontSize="12" VerticalAlignment="Center"/>
+                        <!-- QuanLyCaPhe\Views\Staff\StaffWindow.xaml -->
                         <ComboBox x:Name="cbOrder" Grid.Row="1"
                                   Style="{StaticResource ComboBoxStyle}"
                                   SelectionChanged="ComboBox_SelectionChanged_2" Height="36" VerticalAlignment="Top"
-                                  IsEditable="True" IsTextSearchEnabled="False" StaysOpenOnEdit="True"/>
+                                  IsEditable="True" IsTextSearchEnabled="False" StaysOpenOnEdit="False" MouseDoubleClick="cbOrder_MouseDoubleClick"/>
                     </Grid>
 
                     <Grid Grid.Column="3">

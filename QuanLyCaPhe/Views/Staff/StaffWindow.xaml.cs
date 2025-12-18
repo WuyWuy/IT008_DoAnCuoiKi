@@ -229,10 +229,23 @@ namespace QuanLyCaPhe.Views.Staff
 
         private void StaffWindow_Closing(object? sender, CancelEventArgs e)
         {
-            // stop timers and save the table state
+            // stop timers and save state as before
             try { _dispatcherTimer?.Stop(); } catch { }
             try { _clockTimer?.Stop(); } catch { }
             SaveTablesState();
+
+            // If running under the debugger, shut down the application so Visual Studio stops debugging.
+            // Otherwise (normal run) you can optionally show the login window instead.
+            if (System.Diagnostics.Debugger.IsAttached)
+            {
+                Application.Current.Shutdown();
+            }
+            else
+            {
+                // optional: return to login screen when not debugging
+                var login = new QuanLyCaPhe.Views.Login.LoginWindow();
+                login.Show();
+            }
         }
 
         private void ClockTimer_Tick(object? sender, EventArgs e)
@@ -463,7 +476,7 @@ namespace QuanLyCaPhe.Views.Staff
 
             if (table.Status == "Busy" || table.Status == "Selected Busy")
             {
-                var res = MessageBox.Show($"Bàn {table.Name} ? tr?ng thái có ngu?i. B?n có mu?n xóa tr?ng thái này không?", "Xác nh?n", MessageBoxButton.YesNo, MessageBoxImage.Question);
+                var res = MessageBox.Show($"Bàn {table.Name} ? tr?ng thái có ngu?i. B?n có mu?n xóa tr?ng thái này không?", "Xác nhận", MessageBoxButton.YesNo, MessageBoxImage.Question);
                 if (res == MessageBoxResult.Yes)
                 {
                     table.Status = "Free";
@@ -920,61 +933,88 @@ namespace QuanLyCaPhe.Views.Staff
             return sb.ToString().Normalize(NormalizationForm.FormC);
         }
 
+        // Replace the cbOrder_TextChanged method in QuanLyCaPhe\Views\Staff\StaffWindow.xaml.cs
+        private bool _suspendCbOrderTextChanged = false;
+
         private void cbOrder_TextChanged(object? sender, TextChangedEventArgs e)
         {
+            if (_suspendCbOrderTextChanged) return;
 
             var tb = sender as System.Windows.Controls.TextBox;
             if (tb == null || cbOrder == null) return;
 
-            // 1. L?Y GIÁ TR? HI?N T?I MÀ NGU?I DÙNG ÐANG GÕ
-            string currentText = tb.Text;
-            int caretIndex = tb.CaretIndex; // Luu v? trí con tr? d? khôi ph?c sau
+            string currentText = tb.Text ?? string.Empty;
+            int caretIndex = tb.CaretIndex;
 
-            // 2. G? B? S? KI?N Ð? TRÁNH VÒNG L?P HO?C T? Ð? TRÁNH CÁC VẤN ĐỀ VỀ HIỆU SUẤT
-            tb.TextChanged -= cbOrder_TextChanged;
-
+            _suspendCbOrderTextChanged = true;
             try
             {
-                // 3. X? LÝ L?C D? LI?U (Logic c?a b?n gi? nguyên)
                 var words = currentText.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries)
-                                .Select(w => w.Trim())
-                                .Where(w => w.Length > 0)
-                                .ToArray();
+                    .Select(w => w.Trim())
+                    .Where(w => w.Length >0)
+                    .ToArray();
 
                 IEnumerable<Drink> items = _allDrinks ?? new List<Drink>();
 
-                if (words.Length > 0)
+                if (words.Length >0)
                 {
                     var normalizedWords = words.Select(w => RemoveDiacritics(w).ToLowerInvariant()).ToArray();
                     items = _allDrinks.Where(d =>
                     {
                         var nameNorm = RemoveDiacritics(d.Name).ToLowerInvariant();
-                        return normalizedWords.All(w => nameNorm.IndexOf(w, StringComparison.Ordinal) >= 0);
+                        return normalizedWords.All(w => nameNorm.IndexOf(w, StringComparison.Ordinal) >=0);
                     });
                 }
 
-                // 4. C?P NH?T ITEMSSOURCE
-                // Quan tr?ng: Set l?i ItemsSource s? làm ComboBox c? g?ng ch?n l?i Item
-                cbOrder.ItemsSource = items.ToList();
+                var filtered = items.ToList();
 
-                // 5. M? DROPDOWN Ð? HI?N K?T QU?
-                cbOrder.IsDropDownOpen = true;
+                if (filtered.Count ==1 &&
+                    string.Equals(RemoveDiacritics(filtered[0].Name).Trim(), RemoveDiacritics(currentText).Trim(), StringComparison.OrdinalIgnoreCase))
+                {
+                    var single = new List<Drink> { filtered[0] };
 
-                // 6. C?C K? QUAN TR?NG: GÁN L?I TEXT CU
-                // Vì bu?c gán ItemsSource ? trên có th? dã làm thay d?i Text c?a ComboBox,
-                // ta ph?i ép nó quay v? cái text ngu?i dùng dang gõ.
-                cbOrder.Text = currentText;
+                    // set ItemsSource to a fresh list containing only the match
+                    cbOrder.ItemsSource = single;
+                    cbOrder.SelectedItem = single[0];
 
-                // Ho?c gán tr?c ti?p vào TextBox n?u binding c?a ComboBox chua c?p nh?t k?p
+                    // ensure popup closes and editable textbox loses focus to avoid auto-reopen
+                    cbOrder.Dispatcher.BeginInvoke(new Action(() =>
+                    {
+                        try
+                        {
+                            cbOrder.IsDropDownOpen = false;
+                            // move keyboard focus away from editable textbox
+                            var tbEditable = cbOrder.Template.FindName("PART_EditableTextBox", cbOrder) as TextBox;
+                            if (tbEditable != null)
+                            {
+                                // move focus to parent window
+                                tbEditable.MoveFocus(new TraversalRequest(FocusNavigationDirection.Next));
+                            }
+                            else
+                            {
+                                Keyboard.ClearFocus();
+                            }
+                        }
+                        catch { }
+                    }), System.Windows.Threading.DispatcherPriority.Background);
+                }
+                else
+                {
+                    // assign filtered list and open dropdown only if results
+                    cbOrder.ItemsSource = filtered;
+                    cbOrder.SelectedIndex = -1;
+
+                    // Delay opening to avoid fighting with template focus behavior
+                    cbOrder.Dispatcher.BeginInvoke(new Action(() => cbOrder.IsDropDownOpen = filtered.Count >0), System.Windows.Threading.DispatcherPriority.Background);
+                }
+
+                // restore typed text and caret (ItemsSource changes may reset it)
                 tb.Text = currentText;
-
-                // 7. KHÔI PH?C V? TRÍ CON TR?
-                tb.CaretIndex = caretIndex;
+                tb.CaretIndex = Math.Min(caretIndex, tb.Text.Length);
             }
             finally
             {
-                // 8. G?N L?I S? KI?N Ð? L?N GÕ TI?P THEO HO?T Ð?NG
-                tb.TextChanged += cbOrder_TextChanged;
+                _suspendCbOrderTextChanged = false;
             }
         }
 
@@ -998,6 +1038,19 @@ namespace QuanLyCaPhe.Views.Staff
                     // fallback to normal
                     SortNormal_Click(null, null);
                     break;
+            }
+        }
+
+        private void cbOrder_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            // find editable textbox inside combobox template and clear it
+            if (cbOrder == null) return;
+            var tb = cbOrder.Template.FindName("PART_EditableTextBox", cbOrder) as TextBox;
+            if (tb != null)
+            {
+                tb.Clear();
+                tb.Focus();
+                cbOrder.IsDropDownOpen = false;
             }
         }
 

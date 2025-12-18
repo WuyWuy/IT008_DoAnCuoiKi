@@ -32,6 +32,13 @@ namespace QuanLyCaPhe.Views.Admin.DetailWindow
             txtPhone.Text = user.Phone;
             txtAddress.Text = user.Address;
 
+            // Use FindName to access the TextBox to avoid generated-field issues
+            var wageBox = this.FindName("txtHourlyWage") as TextBox;
+            if (wageBox != null)
+            {
+                wageBox.Text = user.HourlyWage.ToString("N0");
+            }
+
             foreach (ComboBoxItem item in cboRole.Items)
             {
                 if (item.Content.ToString() == user.RoleName)
@@ -59,6 +66,19 @@ namespace QuanLyCaPhe.Views.Admin.DetailWindow
             string address = txtAddress.Text;
             string gender = cboGender.Text;
             string role = (cboRole.SelectedItem as ComboBoxItem)?.Content.ToString() ?? "Staff";
+
+            // hourly wage
+            decimal hourly =0m;
+            var wageBox = this.FindName("txtHourlyWage") as TextBox;
+            string wageText = wageBox?.Text ?? string.Empty;
+            if (!string.IsNullOrWhiteSpace(wageText))
+            {
+                if (!decimal.TryParse(wageText, out hourly))
+                {
+                    MessageBox.Show("Lương theo giờ không hợp lệ. Vui lòng nhập số hợp lệ.");
+                    return;
+                }
+            }
 
             // Validate email format
             const string emailPattern = "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$";
@@ -90,7 +110,7 @@ namespace QuanLyCaPhe.Views.Admin.DetailWindow
                     // Mã hóa mật khẩu
                     string password = txtPassword.Password;
 
-                    if (UserDAO.Instance.InsertUser(name, email, phone, address, gender, password, role))
+                    if (UserDAO.Instance.InsertUser(name, email, phone, address, gender, password, role, hourly))
                     {
                         MessageBox.Show("Thêm nhân viên thành công!");
                         DialogResult = true;
@@ -105,7 +125,7 @@ namespace QuanLyCaPhe.Views.Admin.DetailWindow
                 {
                     // --- LOGIC CẬP NHẬT ---
 
-                    if (UserDAO.Instance.UpdateUser(_user.Id, name, phone, address, gender, role))
+                    if (UserDAO.Instance.UpdateUser(_user.Id, name, phone, address, gender, role, hourly))
                     {
                         MessageBox.Show("Cập nhật thành công!");
                         DialogResult = true;

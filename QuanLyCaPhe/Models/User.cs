@@ -21,6 +21,7 @@ namespace QuanLyCaPhe.Models
         public string RoleName { get; set; }
         public bool RoleLevel { get; set; }
         public bool IsActive { get; set; }
+        public decimal HourlyWage { get; set; } // new property
 
         public User() { }
 
@@ -43,6 +44,16 @@ namespace QuanLyCaPhe.Models
 
             this.RoleLevel = (bool)row["RoleLevel"];
             this.IsActive = (bool)row["IsActive"];
+
+            // HourlyWage may not exist in older databases; check column
+            if (row.Table.Columns.Contains("HourlyWage") && row["HourlyWage"] != DBNull.Value)
+            {
+                this.HourlyWage = Convert.ToDecimal(row["HourlyWage"]);
+            }
+            else
+            {
+                this.HourlyWage =0m;
+            }
         }
     }
 

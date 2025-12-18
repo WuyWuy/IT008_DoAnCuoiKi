@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:QuanLyCaPhe.Views.Admin.DetailWindow"
         mc:Ignorable="d"
-        Title="Thông Tin Nhân Viên" Height="653" Width="450"
+        Title="Thông Tin Nhân Viên" Height="725" Width="450"
         WindowStartupLocation="CenterScreen" ResizeMode="NoResize"
         Background="{StaticResource BackgroundLight}">
 
@@ -43,6 +43,9 @@
                     <ComboBoxItem Content="Nữ" Tag="Female"/>
                 </ComboBox>
 
+                <TextBlock Text="Lương theo giờ (VND):" FontWeight="SemiBold" Margin="0,10,0,5" Foreground="#1E1B4B"/>
+                <TextBox x:Name="txtHourlyWage" Style="{StaticResource GlassTextStyleInput}"/>
+
                 <TextBlock Text="Chức vụ:" FontWeight="SemiBold" Margin="0,10,0,5" Foreground="#1E1B4B"/>
                 <ComboBox x:Name="cboRole" Style="{StaticResource ComboBoxStyle}">
                     <ComboBoxItem Content="Admin" Tag="Admin"/>
@@ -53,7 +56,8 @@
                     <TextBlock Text="Mật khẩu khởi tạo:" FontWeight="SemiBold" Margin="0,10,0,5" Foreground="#1E1B4B"/>
                     <PasswordBox x:Name="txtPassword" Style="{StaticResource MaterialPasswordBoxStyle}"/>
                 </StackPanel>
-                <TextBox x:Name="txtEmail_Copy" Style="{StaticResource GlassTextStyleInput}"/>
+
+                
             </StackPanel>
 
             <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,20,0,0">

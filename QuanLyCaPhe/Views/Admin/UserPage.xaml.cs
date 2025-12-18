@@ -128,12 +128,14 @@ namespace QuanLyCaPhe.Views.Admin
 
                         if (existingId != -1)
                         {
-                            if (UserDAO.Instance.UpdateUser(existingId, item.FullName, item.Phone, item.Address, item.Gender, item.RoleName))
+                            // pass hourly wage when updating
+                            if (UserDAO.Instance.UpdateUser(existingId, item.FullName, item.Phone, item.Address, item.Gender, item.RoleName, item.HourlyWage))
                                 countUpdate++;
                         }
                         else
                         {
-                            if (UserDAO.Instance.InsertUser(item.FullName, item.Email, item.Phone, item.Address, item.Gender, Constants.DEFAULT_PASSWORD, item.RoleName))
+                            // pass hourly wage when inserting
+                            if (UserDAO.Instance.InsertUser(item.FullName, item.Email, item.Phone, item.Address, item.Gender, Constants.DEFAULT_PASSWORD, item.RoleName, item.HourlyWage))
                                 countAdd++;
                         }
                     }

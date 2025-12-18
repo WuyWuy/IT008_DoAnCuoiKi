@@ -26,7 +26,7 @@
 
 
         <StackPanel Grid.Row="2" Orientation="Horizontal">
-            <comp:DatePickerv2 VerticalAlignment="Bottom" Margin="3"/>
+            <comp:DatePickerv2 x:Name="DatePickerV2" VerticalAlignment="Bottom" Margin="3"/>
             <comp:ExcelControl VerticalAlignment="Bottom" Margin="3"/>
             
         </StackPanel>
@@ -42,7 +42,7 @@
                     Style="{StaticResource ProfitMoneyPanelStyle}">
                 <StackPanel>
                     <TextBlock Text="TỔNG THU"/>
-                    <TextBlock Text="99999999999đ" FontSize="30"/>
+                    <TextBlock x:Name="TotalRevenueText" Text="0đ" FontSize="30"/>
                 </StackPanel>
             </Border>
 
@@ -50,6 +50,7 @@
                     Style="{StaticResource ProfitMoneyPanelStyle}">
                 <StackPanel>
                     <TextBlock Text="TỔNG CHI"/>
+                    <TextBlock x:Name="TotalExpenseText" Text="0đ" FontSize="30"/>
                 </StackPanel>
             </Border>
 
@@ -57,6 +58,7 @@
                     Style="{StaticResource ProfitMoneyPanelStyle}">
                 <StackPanel>
                     <TextBlock Text="LỢI NHUẬN"/>
+                    <TextBlock x:Name="ProfitText" Text="0đ" FontSize="30"/>
                 </StackPanel>
             </Border>
         </Grid>

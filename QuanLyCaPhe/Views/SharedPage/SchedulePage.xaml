@@ -24,6 +24,9 @@
                            VerticalAlignment="Center" Margin="15,0" Width="140" TextAlignment="Center"/>
 
                 <Button Content="▶" Click="NextMonth_Click" Width="30" Height="30" Background="Transparent" BorderThickness="1" BorderBrush="#E5E7EB"/>
+
+                <!-- Delete all schedules for current month -->
+                <Button Content="Xóa tất cả" Click="DeleteAll_Click" Width="100" Height="30" Background="Transparent" BorderThickness="1" BorderBrush="#E5E7EB" Margin="10,0,0,0"/>
             </StackPanel>
         </Border>
 

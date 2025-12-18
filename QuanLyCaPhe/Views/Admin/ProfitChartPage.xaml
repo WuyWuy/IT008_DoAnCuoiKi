@@ -28,7 +28,7 @@
                     <TextBlock Text="DOANH THU  LỢI NHUẬN THEO THÁNG" 
                                FontSize="16" FontWeight="SemiBold"
                                Foreground="#374151"/>
-                    <TextBlock Text="(Đơn vị: Triệu đồng)"
+                    <TextBlock Text="{Binding UnitText}"
                                FontSize="12" Foreground="#9CA3AF"
                                Margin="0,5,0,0"/>
                 </StackPanel>

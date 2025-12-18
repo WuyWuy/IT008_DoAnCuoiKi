@@ -69,7 +69,7 @@ namespace QuanLyCaPhe.Views.SharedPage
 
         // Vertical scroll lock threshold (pixels). Content cannot be scrolled above this offset.
         // Set to desired value (0 = topmost). Increase to prevent scrolling up further.
-        private double _verticalLockOffset =45.0; // lock at ~header height + small offset
+        private double _verticalLockOffset = 45.0; // lock at ~header height + small offset
 
         public SchedulePage()
         {
@@ -86,14 +86,14 @@ namespace QuanLyCaPhe.Views.SharedPage
             // Attach wheel handler to lock upward scrolling when close to top using inline lambda
             ContentScrollViewer.PreviewMouseWheel += (s, e) =>
             {
-                if (e.Delta >0) // scrolling up
+                if (e.Delta > 0) // scrolling up
                 {
-                    if (ContentScrollViewer.VerticalOffset <= _verticalLockOffset +0.5)
+                    if (ContentScrollViewer.VerticalOffset <= _verticalLockOffset + 0.5)
                     {
                         // lock: suppress further upward scrolling
                         e.Handled = true;
                         return;
-        }
+                    }
                 }
                 // otherwise let it scroll normally
             };
@@ -187,7 +187,7 @@ namespace QuanLyCaPhe.Views.SharedPage
 
             //1. TẠO CỘT
             // Các cột Slot (30p)
-            for (int i =0; i < totalSlots; i++)
+            for (int i = 0; i < totalSlots; i++)
             {
                 ScheduleGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(60) });
 
@@ -203,7 +203,7 @@ namespace QuanLyCaPhe.Views.SharedPage
             // Add a spacer row at top of DateColumnGrid so its rows align with ScheduleGrid content rows
             DateColumnGrid.RowDefinitions.Add(new RowDefinition { Height = new GridLength(50) });
 
-            for (int i =1; i <= daysInMonth; i++)
+            for (int i = 1; i <= daysInMonth; i++)
             {
                 ScheduleGrid.RowDefinitions.Add(new RowDefinition { Height = new GridLength(60) });
 
@@ -216,21 +216,21 @@ namespace QuanLyCaPhe.Views.SharedPage
             //3. VẼ HEADER GIỜ (LOGIC MỚI - CLEAN CODE)
             // Build hour headers into TimeHeaderGrid
             // Chỉ chạy i < totalSlots (Không vẽ mốc cuối cùng22h)
-            for (int i =0; i < totalSlots; i +=2)
+            for (int i = 0; i < totalSlots; i += 2)
             {
-                var time = new TimeSpan(StartHour,0,0).Add(TimeSpan.FromMinutes(i * StepMinutes));
+                var time = new TimeSpan(StartHour, 0, 0).Add(TimeSpan.FromMinutes(i * StepMinutes));
 
                 Border headerBorder = new Border
                 {
                     Style = (Style)FindResource("HeaderBorderStyle"),
-                    Width =120, // Rộng120px (chiếm trọn1 tiếng)
+                    Width = 120, // Rộng120px (chiếm trọn1 tiếng)
 
                     // Căn Trái: Chữ bắt đầu ngay tại vạch kẻ
                     HorizontalAlignment = HorizontalAlignment.Left,
 
                     // Kéo lùi nhẹ15px để tâm chữ "06" nằm giữa vạch kẻ cho đẹp mắt (giống Google Calendar)
                     // Nếu bạn thích nó nằm hẳn bên trong ô thì sửa thành (5,0,0,0)
-                    Margin = new Thickness(0,0,0,0)
+                    Margin = new Thickness(0, 0, 0, 0)
                 };
 
                 TextBlock txtTime = new TextBlock
@@ -244,21 +244,21 @@ namespace QuanLyCaPhe.Views.SharedPage
                 headerBorder.Child = txtTime;
 
                 // ĐỊNH VỊ: header aligns with ScheduleGrid columns (no leading date column)
-                Grid.SetRow(headerBorder,0);
+                Grid.SetRow(headerBorder, 0);
                 Grid.SetColumn(headerBorder, i);
 
                 // Luôn luôn Span2 cột (Vì ta đã bỏ mốc cuối cùng, nên các mốc còn lại luôn đủ chỗ chứa1 tiếng)
-                Grid.SetColumnSpan(headerBorder,2);
+                Grid.SetColumnSpan(headerBorder, 2);
 
                 // add vertical guideline into ScheduleGrid spanning the content rows (start at row1)
                 Border guideLineContent = new Border
                 {
-                    BorderBrush = new SolidColorBrush(Color.FromRgb(229,231,235)),
-                    BorderThickness = new Thickness(1,0,0,0),
-                    Opacity =0.5
+                    BorderBrush = new SolidColorBrush(Color.FromRgb(229, 231, 235)),
+                    BorderThickness = new Thickness(1, 0, 0, 0),
+                    Opacity = 0.5
 
                 };
-                Grid.SetRow(guideLineContent,1);
+                Grid.SetRow(guideLineContent, 1);
                 Grid.SetRowSpan(guideLineContent, daysInMonth);
                 Grid.SetColumn(guideLineContent, i);
                 ScheduleGrid.Children.Add(guideLineContent);
@@ -266,12 +266,12 @@ namespace QuanLyCaPhe.Views.SharedPage
                 // Also add a small tick/line in header row for visual alignment
                 Border guideLineHeader = new Border
                 {
-                    BorderBrush = new SolidColorBrush(Color.FromRgb(229,231,235)),
-                    BorderThickness = new Thickness(1,0,0,0),
-                    Opacity =0.5
+                    BorderBrush = new SolidColorBrush(Color.FromRgb(229, 231, 235)),
+                    BorderThickness = new Thickness(1, 0, 0, 0),
+                    Opacity = 0.5
                 };
-                Grid.SetRow(guideLineHeader,0);
-                Grid.SetRowSpan(guideLineHeader,1);
+                Grid.SetRow(guideLineHeader, 0);
+                Grid.SetRowSpan(guideLineHeader, 1);
                 Grid.SetColumn(guideLineHeader, i);
                 TimeHeaderGrid.Children.Add(guideLineHeader);
 
@@ -279,12 +279,12 @@ namespace QuanLyCaPhe.Views.SharedPage
             }
 
             //4. VẼ NGÀY VÀ CELL (Giữ nguyên logic cũ) but also fill DateColumnGrid
-            for (int day =1; day <= daysInMonth; day++)
+            for (int day = 1; day <= daysInMonth; day++)
             {
                 DateTime date = new DateTime(_currentMonthDisplay.Year, _currentMonthDisplay.Month, day);
 
                 // Header Ngày
-                Border dayHeader = new Border { Style = (Style)FindResource("HeaderBorderStyle"), Padding = new Thickness(10,0,0,0) };
+                Border dayHeader = new Border { Style = (Style)FindResource("HeaderBorderStyle"), Padding = new Thickness(10, 0, 0, 0) };
                 StackPanel spDay = new StackPanel { VerticalAlignment = VerticalAlignment.Center };
 
                 Brush primaryColor = (Brush)TryFindResource("PrimaryColor") ?? Brushes.Black;
@@ -292,11 +292,11 @@ namespace QuanLyCaPhe.Views.SharedPage
                 TextBlock txtDayNum = new TextBlock
                 {
                     Text = day.ToString("00"),
-                    FontSize =16,
+                    FontSize = 16,
                     FontWeight = FontWeights.Bold,
                     Foreground = primaryColor
                 };
-                TextBlock txtDayName = new TextBlock { Text = GetVietnameseDayName(date.DayOfWeek), FontSize =11, Foreground = Brushes.Gray };
+                TextBlock txtDayName = new TextBlock { Text = GetVietnameseDayName(date.DayOfWeek), FontSize = 11, Foreground = Brushes.Gray };
 
                 if (date.DayOfWeek == DayOfWeek.Sunday)
                 {
@@ -309,15 +309,15 @@ namespace QuanLyCaPhe.Views.SharedPage
                 dayHeader.Child = spDay;
 
                 Grid.SetRow(dayHeader, day); // shift by1 because row0 is spacer/header
-                Grid.SetColumn(dayHeader,0);
+                Grid.SetColumn(dayHeader, 0);
                 DateColumnGrid.Children.Add(dayHeader);
 
                 // Cells
-                for (int c =0; c < totalSlots; c++)
+                for (int c = 0; c < totalSlots; c++)
                 {
-                    var currentTime = new TimeSpan(StartHour,0,0).Add(TimeSpan.FromMinutes(c * StepMinutes));
+                    var currentTime = new TimeSpan(StartHour, 0, 0).Add(TimeSpan.FromMinutes(c * StepMinutes));
                     Border cell = new Border { Style = (Style)FindResource("GridCellStyle") };
-                    cell.Tag = new { Date = date, Time = currentTime, ColIndex = c +1 };
+                    cell.Tag = new { Date = date, Time = currentTime, ColIndex = c + 1 };
                     cell.MouseLeftButtonDown += Cell_Click;
 
                     // Allow drop for drag & drop
@@ -344,17 +344,17 @@ namespace QuanLyCaPhe.Views.SharedPage
                         TimeSpan start = s.StartTime;
                         TimeSpan duration = s.EndTime - s.StartTime;
                         AddShiftToGrid(name, date, start, duration, s.Id, s.UserId);
-            }
-        }
+                    }
+                }
                 catch { }
             }
 
             // After creating ColumnDefinitions and RowDefinitions in RenderSchedule(), set explicit sizes so header/date align with content
 
             // compute fixed pixel sizes (we use60 per time slot,50 header,60 per day)
-            int slotPixelWidth =60;
-            int headerPixelHeight =50;
-            int dayRowHeight =60;
+            int slotPixelWidth = 60;
+            int headerPixelHeight = 50;
+            int dayRowHeight = 60;
 
             // total width for time columns
             double totalTimeWidth = totalSlots * slotPixelWidth;
@@ -362,12 +362,12 @@ namespace QuanLyCaPhe.Views.SharedPage
             // apply widths/heights to ensure scroll extents match
             try
             {
-             TimeHeaderGrid.Width = totalTimeWidth;
-             ScheduleGrid.Width = totalTimeWidth;
+                TimeHeaderGrid.Width = totalTimeWidth;
+                ScheduleGrid.Width = totalTimeWidth;
 
-             double totalContentHeight = headerPixelHeight + (daysInMonth * dayRowHeight);
-             ScheduleGrid.Height = totalContentHeight;
-             DateColumnGrid.Height = totalContentHeight;
+                double totalContentHeight = headerPixelHeight + (daysInMonth * dayRowHeight);
+                ScheduleGrid.Height = totalContentHeight;
+                DateColumnGrid.Height = totalContentHeight;
             }
             catch { }
 
@@ -378,13 +378,13 @@ namespace QuanLyCaPhe.Views.SharedPage
         private void ContentScrollViewer_ScrollChanged(object sender, ScrollChangedEventArgs e)
         {
             // Horizontal -> move header
-            if (e.HorizontalChange !=0)
+            if (e.HorizontalChange != 0)
             {
                 HeaderScrollViewer.ScrollToHorizontalOffset(e.HorizontalOffset);
             }
 
             // Vertical -> move left column
-            if (e.VerticalChange !=0)
+            if (e.VerticalChange != 0)
             {
                 LeftScrollViewer.ScrollToVerticalOffset(e.VerticalOffset);
             }
@@ -403,8 +403,8 @@ namespace QuanLyCaPhe.Views.SharedPage
             try
             {
                 var vs = ContentScrollViewer.ComputedVerticalScrollBarVisibility;
-                double padRight = (vs == Visibility.Visible) ? SystemParameters.VerticalScrollBarWidth :0;
-                HeaderScrollViewer.Padding = new Thickness(0,0, padRight,0);
+                double padRight = (vs == Visibility.Visible) ? SystemParameters.VerticalScrollBarWidth : 0;
+                HeaderScrollViewer.Padding = new Thickness(0, 0, padRight, 0);
             }
             catch { }
         }
@@ -481,6 +481,15 @@ namespace QuanLyCaPhe.Views.SharedPage
 
             TimeSpan duration = endTime - _selectedStartTime;
             if (duration.TotalMinutes % 30 != 0) { txtError.Text = "Thời gian phải chẵn30p."; return; }
+
+            // Check overlap in UI before saving
+            int startSlot = (int)((_selectedStartTime.TotalMinutes - (StartHour * 60)) / StepMinutes);
+            int span = (int)(duration.TotalMinutes / StepMinutes);
+            if (!IsRangeFree(_selectedDate, startSlot, span, null))
+            {
+                txtError.Text = "Vùng thời gian đã có ca khác.";
+                return;
+            }
 
             // Save to database
             try
@@ -662,10 +671,10 @@ namespace QuanLyCaPhe.Views.SharedPage
             bool nearRight = posInBlock.X >= border.ActualWidth - threshold;
 
             // Update slot pixel width from grid if possible
-            if (ScheduleGrid.ColumnDefinitions.Count >0)
+            if (ScheduleGrid.ColumnDefinitions.Count > 0)
             {
                 _slotPixelWidth = ScheduleGrid.ColumnDefinitions[0].ActualWidth;
-                if (_slotPixelWidth <=0) _slotPixelWidth =60;
+                if (_slotPixelWidth <= 0) _slotPixelWidth = 60;
             }
 
             if (nearLeft || nearRight)
@@ -793,8 +802,8 @@ namespace QuanLyCaPhe.Views.SharedPage
             // Compute final start/end based on current visual column/span
             int col = Grid.GetColumn(_resizingBlock);
             int span = Grid.GetColumnSpan(_resizingBlock);
-            int startSlot = col - 1;
-            TimeSpan newStart = TimeSpan.FromMinutes(StartHour *60 + startSlot * StepMinutes);
+            int startSlot = col; // columns are0-based slots
+            TimeSpan newStart = TimeSpan.FromMinutes(StartHour * 60 + startSlot * StepMinutes);
             TimeSpan newEnd = newStart.Add(TimeSpan.FromMinutes(span * StepMinutes));
 
             var sd = _resizingBlock.Tag as ShiftData;
@@ -833,11 +842,19 @@ namespace QuanLyCaPhe.Views.SharedPage
             if (!_isResizing || _resizingBlock != block) return;
 
             Point pos = e.GetPosition(ScheduleGrid);
+
+            // If the mouse moved outside the schedule grid to the left (into the date column) or
+            // beyond the right edge, ignore resize updates to avoid moving blocks into the date column.
+            if (pos.X <0 || pos.X > ScheduleGrid.ActualWidth)
+            {
+                return;
+            }
+
             double deltaX = pos.X - _resizeStartPoint.X;
             // compute slot delta (positive means moving right)
             int slotDelta = (int)Math.Round(deltaX / _slotPixelWidth);
 
-            int origStartSlot = _origColumn -1;
+            int origStartSlot = _origColumn; // columns are0-based, remove previous -1 offset
 
             if (_currentResizeDir == ResizeDirection.Left)
             {
@@ -852,8 +869,15 @@ namespace QuanLyCaPhe.Views.SharedPage
                 }
                 if (newSpan <1) newSpan =1;
 
+                // check overlap ignoring this block
+                if (!IsRangeFree(((ShiftData)block.Tag).Date, newStartSlot, newSpan, block))
+                {
+                    // do not apply change if it would overlap
+                    return;
+                }
+
                 // update visual
-                Grid.SetColumn(block, newStartSlot +1);
+                Grid.SetColumn(block, newStartSlot);
                 Grid.SetColumnSpan(block, newSpan);
 
                 // update tag times for live feedback
@@ -876,6 +900,13 @@ namespace QuanLyCaPhe.Views.SharedPage
                 if (startSlot + newSpan > totalSlots) newSpan = totalSlots - startSlot;
                 if (newSpan <1) newSpan =1;
 
+                // check overlap ignoring this block
+                if (!IsRangeFree(((ShiftData)block.Tag).Date, startSlot, newSpan, block))
+                {
+                    // do not apply change if it would overlap
+                    return;
+                }
+
                 Grid.SetColumnSpan(block, newSpan);
 
                 var sd = block.Tag as ShiftData;
@@ -886,7 +917,6 @@ namespace QuanLyCaPhe.Views.SharedPage
                 }
             }
         }
-
         private void UpdateBlockText(Border block, ShiftData sd)
         {
             if (block.Child is TextBlock tb && sd != null)
@@ -936,6 +966,19 @@ namespace QuanLyCaPhe.Views.SharedPage
                 return;
             }
 
+            // Check overlap: ignore source element if present (moving)
+            int startSlot = (int)((targetStart.TotalMinutes - (StartHour * 60)) / StepMinutes);
+            int span = (int)(duration.TotalMinutes / StepMinutes);
+            UIElement ignoreEl = data.SourceElement as UIElement;
+            if (!IsRangeFree(targetDate, startSlot, span, ignoreEl))
+            {
+                MessageBox.Show("Vị trí dán bị chồng lấp với ca khác.");
+                RemoveDragAdorner();
+                e.Effects = DragDropEffects.None;
+                e.Handled = true;
+                return;
+            }
+
             // Insert new schedule first
             bool inserted = WorkScheduleDAO.Instance.RegisterSchedule(data.UserId, targetDate, targetStart, targetEnd, "");
             if (!inserted)
@@ -976,6 +1019,10 @@ namespace QuanLyCaPhe.Views.SharedPage
                 TimeSpan duration = _clipboard.End - _clipboard.Start;
                 TimeSpan targetEnd = targetStart.Add(duration);
                 if (targetEnd > new TimeSpan(EndHour, 0, 0)) { MessageBox.Show("Không thể dán: vượt quá giờ làm."); return; }
+
+                int startSlot = (int)((targetStart.TotalMinutes - (StartHour * 60)) / StepMinutes);
+                int span = (int)(duration.TotalMinutes / StepMinutes);
+                if (!IsRangeFree(targetDate, startSlot, span, null)) { MessageBox.Show("Vị trí dán bị chồng lấp với ca khác."); return; }
 
                 // Insert
                 bool ok = WorkScheduleDAO.Instance.RegisterSchedule(_clipboard.UserId, targetDate, targetStart, targetEnd, "");
@@ -1089,6 +1136,66 @@ namespace QuanLyCaPhe.Views.SharedPage
                     drawingContext.Pop();
                 }
             }
+        }
+
+        // Check whether the target slot range for a given date is free (no other shift blocks overlap).
+        // If ignoreElement is provided, that UIElement will be skipped from the overlap check (useful when resizing/moving the same block).
+        private bool IsRangeFree(DateTime date, int startSlot, int span, UIElement ignoreElement)
+        {
+            if (span <= 0) return false;
+            int endSlotExclusive = startSlot + span; // exclusive
+            foreach (UIElement child in ScheduleGrid.Children)
+            {
+                if (child == ignoreElement) continue;
+                if (child is Border b && b.Tag is ShiftData sd)
+                {
+                    // Only consider blocks on the same date
+                    if (sd.Date.Date != date.Date) continue;
+
+                    int childStart = Grid.GetColumn(b);
+                    int childSpan = Grid.GetColumnSpan(b);
+                    int childEndExclusive = childStart + childSpan;
+
+                    // ranges [startSlot, endSlotExclusive) and [childStart, childEndExclusive) overlap if
+                    // startSlot < childEndExclusive && childStart < endSlotExclusive
+                    if (startSlot < childEndExclusive && childStart < endSlotExclusive)
+                    {
+                        return false; // overlap found
+                    }
+                }
+            }
+            return true;
+        }
+
+        // Add the following method to delete all schedules for current month (with confirmation)
+        private void DeleteAll_Click(object sender, RoutedEventArgs e)
+        {
+            if (MessageBox.Show($"Xóa tất cả ca trong tháng {_currentMonthDisplay:MM/yyyy}?", "Xác nhận", MessageBoxButton.YesNo, MessageBoxImage.Warning) != MessageBoxResult.Yes)
+                return;
+
+            DeleteAllSchedulesForCurrentMonth();
+        }
+
+        private void DeleteAllSchedulesForCurrentMonth()
+        {
+            // iterate each day and remove schedules
+            int days = DateTime.DaysInMonth(_currentMonthDisplay.Year, _currentMonthDisplay.Month);
+            for (int d =1; d <= days; d++)
+            {
+                var date = new DateTime(_currentMonthDisplay.Year, _currentMonthDisplay.Month, d);
+                try
+                {
+                    var schedules = WorkScheduleDAO.Instance.GetListByDate(date);
+                    foreach (var s in schedules)
+                    {
+                        try { WorkScheduleDAO.Instance.DeleteSchedule(s.Id); } catch { }
+                    }
+                }
+                catch { }
+            }
+
+            // reload UI
+            RenderSchedule();
         }
     }
 }

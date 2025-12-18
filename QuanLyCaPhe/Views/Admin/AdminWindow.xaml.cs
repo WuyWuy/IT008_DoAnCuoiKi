@@ -1,5 +1,9 @@
-﻿using System;
+﻿using DocumentFormat.OpenXml.Drawing.Diagrams;
+using QuanLyCaPhe.Views.Login;
+using QuanLyCaPhe.Views.SharedPage;
+using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -9,12 +13,9 @@ using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
-using System.Windows.Media.Animation;
-using QuanLyCaPhe.Views.SharedPage;
-using DocumentFormat.OpenXml.Drawing.Diagrams;
-using QuanLyCaPhe.Views.Login;
 
 namespace QuanLyCaPhe.Views.Admin
 {
@@ -23,10 +24,14 @@ namespace QuanLyCaPhe.Views.Admin
     /// </summary>
     public partial class AdminWindow : Window
     {
+        // Flag to indicate the user requested logout (so Closing handler won't shut down the app)
+        private bool _isLoggingOut = false;
+
         public AdminWindow()
         {
             InitializeComponent();
             this.Loaded += AdminWindow_Loaded;
+            this.Closing += AdminWindow_Closing;
             //curClick = Homebtn;
         }
 
@@ -108,8 +113,26 @@ namespace QuanLyCaPhe.Views.Admin
             Sidebar.BeginAnimation(UIElement.OpacityProperty, opacityAnimation);
         }
 
+        private void AdminWindow_Closing(object? sender, CancelEventArgs e)
+        {
+            // stop timers / cleanup if needed...
+            // If user is logging out, do not shut down the application; simply allow close so LoginWindow can show.
+            if (_isLoggingOut)
+            {
+                return;
+            }
+
+            // When debugging, closing the main admin window should stop the app so Visual Studio stops debugging.
+            if (System.Diagnostics.Debugger.IsAttached)
+            {
+                Application.Current.Shutdown();
+            }
+        }
         private void Logoutbtn_Click(object sender, RoutedEventArgs e)
         {
+            // Mark that we're logging out so Closing handler won't call Shutdown
+            _isLoggingOut = true;
+
             // Return to login window: open a new LoginWindow and close this admin window
             var loginWindow = new LoginWindow();
             loginWindow.Show();

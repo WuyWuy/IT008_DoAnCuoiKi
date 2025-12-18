@@ -67,12 +67,56 @@ namespace QuanLyCaPhe.Views.Admin
                 // Use GetCountStaff to get number of staff users
                 int staffCount = UserDAO.Instance.GetCountStaff();
 
-                // Ví dụ: decimal totalIncome = DataProvider.Ins.DB.Bills.Sum(x => x.Total);
-                decimal totalIncome = 15600000;
+                // compute totals for current month (same logic as ProfitPage)
+                DateTime now = DateTime.Now;
+                int month = now.Month;
+                int year = now.Year;
 
-                // Ví dụ: decimal totalExpense = DataProvider.Ins.DB.ImportBills.Sum(x => x.Total);
-                Random random = new Random();
-                decimal totalExpense = random.Next(1, 100000000);
+                decimal totalIncome =0m;
+                var bills = BillDAO.Instance.GetListBills();
+                foreach (var b in bills)
+                {
+                    DateTime checkDate = b.DateCheckOut ?? b.DateCheckIn;
+                    if (checkDate.Month == month && checkDate.Year == year)
+                    {
+                        totalIncome += b.TotalPrice;
+                    }
+                }
+
+                decimal totalInputExpense =0m;
+                var inputs = InputInfoDAO.Instance.GetListInputInfo();
+                foreach (var inp in inputs)
+                {
+                    if (inp.DateInput.Month == month && inp.DateInput.Year == year)
+                    {
+                        totalInputExpense += inp.InputPrice;
+                    }
+                }
+
+                // labor cost from schedules
+                decimal totalLabor =0m;
+                var users = UserDAO.Instance.GetListUser();
+                var wageById = users.ToDictionary(u => u.Id, u => u.HourlyWage);
+
+                DateTime firstDay = new DateTime(year, month,1);
+                int daysInMonth = DateTime.DaysInMonth(year, month);
+                for (int d =0; d < daysInMonth; d++)
+                {
+                    DateTime date = firstDay.AddDays(d);
+                    var schedules = WorkScheduleDAO.Instance.GetListByDate(date);
+                    foreach (var s in schedules)
+                    {
+                        double hoursDouble = (s.EndTime - s.StartTime).TotalHours;
+                        if (hoursDouble <=0) continue;
+                        decimal hours = (decimal)hoursDouble;
+                        if (wageById.TryGetValue(s.UserId, out decimal hourlyWage))
+                        {
+                            totalLabor += hours * hourlyWage;
+                        }
+                    }
+                }
+
+                decimal totalExpense = totalInputExpense + totalLabor;
 
 
                 // --- PHẦN 2: HIỂN THỊ LÊN GIAO DIỆN ---
