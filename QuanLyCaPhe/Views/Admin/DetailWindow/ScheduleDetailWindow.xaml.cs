@@ -5,9 +5,9 @@ using System.Windows;
 using System.Windows.Controls;
 using QuanLyCaPhe.DAO;
 using QuanLyCaPhe.Models;
-using QuanLyCaPhe.Views.Components; // Dùng MessageBox Custom
+using QuanLyCaPhe.Views.Components; 
 
-namespace QuanLyCaPhe.Views.SharedPage
+namespace QuanLyCaPhe.Views.Admin.DetailWindow
 {
     public partial class ScheduleRegisterWindow : Window
     {

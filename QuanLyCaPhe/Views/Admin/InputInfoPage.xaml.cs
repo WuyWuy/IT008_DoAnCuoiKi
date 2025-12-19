@@ -1,6 +1,8 @@
 ﻿using QuanLyCaPhe.DAO;
 using QuanLyCaPhe.Models;
+using QuanLyCaPhe.Services; // [QUAN TRỌNG] Để gọi CheckWarnings
 using QuanLyCaPhe.Views.Admin.DetailWindow;
+using QuanLyCaPhe.Views.Components; // [QUAN TRỌNG] Để dùng JetMoonMessageBox
 using System.Windows;
 using System.Windows.Controls;
 
@@ -30,60 +32,83 @@ namespace QuanLyCaPhe.Views.Admin
             e.Row.Header = (e.Row.GetIndex() + 1).ToString();
         }
 
-        // --- THÊM PHIẾU NHẬP ---
+        // --- 1. THÊM PHIẾU NHẬP ---
         private void BtnAdd_Click(object sender, RoutedEventArgs e)
         {
             InputInfoDetailWindow f = new InputInfoDetailWindow();
-            // Nếu người dùng bấm Lưu và đóng form -> Load lại danh sách
             if (f.ShowDialog() == true)
             {
+                // [MỚI] Ghi log sau khi thêm thành công
+                GlobalService.RecordActivity("Kho hàng", "Nhập hàng", "Vừa thêm phiếu nhập hàng mới");
+
                 LoadData();
             }
         }
 
-        // --- SỬA PHIẾU NHẬP (Chỉ cho xem/sửa giá/ngày, hạn chế sửa số lượng vì rắc rối kho) ---
+        // --- 2. SỬA PHIẾU NHẬP ---
         private void BtnEdit_Click(object sender, RoutedEventArgs e)
         {
-            // InputInfoDetailWindow của bạn đã hỗ trợ nhận tham số InputInfo vào Constructor
-            // Hãy đảm bảo bạn đã code phần đó (như tôi đã gửi ở các bước trước)
             if (InputInfosdg.SelectedItem is InputInfo selected)
             {
                 InputInfoDetailWindow f = new InputInfoDetailWindow(selected);
                 if (f.ShowDialog() == true)
                 {
+                    // [MỚI] Ghi log sau khi sửa thành công
+                    GlobalService.RecordActivity("Kho hàng", "Sửa phiếu nhập", $"Đã cập nhật thông tin phiếu nhập #{selected.Id}");
+
                     LoadData();
                 }
             }
+            else
+            {
+                JetMoonMessageBox.Show("Vui lòng chọn phiếu cần xem/sửa!", "Chưa chọn dòng", MsgType.Warning);
+            }
         }
 
-        // --- XÓA PHIẾU NHẬP ---
+        // --- 3. XÓA PHIẾU NHẬP ---
         private void BtnDelete_Click(object sender, RoutedEventArgs e)
         {
             if (InputInfosdg.SelectedItem is InputInfo selected)
             {
-                var result = MessageBox.Show(
-                    $"Bạn có chắc muốn xóa phiếu nhập #{selected.Id}?\n\nLƯU Ý: Số lượng tồn kho của [{selected.IngredientName}] sẽ bị trừ đi {selected.Count}.",
+                // Hỏi xác nhận
+                var result = JetMoonMessageBox.Show(
+                    $"Bạn có chắc muốn xóa phiếu nhập #{selected.Id}?\n" +
+                    $"\nLƯU Ý: Số lượng tồn kho của [{selected.IngredientName}] sẽ bị trừ đi {selected.Count} {selected.Unit}.",
                     "Cảnh báo kho",
-                    MessageBoxButton.YesNo,
-                    MessageBoxImage.Warning);
+                    MsgType.Question,
+                    true);
 
-                if (result == MessageBoxResult.Yes)
+                if (result == true)
                 {
+                    // Thực hiện xóa
                     if (InputInfoDAO.Instance.DeleteInputInfo(selected.Id, selected.IngId, selected.Count))
                     {
-                        MessageBox.Show("Đã xóa và cập nhật lại kho hàng!");
+                        // Kiểm tra cảnh báo (Warning) ngay lập tức vì kho vừa bị trừ
+                        GlobalService.CheckWarnings();
+
+                        // [MỚI] Ghi log hoạt động
+                        GlobalService.RecordActivity(
+                            "Kho hàng",
+                            "Xóa phiếu nhập",
+                            $"Đã xóa phiếu nhập #{selected.Id} - {selected.IngredientName} ({selected.Count} {selected.Unit})"
+                        );
+
+                        JetMoonMessageBox.Show("Đã xóa phiếu nhập và cập nhật lại kho hàng!", "Thành công", MsgType.Success);
                         LoadData();
                     }
                     else
                     {
-                        MessageBox.Show("Xóa thất bại!");
+                        JetMoonMessageBox.Show("Xóa thất bại! Có lỗi xảy ra với CSDL.", "Lỗi", MsgType.Error);
                     }
                 }
+            }
+            else
+            {
+                JetMoonMessageBox.Show("Vui lòng chọn dòng cần xóa!", "Chưa chọn dòng", MsgType.Warning);
             }
         }
 
         // --- TÌM KIẾM ---
-        // Bạn cần gán sự kiện này vào SearchBar trong XAML: Clicked="SearchBar_Clicked"
         private void SearchBar_Clicked(object sender, string keyword)
         {
             if (string.IsNullOrWhiteSpace(keyword))

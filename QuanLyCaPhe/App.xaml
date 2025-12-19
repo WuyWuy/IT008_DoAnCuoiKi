@@ -14,10 +14,9 @@
                 <ResourceDictionary Source="/Resources/Styles/MAINSTYLE.xaml"/>
                 <ResourceDictionary Source="/Resources/Styles/LoginStyles.xaml"/>
                 <ResourceDictionary Source="/Resources/Styles/AdminStyles.xaml"/>
-                <ResourceDictionary Source="/Resources/Styles/HomePage_Admin.xaml"/>
                 <ResourceDictionary Source="/Resources/Styles/DataGridStyles.xaml"/>
+                <ResourceDictionary Source="/Resources/Styles/ContextMenuStyles.xaml"/>
                 <ResourceDictionary Source="/Resources/Styles/HoverBorderAnimation.xaml"/>
-                <ResourceDictionary Source="/Resources/Styles/ProfitStyles.xaml"/>
                 <ResourceDictionary Source="/Resources/Styles/TableListBoxStyle.xaml"/>
                 <ResourceDictionary Source="/Resources/Styles/LiquidGlassStyle.xaml"/>
                 <ResourceDictionary Source="/Resources/Styles/LastBillStyle.xaml"/>

@@ -10,7 +10,8 @@
       Title="BillsPage">
 
     <Page.Resources>
-        <ContextMenu x:Key="ContextMenu">
+        <ContextMenu x:Key="ContextMenu" 
+                     Style="{DynamicResource GlassContextMenu}">
             <MenuItem x:Name="BtnInfo" Header="Xem chi tiết" Click="BtnInfo_Click">
                 <MenuItem.Icon>
                     <TextBlock Text="&#xE70F;" FontFamily="Segoe MDL2 Assets"/>

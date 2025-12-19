@@ -159,6 +159,15 @@ namespace QuanLyCaPhe.Views.Staff
 
         private void BtnLogout_Click(object sender, RoutedEventArgs e)
         {
+
+            var res = JetMoonMessageBox.Show(
+                    $"Bạn có chắc chắn muốn đăng xuất không ?",
+                    "Xác nhận đắng xuất",
+                    MsgType.Question,
+                    true);
+
+            if (res == false) return;
+
             _isLogout = true;
 
             try { _dispatcherTimer?.Stop(); } catch { }
@@ -504,7 +513,6 @@ namespace QuanLyCaPhe.Views.Staff
 
             if (!CanOrderProduct(d.Id, totalRequested, out var failMsg))
             {
-                // [FIXED]
                 JetMoonMessageBox.Show(failMsg, "Thiếu nguyên liệu", MsgType.Warning);
                 return;
             }
@@ -537,7 +545,14 @@ namespace QuanLyCaPhe.Views.Staff
             _currentSum += d.Price * amount;
             UpdateSumDisplay();
 
-            iudAmmount.Value = 1; // Reset về 1 thay vì 0 cho tiện
+            iudAmmount.Value = 1; // Reset về 1
+
+            // [ĐÃ SỬA LỖI] Ghi log hoạt động đúng cú pháp
+            QuanLyCaPhe.Services.GlobalService.RecordActivity(
+                "Order",
+                $"Order mới: {selectedTable?.Name ?? "Khách mang về"}",
+                $"{d.Name} - Số lượng: {amount}" // Dùng biến d.Name và amount có sẵn
+            );
         }
 
         private void btnDelete_Click(object sender, RoutedEventArgs e)
@@ -795,16 +810,37 @@ namespace QuanLyCaPhe.Views.Staff
 
         private void CompleteOrderCleanup()
         {
-            _currentSum = 0;
-            tbSum.Text = "0 VNĐ";
-            cbOrder.SelectedIndex = -1;
-            if (OrderList != null)
+            // [FIX] 1. Tạm dừng sự kiện TextChanged để không kích hoạt tìm kiếm tự động
+            _suspendCbOrderTextChanged = true;
+
+            try
             {
-                foreach (var it in OrderList) ReleaseId(it.Id);
-                OrderList.Clear();
+                _currentSum = 0;
+                tbSum.Text = "0 VNĐ";
+
+                // [FIX] 2. Reset ComboBox an toàn
+                cbOrder.SelectedIndex = -1;
+                cbOrder.Text = string.Empty; // Xóa sạch text tìm kiếm cũ
+                cbOrder.IsDropDownOpen = false; // Đảm bảo đóng dropdown
+
+                if (OrderList != null)
+                {
+                    foreach (var it in OrderList) ReleaseId(it.Id);
+                    OrderList.Clear();
+                }
+                dtgdOrder.ItemsSource = OrderList;
+                iudAmmount.Value = 1;
             }
-            dtgdOrder.ItemsSource = OrderList;
-            iudAmmount.Value = 1;
+            finally
+            {
+                // [FIX] 3. Mở lại cờ để lần sau người dùng gõ phím thì vẫn tìm kiếm được
+                _suspendCbOrderTextChanged = false;
+            }
+
+            // [FIX] 4. Bỏ Focus khỏi ComboBox để tránh con trỏ nhấp nháy
+            Keyboard.ClearFocus();
+            // Hoặc focus vào một control khác an toàn hơn, ví dụ Grid chính
+            // this.Focus(); 
         }
 
         private void ClearHourSelection()

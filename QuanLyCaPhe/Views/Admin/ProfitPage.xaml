@@ -8,6 +8,17 @@
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
       Title="ProfitPage">
+
+    <Page.Resources>
+        <Style x:Key="ProfitMoneyPanelStyle" TargetType="Border" BasedOn="{StaticResource HoverAnimationStyle}">
+            <Setter Property="Margin" Value="5"/>
+            <Setter Property="BorderBrush" Value="Black"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="CornerRadius" Value="10"/>
+            <Setter Property="Padding" Value="5"/>
+            <Setter Property="Height" Value="72"/>
+        </Style>
+    </Page.Resources>
     
     <Grid>
         <Grid.RowDefinitions>
@@ -27,11 +38,9 @@
 
         <StackPanel Grid.Row="2" Orientation="Horizontal">
             <comp:DatePickerv2 x:Name="DatePickerV2" VerticalAlignment="Bottom" Margin="3"/>
-            <comp:ExcelControl VerticalAlignment="Bottom" Margin="3"/>
-            
         </StackPanel>
 
-        <Grid Grid.Row="3" Margin="0,20,0,20">
+        <Grid Grid.Row="3" Margin="0,20,0,0">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>
@@ -41,34 +50,40 @@
             <Border Grid.Column="0" Margin="10,0,10,0" Background="MediumSpringGreen" 
                     Style="{StaticResource ProfitMoneyPanelStyle}">
                 <StackPanel>
-                    <TextBlock Text="TỔNG THU"/>
-                    <TextBlock x:Name="TotalRevenueText" Text="0đ" FontSize="30"/>
+                    <TextBlock Text="TỔNG THU" Margin="5, 0"/>
+                    <TextBlock x:Name="TotalRevenueText" Text="0đ" 
+                               Margin="5, 10"
+                               FontSize="24"/>
                 </StackPanel>
             </Border>
 
             <Border Grid.Column="1" Margin="10,0,10,0" Background="IndianRed"
                     Style="{StaticResource ProfitMoneyPanelStyle}">
                 <StackPanel>
-                    <TextBlock Text="TỔNG CHI"/>
-                    <TextBlock x:Name="TotalExpenseText" Text="0đ" FontSize="30"/>
+                    <TextBlock Text="TỔNG CHI" Margin="5, 0"/>
+                    <TextBlock x:Name="TotalExpenseText" 
+                               Margin="5, 10"
+                               Text="0đ" FontSize="24"/>
                 </StackPanel>
             </Border>
 
             <Border Grid.Column="2" Margin="10,0,10,0" Background="CornflowerBlue"
                     Style="{StaticResource ProfitMoneyPanelStyle}">
                 <StackPanel>
-                    <TextBlock Text="LỢI NHUẬN"/>
-                    <TextBlock x:Name="ProfitText" Text="0đ" FontSize="30"/>
+                    <TextBlock Text="LỢI NHUẬN" Margin="5, 0"/>
+                    <TextBlock x:Name="ProfitText" 
+                               Margin="5, 10"
+                               Text="0đ" FontSize="24"/>
                 </StackPanel>
             </Border>
         </Grid>
 
         <!-- Chart -->
         <Border Grid.Row="4" Grid.RowSpan="2"
-        Padding="10" Margin="10"
+        Padding="2" Margin="10"
         BorderThickness="1"
         Background="White"
-        Style="{StaticResource RunningGlowBorderStyle}">
+        Style="{StaticResource DynamicGlassStyle}">
             <Frame x:Name="ChartFrame"/>
         </Border>
 

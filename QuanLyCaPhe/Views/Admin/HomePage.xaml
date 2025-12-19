@@ -26,19 +26,12 @@
         <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" 
                    Padding="10" Text="Trang Chủ" Style="{StaticResource FontHeader}"/>
         <!--________________________________Panel Chào mừng________________________________-->
-        <Border Grid.Row="1" Grid.Column="0" Grid.RowSpan="2" 
-                Width="auto" Padding="10"
-                Margin="10, 0"
+        <Border Grid.Row="1" Grid.Column="0" Grid.RowSpan="3" 
+                Width="auto" 
+                Padding="0" Margin="10, 5"
                 Background="White"
                 Style="{StaticResource DynamicGlassStyle}">
-            <Grid>
-                <StackPanel Orientation="Vertical" VerticalAlignment="Center" HorizontalAlignment="Center">
-                    <TextBlock Text="Xin chào!!" FontSize="30" HorizontalAlignment="Left"/>
-                    <TextBlock Text="{Binding Source = {StaticResource TenQuan}, StringFormat='Chào mừng đến {0}'}" 
-                        TextWrapping="Wrap" FontSize="15" Width="200" 
-                        HorizontalAlignment="Left"/>
-                </StackPanel>
-            </Grid>
+            <Frame x:Name="ActivityFrame" Margin="1"/>
         </Border>
 
         <!--________________________________Panel Tổng quan________________________________-->
@@ -136,22 +129,14 @@
                       Stretch="Uniform" Height="40" Width="40" VerticalAlignment="Center"/>
             </Grid>
         </Border>
-        <!--________________________________Mini Chart Frame_______________________________-->
-        <Border Grid.Row="3" Grid.Column="0" Grid.RowSpan="2"
-                Padding="10"
-                Margin="10"
-                Background="White"
-                Style="{StaticResource DynamicGlassStyle}">
-            <Frame x:Name="MiniChart"/>
-        </Border>
 
         <!--________________________________Panel ff________________________________-->
         <Border Grid.Row="3" Grid.Column="1" Grid.RowSpan="2" Grid.ColumnSpan="2"
                 Padding="10"
                 Margin="10"
-                Background="White"
+                Background="White" Opacity="1"
                 Style="{StaticResource DynamicGlassStyle}">
-            <Frame Width="auto" x:Name="LastBill" 
+            <Frame Width="auto" x:Name="WarningFrame" 
                    NavigationUIVisibility="Hidden" 
                    HorizontalAlignment="Stretch"
                    VerticalAlignment="Top"/>

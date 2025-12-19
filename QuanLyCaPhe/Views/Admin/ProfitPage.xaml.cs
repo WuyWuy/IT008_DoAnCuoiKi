@@ -1,17 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using QuanLyCaPhe.DAO;
 using QuanLyCaPhe.Models;
 using System.ComponentModel;
@@ -19,17 +9,19 @@ using System.Globalization;
 
 namespace QuanLyCaPhe.Views.Admin
 {
-    /// <summary>
-    /// Interaction logic for ProfitPage.xaml
-    /// </summary>
     public partial class ProfitPage : Page
     {
+        // [FIX] Tạo biến lưu giữ trang biểu đồ để gọi update bất cứ lúc nào
+        private readonly ProfitChartPage _chartPage = new ProfitChartPage();
+
         public ProfitPage()
         {
             InitializeComponent();
-            ChartFrame.Navigate(new ProfitChartPage());
 
-            // Listen to changes on DatePickerV2.SelectedDate dependency property
+            // 1. Điều hướng Frame tới biến _chartPage đã tạo
+            ChartFrame.Navigate(_chartPage);
+
+            // 2. Lắng nghe sự kiện DatePicker
             var dpd = DependencyPropertyDescriptor.FromProperty(
                 Views.Components.DatePickerv2.SelectedDateProperty,
                 typeof(Views.Components.DatePickerv2));
@@ -39,13 +31,25 @@ namespace QuanLyCaPhe.Views.Admin
                 dpd.AddValueChanged(DatePickerV2, DatePicker_SelectedDateChanged);
             }
 
-            // Initial update
-            UpdateTotals();
+            // 3. Load dữ liệu khi trang ProfitPage hiển thị
+            this.Loaded += (s, e) => UpdateAllData();
         }
 
         private void DatePicker_SelectedDateChanged(object? sender, EventArgs e)
         {
+            UpdateAllData();
+        }
+
+        private void UpdateAllData()
+        {
+            // A. Cập nhật thẻ tiền
             UpdateTotals();
+
+            // B. [FIX] Gọi trực tiếp vào biến _chartPage, không cần quan tâm Frame load xong chưa
+            if (DatePickerV2.SelectedDate != DateTime.MinValue)
+            {
+                _chartPage.UpdateChart(DatePickerV2.SelectedDate);
+            }
         }
 
         private void UpdateTotals()
@@ -56,7 +60,7 @@ namespace QuanLyCaPhe.Views.Admin
                 int month = selected.Month;
                 int year = selected.Year;
 
-                // Total revenue: sum of TotalPrice from bills in selected month/year
+                // --- 1. Tổng Thu ---
                 decimal totalRevenue = 0m;
                 var bills = BillDAO.Instance.GetListBills();
                 foreach (var b in bills)
@@ -68,7 +72,7 @@ namespace QuanLyCaPhe.Views.Admin
                     }
                 }
 
-                // Total expense: sum of InputPrice from input infos in selected month/year
+                // --- 2. Tổng Chi (Nhập hàng) ---
                 decimal totalExpense = 0m;
                 var inputs = InputInfoDAO.Instance.GetListInputInfo();
                 foreach (var inp in inputs)
@@ -79,10 +83,8 @@ namespace QuanLyCaPhe.Views.Admin
                     }
                 }
 
-                // Labor cost: sum of worked hours * user's hourly wage for schedules in the month
+                // --- 3. Tổng Chi (Lương) ---
                 decimal totalLabor = 0m;
-
-                // Build a lookup of user hourly wages
                 var users = UserDAO.Instance.GetListUser();
                 var wageById = users.ToDictionary(u => u.Id, u => u.HourlyWage);
 
@@ -95,37 +97,27 @@ namespace QuanLyCaPhe.Views.Admin
                     var schedules = WorkScheduleDAO.Instance.GetListByDate(date);
                     foreach (var s in schedules)
                     {
-                        // Calculate hours worked
                         double hoursDouble = (s.EndTime - s.StartTime).TotalHours;
-                        if (hoursDouble <= 0) continue; // skip invalid or zero-length shifts
-
-                        decimal hours = (decimal)hoursDouble;
-
+                        if (hoursDouble <= 0) continue;
                         if (wageById.TryGetValue(s.UserId, out decimal hourlyWage))
                         {
-                            totalLabor += hours * hourlyWage;
+                            totalLabor += (decimal)hoursDouble * hourlyWage;
                         }
                     }
                 }
 
-                // Add labor cost to total expense
                 totalExpense += totalLabor;
-
                 decimal profit = totalRevenue - totalExpense;
 
                 TotalRevenueText.Text = FormatCurrencyVnd(totalRevenue);
                 TotalExpenseText.Text = FormatCurrencyVnd(totalExpense);
                 ProfitText.Text = FormatCurrencyVnd(profit);
             }
-            catch
-            {
-                // ignore errors silently to avoid breaking UI
-            }
+            catch { }
         }
 
         private string FormatCurrencyVnd(decimal amount)
         {
-            // Format with thousand separators and no decimals, append currency symbol
             return string.Format(CultureInfo.InvariantCulture, "{0:N0}đ", amount);
         }
     }

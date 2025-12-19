@@ -10,7 +10,8 @@
       Title="SuppliesPage">
 
     <Page.Resources>
-        <ContextMenu x:Key="ContextMenu">
+        <ContextMenu x:Key="ContextMenu"
+                     Style="{DynamicResource GlassContextMenu}">
             <MenuItem x:Name="BtnEdit" Header="Sửa số liệu này" Click="BtnEdit_Click">
                 <MenuItem.Icon>
                     <TextBlock Text="&#xE70F;" FontFamily="Segoe MDL2 Assets"/>
@@ -48,16 +49,23 @@
         <Border Style="{StaticResource LiquidGlassStyle}" 
                 Grid.Row="2" Margin="4" Padding="4, 4, 4 ,10">
             <DataGrid Grid.Row="2" x:Name="InputInfosdg" 
-                      LoadingRow="Productsdg_LoadingRow"
-                      AutoGenerateColumns="False" IsReadOnly="True" 
-                      Style="{StaticResource CardStyleDataGridStyle}"
-                      HeadersVisibility="Column" GridLinesVisibility="Horizontal">
+          LoadingRow="Productsdg_LoadingRow"
+          AutoGenerateColumns="False" IsReadOnly="True" 
+          Style="{StaticResource CardStyleDataGridStyle}"
+          HeadersVisibility="Column">
+
+                <DataGrid.RowStyle>
+                    <Style TargetType="DataGridRow" BasedOn="{StaticResource CardRowType}">
+                        <Setter Property="ContextMenu" Value="{StaticResource ContextMenu}"/>
+                    </Style>
+                </DataGrid.RowStyle>
+
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="STT" Binding="{Binding RelativeSource={RelativeSource AncestorType=DataGridRow}, Path=Header}" Width="auto"/>
                     <DataGridTextColumn Header="Ngày Nhập" Binding="{Binding DateInput, StringFormat={}{0:dd/MM/yyyy}}" Width="auto"/>
                     <DataGridTextColumn Header="Nguyên Liệu" Binding="{Binding IngredientName}" Width="*"/>
                     <DataGridTextColumn Header="Số Lượng" Binding="{Binding DisplayQuantity}" Width="auto"/>
-                    <DataGridTextColumn Header="Thành Tiền" Binding="{Binding InputPrice, StringFormat={}{0:N0} đ}" Width="auto" FontWeight="Bold" Foreground="Red"/>
+                    <DataGridTextColumn Header="Thành Tiền" Binding="{Binding InputPrice, StringFormat={}{0:N0} đ}" Width="auto"/>
                 </DataGrid.Columns>
             </DataGrid>
         </Border>

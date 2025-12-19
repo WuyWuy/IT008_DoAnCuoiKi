@@ -10,14 +10,14 @@
       Title="UserPage">
 
     <Page.Resources>
-        <ContextMenu x:Key="ContextMenu">
-            <MenuItem x:Name="BtnEdit" Header="Sửa nguyên liệu này" Click="BtnEdit_Click">
+        <ContextMenu x:Key="ContextMenu" Style="{DynamicResource GlassContextMenu}">
+            <MenuItem x:Name="BtnEdit" Header="Sửa nhân viên này" Click="BtnEdit_Click">
                 <MenuItem.Icon>
                     <TextBlock Text="&#xE70F;" FontFamily="Segoe MDL2 Assets"/>
                 </MenuItem.Icon>
             </MenuItem>
 
-            <MenuItem x:Name="BtnDelete" Header="Xóa nguyên liệu này" Foreground="Red" Click="BtnDelete_Click">
+            <MenuItem x:Name="BtnDelete" Header="Xóa nhân viên này" Foreground="Red" Click="BtnDelete_Click">
                 <MenuItem.Icon>
                     <TextBlock Text="&#xE74D;" FontFamily="Segoe MDL2 Assets" Foreground="Red"/>
                 </MenuItem.Icon>
@@ -45,18 +45,25 @@
         <Border Style="{StaticResource LiquidGlassStyle}" 
                 Grid.Row="2" Margin="4" Padding="4, 4, 4 ,10">
             <DataGrid x:Name="Usersdg" Grid.Row="2"
-                      LoadingRow="Usersdg_LoadingRow"
-                  AutoGenerateColumns="False" CanUserAddRows="False" IsReadOnly="True" SelectionMode="Single"
-                  Style="{StaticResource CardStyleDataGridStyle}" Grid.ColumnSpan="2">
+          LoadingRow="Usersdg_LoadingRow"
+          AutoGenerateColumns="False" CanUserAddRows="False" IsReadOnly="True" SelectionMode="Single"
+          Style="{StaticResource CardStyleDataGridStyle}" Grid.ColumnSpan="2">
+
+                <DataGrid.RowStyle>
+                    <Style TargetType="DataGridRow" BasedOn="{StaticResource CardRowType}">
+                        <Setter Property="ContextMenu" Value="{StaticResource ContextMenu}"/>
+                    </Style>
+                </DataGrid.RowStyle>
+
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="STT" Binding="{Binding RelativeSource={RelativeSource AncestorType=DataGridRow}, Path=Header}" Width="auto"/>
-                    <DataGridTextColumn Header="Họ và tên" Binding="{Binding FullName}" Width="*"/>
-                    <DataGridTextColumn Header="Số Điện thoại" Binding="{Binding Phone}" Width="*"/>
-                    <DataGridTextColumn Header="Email" Binding="{Binding Email}" Width="*"/>
+                    <DataGridTextColumn Header="Họ và tên" Binding="{Binding FullName}" Width="auto"/>
+                    <DataGridTextColumn Header="Email" Binding="{Binding Email}" Width="auto"/>
+                    <DataGridTextColumn Header="Lương/giờ" Binding="{Binding HourlyWage, StringFormat={}{0:N0} đ }" Width="auto"/>
                     <DataGridTextColumn Header="Địa chỉ" Binding="{Binding Address}" Width="*"/>
+                    <DataGridTextColumn Header="Số Điện thoại" Binding="{Binding Phone}" Width="*"/>
                     <DataGridTextColumn Header="Giới tính" Binding="{Binding Gender}" Width="*"/>
                     <DataGridTextColumn Header="Chức vụ" Binding="{Binding RoleName}" Width="*"/>
-                    <DataGridTextColumn Header="Lương/giờ" Binding="{Binding HourlyWage, StringFormat=N0}" Width="*"/>
                 </DataGrid.Columns>
 
             </DataGrid>

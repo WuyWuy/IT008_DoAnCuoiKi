@@ -98,8 +98,6 @@ namespace QuanLyCaPhe.Views.Admin.DetailWindow
                 }
                 else // TRƯỜNG HỢP SỬA (Lưu ý: Logic sửa kho khá phức tạp)
                 {
-                   
-
                     MessageBox.Show("Chức năng cập nhật phiếu nhập đang được bảo trì để đảm bảo an toàn kho.\nVui lòng xóa phiếu cũ và nhập lại nếu cần.", "Thông báo");
                 }
             }

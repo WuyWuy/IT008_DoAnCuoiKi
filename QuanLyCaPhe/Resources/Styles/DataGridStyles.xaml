@@ -17,7 +17,6 @@
         <Setter Property="Stylus.IsFlicksEnabled" Value="false"/>
         <Setter Property="Foreground" Value="#94A3B8"/>
         <Setter Property="Background" Value="Transparent"/>
-
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="ScrollBar">
@@ -55,14 +54,12 @@
                             </Track.Thumb>
                         </Track>
                     </Grid>
-
                     <ControlTemplate.Triggers>
                         <Trigger Property="Orientation" Value="Vertical">
                             <Setter TargetName="PART_Track" Property="Orientation" Value="Vertical"/>
                             <Setter TargetName="PART_Track" Property="IsDirectionReversed" Value="True"/>
                             <Setter Property="Width" Value="10"/>
                         </Trigger>
-
                         <Trigger Property="Orientation" Value="Horizontal">
                             <Setter TargetName="PART_Track" Property="Orientation" Value="Horizontal"/>
                             <Setter TargetName="PART_Track" Property="IsDirectionReversed" Value="False"/>
@@ -72,13 +69,11 @@
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
-        
         <Style.Triggers>
             <Trigger Property="Orientation" Value="Vertical">
                 <Setter Property="Width" Value="10"/>
                 <Setter Property="MinWidth" Value="10"/>
             </Trigger>
-
             <Trigger Property="Orientation" Value="Horizontal">
                 <Setter Property="Height" Value="10"/>
                 <Setter Property="MinHeight" Value="10"/>
@@ -89,7 +84,7 @@
     <Style x:Key="ModernDataGridScrollViewer" TargetType="ScrollViewer">
         <Setter Property="PanningMode" Value="Both"/>
         <Setter Property="VerticalScrollBarVisibility" Value="Auto"/>
-        <Setter Property="HorizontalScrollBarVisibility" Value="Auto"/>
+        <Setter Property="HorizontalScrollBarVisibility" Value="Disabled"/>
         <Setter Property="Padding" Value="0"/>
         <Setter Property="Template">
             <Setter.Value>
@@ -103,26 +98,9 @@
                             <RowDefinition Height="*"/>
                             <RowDefinition Height="Auto"/>
                         </Grid.RowDefinitions>
-
-                        <ScrollContentPresenter x:Name="PART_ScrollContentPresenter"
-                                                CanContentScroll="{TemplateBinding CanContentScroll}"
-                                                Grid.Column="0" Grid.Row="0"/>
-
-                        <ScrollBar x:Name="PART_VerticalScrollBar"
-                                   Grid.Column="1" Grid.Row="0"
-                                   Orientation="Vertical"
-                                   ViewportSize="{TemplateBinding ViewportHeight}"
-                                   Maximum="{TemplateBinding ScrollableHeight}"
-                                   Value="{Binding VerticalOffset, Mode=OneWay, RelativeSource={RelativeSource TemplatedParent}}"
-                                   Visibility="{TemplateBinding ComputedVerticalScrollBarVisibility}"/>
-
-                        <ScrollBar x:Name="PART_HorizontalScrollBar"
-                                   Grid.Column="0" Grid.Row="1"
-                                   Orientation="Horizontal"
-                                   ViewportSize="{TemplateBinding ViewportWidth}"
-                                   Maximum="{TemplateBinding ScrollableWidth}"
-                                   Value="{Binding HorizontalOffset, Mode=OneWay, RelativeSource={RelativeSource TemplatedParent}}"
-                                   Visibility="{TemplateBinding ComputedHorizontalScrollBarVisibility}"/>
+                        <ScrollContentPresenter x:Name="PART_ScrollContentPresenter" CanContentScroll="{TemplateBinding CanContentScroll}" Grid.Column="0" Grid.Row="0"/>
+                        <ScrollBar x:Name="PART_VerticalScrollBar" Grid.Column="1" Grid.Row="0" Orientation="Vertical" ViewportSize="{TemplateBinding ViewportHeight}" Maximum="{TemplateBinding ScrollableHeight}" Value="{Binding VerticalOffset, Mode=OneWay, RelativeSource={RelativeSource TemplatedParent}}" Visibility="{TemplateBinding ComputedVerticalScrollBarVisibility}"/>
+                        <ScrollBar x:Name="PART_HorizontalScrollBar" Grid.Column="0" Grid.Row="1" Orientation="Horizontal" ViewportSize="{TemplateBinding ViewportWidth}" Maximum="{TemplateBinding ScrollableWidth}" Value="{Binding HorizontalOffset, Mode=OneWay, RelativeSource={RelativeSource TemplatedParent}}" Visibility="{TemplateBinding ComputedHorizontalScrollBarVisibility}"/>
                     </Grid>
                 </ControlTemplate>
             </Setter.Value>
@@ -142,11 +120,12 @@
             <Setter.Value>
                 <ControlTemplate TargetType="DataGridRow">
                     <Border x:Name="DGR_Border"
-                            Padding="10, 0, -5, 0"
+                            Padding="0" 
                             Background="{TemplateBinding Background}"
                             BorderBrush="{TemplateBinding BorderBrush}"
                             BorderThickness="{TemplateBinding BorderThickness}"
-                            CornerRadius="8">
+                            CornerRadius="8"
+                            ClipToBounds="True">
                         <SelectiveScrollingGrid>
                             <SelectiveScrollingGrid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto"/>
@@ -183,7 +162,11 @@
             <SolidColorBrush x:Key="{x:Static SystemColors.HighlightTextBrushKey}" Color="#111827"/>
             <SolidColorBrush x:Key="{x:Static SystemColors.InactiveSelectionHighlightBrushKey}" Color="Transparent"/>
         </Style.Resources>
+
         <Setter Property="ScrollViewer.CanContentScroll" Value="False"/>
+
+        <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Disabled"/>
+
         <Setter Property="Background" Value="Transparent"/>
         <Setter Property="BorderThickness" Value="0"/>
         <Setter Property="GridLinesVisibility" Value="None"/>
@@ -191,7 +174,7 @@
         <Setter Property="RowHeight" Value="52"/>
         <Setter Property="ColumnHeaderHeight" Value="48"/>
         <Setter Property="RowDetailsVisibilityMode" Value="VisibleWhenSelected"/>
-        
+
         <Setter Property="CellStyle">
             <Setter.Value>
                 <Style TargetType="DataGridCell">
@@ -200,8 +183,8 @@
                     <Setter Property="Template">
                         <Setter.Value>
                             <ControlTemplate TargetType="DataGridCell">
-                                <Border Background="Transparent">
-                                    <ContentPresenter VerticalAlignment="Center"/>
+                                <Border Background="Transparent" Padding="16,0,0,0">
+                                    <ContentPresenter VerticalAlignment="Center" HorizontalAlignment="Left"/>
                                 </Border>
                             </ControlTemplate>
                         </Setter.Value>
@@ -219,9 +202,22 @@
                     <Setter Property="Foreground" Value="{StaticResource TextPrimary}"/>
                     <Setter Property="FontWeight" Value="SemiBold"/>
                     <Setter Property="FontSize" Value="14"/>
-                    <Setter Property="Padding" Value="16,12"/>
-                    <Setter Property="BorderBrush" Value="{StaticResource TextPrimary}"/>
-                    <Setter Property="BorderThickness" Value="0,0,0,2"/>
+                    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                    <Setter Property="Padding" Value="20,12"/>
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="DataGridColumnHeader">
+                                <Grid>
+                                    <Border BorderThickness="0,0,0,1" BorderBrush="#E5E7EB" Background="{TemplateBinding Background}">
+                                        <ContentPresenter Margin="{TemplateBinding Padding}" 
+                                                          HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" 
+                                                          VerticalAlignment="Center" 
+                                                          SnapsToDevicePixels="True"/>
+                                    </Border>
+                                </Grid>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
                 </Style>
             </Setter.Value>
         </Setter>

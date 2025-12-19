@@ -233,16 +233,6 @@
             </Setter.Value>
         </Setter>
 
-        <Setter Property="Effect">
-            <Setter.Value>
-                <DropShadowEffect Color="#0284C7"
-                              Direction="270"
-                              ShadowDepth="5"
-                              BlurRadius="15"
-                              Opacity="0.15"/>
-            </Setter.Value>
-        </Setter>
-
         <Style.Triggers>
             <Trigger Property="IsMouseOver" Value="True">
                 <Setter Property="Background">
@@ -260,16 +250,6 @@
                             <GradientStop Color="#FFFFFF" Offset="0"/>
                             <GradientStop Color="#40FFFFFF" Offset="1"/>
                         </LinearGradientBrush>
-                    </Setter.Value>
-                </Setter>
-
-                <Setter Property="Effect">
-                    <Setter.Value>
-                        <DropShadowEffect Color="#0284C7"
-                                      Direction="270"
-                                      ShadowDepth="8"
-                                      BlurRadius="20"
-                                      Opacity="0.25"/>
                     </Setter.Value>
                 </Setter>
 

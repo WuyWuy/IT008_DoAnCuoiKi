@@ -22,9 +22,31 @@
     <SolidColorBrush x:Key="AccentColor" Color="#0EA5E9"/>
 
     <SolidColorBrush x:Key="HoverBackground" Color="#BFDBFE"/>
-    
+    <SolidColorBrush x:Key="Success_Time" Color="#10B981"/>
+
+
+    <Style TargetType="{x:Type Window}">
+        <Setter Property="FontFamily" Value="Segoe UI"/>
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="Foreground" Value="{StaticResource TextPrimary}"/>
+    </Style>
+
+    <Style x:Key="FontHeader" TargetType="TextBlock">
+        <Setter Property="FontFamily" Value="Segoe UI Light"/>
+        <Setter Property="FontSize" Value="36"/>
+        <Setter Property="Foreground" Value="{StaticResource TextPrimary}"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
+    </Style>
+
+    <Style x:Key="FontHeaderMedium" TargetType="TextBlock">
+        <Setter Property="FontFamily" Value="Segoe UI Semibold"/>
+        <Setter Property="FontSize" Value="24"/>
+        <Setter Property="Foreground" Value="{StaticResource TextPrimary}"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
+    </Style>
 
     <Style x:Key="HeaderTextStyle" TargetType="TextBlock">
+        <Setter Property="FontFamily" Value="Segoe UI"/>
         <Setter Property="FontWeight" Value="SemiBold"/>
         <Setter Property="Foreground" Value="{StaticResource TextPrimary}"/>
         <Setter Property="VerticalAlignment" Value="Center"/>
@@ -38,45 +60,25 @@
         <Setter Property="Padding" Value="0,10"/>
         <Setter Property="Background" Value="{StaticResource CardBackground}"/>
     </Style>
-    
-    <!-- Font -->
-    <Style x:Key="FontHeader" TargetType="TextBlock">
-        <Setter Property="FontFamily" Value="Segoe UI"/>
-        <Setter Property="FontSize" Value="36"/>
-        <Setter Property="FontWeight" Value="Medium"/>
-        <Setter Property="Foreground" Value="{StaticResource Header36}"/>
-        <Setter Property="VerticalAlignment" Value="Center"/>
-    </Style>
-
-    <Style x:Key="FontHeaderMedium" TargetType="TextBlock">
-        <Setter Property="FontFamily" Value="Segoe UI"/>
-        <Setter Property="FontSize" Value="24"/>
-        <Setter Property="FontWeight" Value="Medium"/>
-        <Setter Property="Foreground" Value="{StaticResource Header36}"/>
-        <Setter Property="VerticalAlignment" Value="Center"/>
-    </Style>
 
     <Style x:Key="FontBody" TargetType="TextBlock">
         <Setter Property="FontFamily" Value="Segoe UI"/>
         <Setter Property="FontSize" Value="14"/>
-        <Setter Property="Foreground" Value="#334155"/>
+        <Setter Property="Foreground" Value="{StaticResource TextPrimary}"/>
+        <Setter Property="LineHeight" Value="20"/>
     </Style>
 
     <Style x:Key="FontSmall" TargetType="TextBlock">
         <Setter Property="FontFamily" Value="Segoe UI"/>
         <Setter Property="FontSize" Value="12"/>
-        <Setter Property="Foreground" Value="#64748B"/>
+        <Setter Property="Foreground" Value="{StaticResource TextSecondary}"/>
     </Style>
 
     <Style x:Key="FontMoney" TargetType="TextBlock">
-        <Setter Property="FontFamily" Value="Segoe UI Semibold"/>
-        <Setter Property="FontSize" Value="14"/>
-        <Setter Property="Foreground" Value="#0C4A6E"/>
-    </Style>
-
-    <Style TargetType="{x:Type Window}">
         <Setter Property="FontFamily" Value="Segoe UI"/>
-        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="FontWeight" Value="Bold"/>
+        <Setter Property="FontSize" Value="15"/>
+        <Setter Property="Foreground" Value="{StaticResource TextPrimary}"/>
     </Style>
 
     <Style x:Key="FontButtonPrimary" TargetType="TextBlock">
@@ -91,7 +93,7 @@
         <Setter Property="FontFamily" Value="Segoe UI"/>
         <Setter Property="FontSize" Value="14"/>
         <Setter Property="FontWeight" Value="Medium"/>
-        <Setter Property="Foreground" Value="#64748B"/>
+        <Setter Property="Foreground" Value="{StaticResource TextSecondary}"/>
         <Setter Property="VerticalAlignment" Value="Center"/>
         <Setter Property="HorizontalAlignment" Value="Center"/>
     </Style>
@@ -99,10 +101,9 @@
     <Style x:Key="FontMenu" TargetType="TextBlock">
         <Setter Property="FontFamily" Value="Segoe UI Semibold"/>
         <Setter Property="FontSize" Value="15"/>
-        <Setter Property="Foreground" Value="#0C4A6E"/>
+        <Setter Property="Foreground" Value="{StaticResource TextPrimary}"/>
         <Setter Property="VerticalAlignment" Value="Center"/>
     </Style>
-
     <!--=========================================================================================================-->
     <!--                                                                                                         -->
     <!--=========================================================================================================-->

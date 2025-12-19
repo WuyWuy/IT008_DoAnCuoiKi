@@ -150,6 +150,16 @@ CREATE TABLE InputInfos
 );
 GO
 
+-- Bảng 10: Activities
+CREATE TABLE Activities (
+    Id INT IDENTITY(1,1) PRIMARY KEY,
+    ActivityType NVARCHAR(50), -- 'Order', 'Payment', 'Warning'
+    Description NVARCHAR(200), -- VD: "Thanh toán: Bàn 01"
+    Detail NVARCHAR(500),      -- VD: "Tổng: 45.000 VNĐ"
+    TimeAgo DATETIME DEFAULT GETDATE()
+)
+GO
+
 -- =============================================
 -- KHU VỰC 4: DỮ LIỆU MẪU (SEED DATA)
 -- =============================================
@@ -285,3 +295,4 @@ SELECT * FROM BillInfos WHERE BillId = @NewBillId;
 
 SELECT * FROM Users
 SELECT * FROM Ingredients
+SELECT * FROM Activities

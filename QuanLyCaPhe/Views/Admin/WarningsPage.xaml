@@ -1,0 +1,56 @@
+﻿<Page
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:av="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="av" x:Class="QuanLyCaPhe.Views.Admin.WarningsPage"
+      Title="WarningsPage">
+
+    <Grid>
+        <Border Padding="20" Margin="1">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <StackPanel Orientation="Horizontal" Margin="0,0,0,15">
+                    <TextBlock Text="CHÚ Ý" FontSize="16" FontWeight="Bold" Foreground="#F59E0B" VerticalAlignment="Center"/>
+                    <Border Background="#FEF3C7" CornerRadius="10" Margin="10,0,0,0" Padding="8,2">
+                        <TextBlock x:Name="txtCount" Text="0" Foreground="#D97706" FontWeight="Bold" FontSize="12"/>
+                    </Border>
+                </StackPanel>
+
+                <ListBox x:Name="lbWarnings" Grid.Row="1" Background="Transparent" BorderThickness="0" ScrollViewer.HorizontalScrollBarVisibility="Disabled" av:ItemsSource="{av:SampleData ItemCount=5}">
+                    <ListBox.ItemContainerStyle>
+                        <Style TargetType="{x:Type ListBoxItem}">
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="{x:Type ListBoxItem}">
+                                        <Border Background="#FFF7ED" CornerRadius="8" Margin="0,0,0,8" Padding="12" BorderBrush="#FFEDD5" BorderThickness="1">
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                </Grid.ColumnDefinitions>
+                                                <TextBlock Text="{Binding}" TextWrapping="Wrap" Foreground="#C2410C" FontWeight="SemiBold"/>
+                                                <Path Grid.Column="1" 
+                                                      Data="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z" 
+                                                      Fill="#F97316" 
+                                                      Stretch="Uniform" 
+                                                      Width="16" Height="16" 
+                                                      Margin="10,0,0,0"
+                                                      VerticalAlignment="Center"/>    </Grid>
+                                        </Border>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </ListBox.ItemContainerStyle>
+                </ListBox>
+
+                <TextBlock x:Name="txtEmpty" Text="Hệ thống hoạt động tốt. Không có cảnh báo." 
+                           Foreground="#10B981" HorizontalAlignment="Center" VerticalAlignment="Center" 
+                           Grid.Row="1" Visibility="Collapsed" FontStyle="Italic"/>
+            </Grid>
+        </Border>
+    </Grid>
+</Page>

@@ -16,45 +16,41 @@
         </Grid.ColumnDefinitions>
 
         <Border x:Name="Sidebar" Grid.Column="0" Panel.ZIndex="1"
-                CornerRadius="20"
-                Background="Transparent"
+                CornerRadius="0,20,20,0"
+                Background="White" Opacity="0.95"
                 ClipToBounds="True"
                 Style="{StaticResource LiquidGlassStyle}"
-                BorderBrush="Black"
                 Width="250"
-                Margin="-20, 0, 0, -20">
-            
-            <StackPanel Margin="0, 100">
-                <Button x:Name="Homebtn" Content="Trang chủ" 
-                        Style="{StaticResource AdminButtonStyle}"
-                        Click="Homebtn_Click"/>
+                Margin="-20, 0, 0, -20" Padding="20,0,0,0">
 
-                <Button x:Name="Prodbtn" Content="Món ăn"
-                        Style="{StaticResource AdminButtonStyle}"
-                        Click="Prodbtn_Click"/>
+            <StackPanel Margin="0, 40, 0, 0">
 
-                <Button x:Name="Ingredbtn" Content="Nguyên liệu"
-                        Style="{StaticResource AdminButtonStyle}"
-                        Click="Ingredbtn_Click"/>
+                <TextBlock Text="MENU" Style="{StaticResource FontSmall}" Margin="25,0,0,10" Opacity="0.6"/>
 
-                <Button x:Name="Staffbtn" Content="Nhân viên"
-                        Style="{StaticResource AdminButtonStyle}"
-                        Click="Staffbtn_Click"/>
+                <Button x:Name="Homebtn" Content="Trang chủ" Tag="&#xE80F;"
+                Style="{StaticResource AdminButtonStyle}" Click="Homebtn_Click"/>
 
-                <Button x:Name="Suplybtn" Content="Hàng hóa"
-                        Style="{StaticResource AdminButtonStyle}"
-                        Click="Suplybtn_Click"/>
+                <Button x:Name="Prodbtn" Content="Món ăn" Tag="&#xE701;"
+                Style="{StaticResource AdminButtonStyle}" Click="Prodbtn_Click"/>
 
-                <Button x:Name="Billbtn" Content="Hóa đơn"
-                        Style="{StaticResource AdminButtonStyle}"
-                        Click="Billbtn_Click"/>
-                <Button x:Name="Timelbtn" Content="Ca làm"
-                        Style="{StaticResource AdminButtonStyle}"
-                        Click="Timelbtn_Click"/>
+                <Button x:Name="Ingredbtn" Content="Nguyên liệu" Tag="&#xE80A;"
+                Style="{StaticResource AdminButtonStyle}" Click="Ingredbtn_Click"/>
 
-                <Button x:Name="Profitbtn" Content="Doanh thu"
-                        Style="{StaticResource AdminButtonStyle}"
-                        Click="Profitbtn_Click"/>
+                <Button x:Name="Staffbtn" Content="Nhân viên" Tag="&#xE77B;"
+                Style="{StaticResource AdminButtonStyle}" Click="Staffbtn_Click"/>
+
+                <Button x:Name="Suplybtn" Content="Hàng hóa" Tag="&#xE7B8;"
+                Style="{StaticResource AdminButtonStyle}" Click="Suplybtn_Click"/>
+
+                <Button x:Name="Billbtn" Content="Hóa đơn" Tag="&#xE7C1;"
+                Style="{StaticResource AdminButtonStyle}" Click="Billbtn_Click"/>
+
+                <Button x:Name="Timelbtn" Content="Ca làm" Tag="&#xE787;"
+                Style="{StaticResource AdminButtonStyle}" Click="Timelbtn_Click"/>
+
+                <Button x:Name="Profitbtn" Content="Doanh thu" Tag="&#xE719;"
+                Style="{StaticResource AdminButtonStyle}" Click="Profitbtn_Click"/>
+
             </StackPanel>
 
         </Border>

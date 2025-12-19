@@ -4,78 +4,79 @@
       xmlns:lvc="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"
       Title="Biểu đồ doanh thu">
 
-    <Grid Background="#F9FAFB">
-        <!-- Header -->
-       
-        <!-- Biểu đồ 3 đường -->
-        <Border Margin="0"
-                Background="White" 
-                CornerRadius="12"
-                Padding="25"
-                BorderBrush="#E5E7EB"
-                BorderThickness="1">
+    <Page.Resources>
+        <DropShadowEffect x:Key="CardShadow" BlurRadius="15" ShadowDepth="3" Opacity="0.12" Color="Black"/>
+        <DropShadowEffect x:Key="HeavyShadow" BlurRadius="25" ShadowDepth="5" Opacity="0.2" Color="Black"/>
 
+        <Style x:Key="HoverChartBorderStyle" TargetType="Border">
+            <Setter Property="Effect" Value="{StaticResource CardShadow}"/>
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="CornerRadius" Value="12"/>
+            <Setter Property="BorderBrush" Value="#E5E7EB"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Padding" Value="25"/>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Effect" Value="{StaticResource HeavyShadow}"/>
+                    <Setter Property="BorderBrush" Value="#3B82F6"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </Page.Resources>
 
-
+    <Grid Background="Transparent">
+        <Border Margin="2" Style="{StaticResource HoverChartBorderStyle}">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
 
-                <!-- Tiêu đề và đơn vị -->
                 <StackPanel Grid.Row="0" Margin="0,0,0,20">
-                    <TextBlock Text="DOANH THU  LỢI NHUẬN THEO THÁNG" 
-                               FontSize="16" FontWeight="SemiBold"
-                               Foreground="#374151"/>
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                        <TextBlock Text="📊 " FontSize="18"/>
+                        <TextBlock Text="BIỂU ĐỒ LỢI NHUẬN" 
+                                   FontSize="16" FontWeight="Bold"
+                                   Foreground="#374151" VerticalAlignment="Center"/>
+                    </StackPanel>
+
                     <TextBlock Text="{Binding UnitText}"
-                               FontSize="12" Foreground="#9CA3AF"
-                               Margin="0,5,0,0"/>
+                               FontSize="13" Foreground="#6B7280"
+                               FontStyle="Italic"
+                               Margin="26,2,0,0"/>
                 </StackPanel>
 
-                <!-- Biểu đồ -->
                 <lvc:CartesianChart Grid.Row="1"
                                     Series="{Binding ThreeLineSeries}"
-                                    LegendLocation="Top"
+                                    LegendLocation="None"
                                     Hoverable="True"
                                     DisableAnimations="False"
-                                    AnimationsSpeed="0:0:0.002">
+                                    AnimationsSpeed="0:0:0.5">
 
-                    <!-- Cấu hình trục X -->
                     <lvc:CartesianChart.AxisX>
-                        <lvc:Axis Labels="{Binding Months}" 
+                        <lvc:Axis Labels="{Binding Labels}"
                                   Foreground="#6B7280"
                                   FontSize="12"
-                                  Separator="{x:Static lvc:DefaultAxes.CleanSeparator}"/>
+                                  Separator="{x:Static lvc:DefaultAxes.CleanSeparator}">
+                        </lvc:Axis>
                     </lvc:CartesianChart.AxisX>
 
-                    <!-- Cấu hình trục Y -->
                     <lvc:CartesianChart.AxisY>
                         <lvc:Axis LabelFormatter="{Binding CurrencyFormatter}"
                                   Foreground="#6B7280"
                                   FontSize="12"/>
                     </lvc:CartesianChart.AxisY>
 
-                    <!-- Legend tùy chỉnh -->
-                    <lvc:CartesianChart.ChartLegend>
-                        <lvc:DefaultLegend BulletSize="15" 
-                                           FontSize="13"
-                                           Foreground="#374151"/>
-                    </lvc:CartesianChart.ChartLegend>
-
-                    <!-- Tooltip tùy chỉnh -->
                     <lvc:CartesianChart.DataTooltip>
                         <lvc:DefaultTooltip BulletSize="10" 
-                                            Background="#374151"
+                                            Background="#1F2937"
                                             Foreground="White"
-                                            FontSize="12"/>
+                                            FontSize="14"
+                                            SelectionMode="SharedXValues"/>
                     </lvc:CartesianChart.DataTooltip>
 
                 </lvc:CartesianChart>
-
-               
             </Grid>
         </Border>
-
     </Grid>
 </Page>

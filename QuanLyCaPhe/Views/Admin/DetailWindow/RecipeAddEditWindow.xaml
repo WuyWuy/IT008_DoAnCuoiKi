@@ -3,8 +3,8 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="Công Thức Pha Chế" Height="500" Width="700"
         WindowStartupLocation="CenterScreen" ResizeMode="NoResize"
-        Background="{StaticResource BackgroundLight}">
-    <Border Style="{StaticResource DynamicGlassStyle}" Padding="20" Margin="15">
+        Background="{StaticResource BorderStroke}">
+    <Border Padding="20" Margin="15">
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
@@ -30,9 +30,9 @@
             </DataGrid>
 
             <StackPanel Orientation="Horizontal" Grid.Row="2" HorizontalAlignment="Right" Margin="0,20,0,0">
-                <Button x:Name="btnAdd" Content="Thêm NL" Width="100" Style="{StaticResource GlassButtonStyle}" Margin="0,0,10,0" Click="btnAdd_Click"/>
+                <Button x:Name="btnClose" Content="Đóng" Width="90" Style="{StaticResource GlassDeleteButtonStyle}" Margin="0,0,10,0" Background="Transparent" BorderBrush="#CBD5E1" Click="btnClose_Click"/>
                 <Button x:Name="btnDelete" Content="Xóa NL" Width="100" Style="{StaticResource GlassDeleteButtonStyle}" Margin="0,0,10,0" Click="btnDelete_Click"/>
-                <Button x:Name="btnClose" Content="Đóng" Width="90" Style="{StaticResource GlassDeleteButtonStyle}" Background="Transparent" BorderBrush="#CBD5E1" Click="btnClose_Click"/>
+                <Button x:Name="btnAdd" Content="Thêm NL" Width="100" Style="{StaticResource GlassButtonStyle}" Click="btnAdd_Click"/>
             </StackPanel>
         </Grid>
     </Border>

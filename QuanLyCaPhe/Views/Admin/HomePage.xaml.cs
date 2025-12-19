@@ -31,7 +31,7 @@ namespace QuanLyCaPhe.Views.Admin
 
             // Cấu hình Timer
             _timer = new DispatcherTimer();
-            _timer.Interval = TimeSpan.FromSeconds(5); // 5 giây load 1 lần
+            _timer.Interval = TimeSpan.FromSeconds(15); // 5 giây load 1 lần
             _timer.Tick += (s, e) => LoadOverviewData(); // Cứ hết giờ là gọi hàm Load
 
             // Khi trang hiện lên thì BẮT ĐẦU đếm giờ
@@ -49,8 +49,9 @@ namespace QuanLyCaPhe.Views.Admin
         private void HomePage_Loaded(object sender, RoutedEventArgs e)
         {
             LoadOverviewData();
-            MiniChart.Navigate(new ProfitChartPage());
-            LastBill.Navigate(new LastBillPage());
+            ActivityFrame.Navigate(new ActivitiesPage());
+            WarningFrame.Navigate(new WarningsPage());
+
 
         }
 
