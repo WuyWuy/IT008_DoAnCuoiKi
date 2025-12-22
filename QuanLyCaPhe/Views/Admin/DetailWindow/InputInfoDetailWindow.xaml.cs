@@ -10,6 +10,7 @@ namespace QuanLyCaPhe.Views.Admin.DetailWindow
     public partial class InputInfoDetailWindow : Window
     {
         private InputInfo _inputInfo;
+        private double _originalCount = 0; // store original count to compute difference
 
         // Constructor mặc định (Thêm mới)
         public InputInfoDetailWindow()
@@ -35,6 +36,9 @@ namespace QuanLyCaPhe.Views.Admin.DetailWindow
 
                 // Khóa ComboBox lại nếu đang sửa (để tránh sai lệch kho nghiêm trọng)
                 cboIngredient.IsEnabled = false;
+
+                // Store original count for later diff calculation
+                _originalCount = _inputInfo.Count;
             }
         }
 
@@ -56,7 +60,7 @@ namespace QuanLyCaPhe.Views.Admin.DetailWindow
 
         private void BtnSave_Click(object sender, RoutedEventArgs e)
         {
-            // 1. Validate dữ liệu
+            //1. Validate dữ liệu
             if (cboIngredient.SelectedValue == null)
             {
                 MessageBox.Show("Vui lòng chọn nguyên liệu cần nhập!");
@@ -77,7 +81,7 @@ namespace QuanLyCaPhe.Views.Admin.DetailWindow
 
             if (dpDateInput.SelectedDate == null) dpDateInput.SelectedDate = DateTime.Now;
 
-            // 2. Lấy dữ liệu
+            //2. Lấy dữ liệu
             int ingId = (int)cboIngredient.SelectedValue;
             DateTime dateInput = dpDateInput.SelectedDate.Value;
 
@@ -96,9 +100,19 @@ namespace QuanLyCaPhe.Views.Admin.DetailWindow
                         MessageBox.Show("Có lỗi khi nhập kho.");
                     }
                 }
-                else // TRƯỜNG HỢP SỬA (Lưu ý: Logic sửa kho khá phức tạp)
+                else // TRƯỜNG HỢP SỬA
                 {
-                    MessageBox.Show("Chức năng cập nhật phiếu nhập đang được bảo trì để đảm bảo an toàn kho.\nVui lòng xóa phiếu cũ và nhập lại nếu cần.", "Thông báo");
+                    // Call the new UpdateInputInfo method, passing original count to compute adjustment
+                    if (InputInfoDAO.Instance.UpdateInputInfo(_inputInfo.Id, ingId, dateInput, price, count, _originalCount))
+                    {
+                        MessageBox.Show("Cập nhật phiếu nhập thành công! Kho đã được điều chỉnh.");
+                        DialogResult = true;
+                        Close();
+                    }
+                    else
+                    {
+                        MessageBox.Show("Cập nhật phiếu nhập thất bại.");
+                    }
                 }
             }
             catch (Exception ex)

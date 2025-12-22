@@ -39,7 +39,7 @@
 
         <Grid Grid.Row="1">
             <comp:ExcelControl x:Name="IETable" Clicked="IETable_Clicked"
-                               HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="3"/>
+                               HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="3" Loaded="IETable_Loaded"/>
             <comp:SearchBar x:Name="SearchBar" Clicked="SearchBar_Clicked"
                             HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="3"/>
         </Grid>

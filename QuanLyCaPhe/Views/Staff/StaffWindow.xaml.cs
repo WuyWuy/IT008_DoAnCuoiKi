@@ -287,7 +287,7 @@ namespace QuanLyCaPhe.Views.Staff
             {
                 // [FIXED] Dùng JetMoonMessageBox
                 var res = JetMoonMessageBox.Show(
-                    $"Bàn {table.Name} đang có người. Bạn có muốn xóa trạng thái này (Reset bàn) không?",
+                    $"{table.Name} đang có người. Bạn có muốn xóa trạng thái này không?",
                     "Xác nhận Reset Bàn",
                     MsgType.Question,
                     true);
@@ -306,9 +306,6 @@ namespace QuanLyCaPhe.Views.Staff
                 e.Handled = true;
             }
         }
-
-        // --- LOGIC CHUYỂN BÀN (SWAP TABLE) ---
-
         private void PopulateSwapCombo()
         {
             if (cbxSwapTable == null) return;
@@ -807,10 +804,9 @@ namespace QuanLyCaPhe.Views.Staff
             if (checkedRb != null && int.TryParse(checkedRb.Content?.ToString(), out int hours)) return hours;
             return 0;
         }
-
         private void CompleteOrderCleanup()
         {
-            // [FIX] 1. Tạm dừng sự kiện TextChanged để không kích hoạt tìm kiếm tự động
+            // Pause TextChanged handler while we reset controls
             _suspendCbOrderTextChanged = true;
 
             try
@@ -818,10 +814,32 @@ namespace QuanLyCaPhe.Views.Staff
                 _currentSum = 0;
                 tbSum.Text = "0 VNĐ";
 
-                // [FIX] 2. Reset ComboBox an toàn
+                // Reset ComboBox: restore the full source, clear selection and editable text,
+                // and ensure the drop-down is closed.
+                try
+                {
+                    // Restore full item source so subsequent typing/search shows all items
+                    cbOrder.ItemsSource = _allDrinks;
+                }
+                catch { }
+
+                cbOrder.SelectedItem = null;
                 cbOrder.SelectedIndex = -1;
-                cbOrder.Text = string.Empty; // Xóa sạch text tìm kiếm cũ
-                cbOrder.IsDropDownOpen = false; // Đảm bảo đóng dropdown
+                cbOrder.Text = string.Empty;
+                cbOrder.IsDropDownOpen = false;
+                cbOrder.ToolTip = null;
+
+                // Also clear the internal editable TextBox if present in the control template
+                try
+                {
+                    var tbEditable = cbOrder.Template.FindName("PART_EditableTextBox", cbOrder) as System.Windows.Controls.TextBox;
+                    if (tbEditable != null)
+                    {
+                        tbEditable.Text = string.Empty;
+                        tbEditable.CaretIndex = 0;
+                    }
+                }
+                catch { }
 
                 if (OrderList != null)
                 {
@@ -833,14 +851,11 @@ namespace QuanLyCaPhe.Views.Staff
             }
             finally
             {
-                // [FIX] 3. Mở lại cờ để lần sau người dùng gõ phím thì vẫn tìm kiếm được
                 _suspendCbOrderTextChanged = false;
             }
 
-            // [FIX] 4. Bỏ Focus khỏi ComboBox để tránh con trỏ nhấp nháy
+            // Remove focus so the editable textbox does not show caret/text again
             Keyboard.ClearFocus();
-            // Hoặc focus vào một control khác an toàn hơn, ví dụ Grid chính
-            // this.Focus(); 
         }
 
         private void ClearHourSelection()

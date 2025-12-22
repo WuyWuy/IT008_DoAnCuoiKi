@@ -71,8 +71,8 @@ namespace QuanLyCaPhe.Services
                 var ingredients = IngredientDAO.Instance.GetListIngredient();
                 foreach (var ing in ingredients)
                 {
-                    // Ngưỡng cảnh báo: Dưới 10 đơn vị
-                    if (ing.Quantity < 10)
+                    // Ngưỡng cảnh báo: <= 200 đơn vị
+                    if (ing.Quantity <= 200)
                     {
                         CurrentWarnings.Add($"⚠️ {ing.IngName} sắp hết (Còn {ing.Quantity} {ing.Unit})");
                     }

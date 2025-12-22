@@ -90,5 +90,32 @@ namespace QuanLyCaPhe.DAO
             }
             return false;
         }
+
+        // --- 5. CẬP NHẬT PHIẾU NHẬP ---
+        // Cập nhật thông tin phiếu nhập và điều chỉnh tồn kho theo hiệu giữa số mới và số cũ
+        public bool UpdateInputInfo(int id, int ingId, DateTime dateInput, decimal price, double newCount, double oldCount)
+        {
+            string query = "UPDATE InputInfos SET DateInput = @date, InputPrice = @price, Count = @count WHERE Id = @id";
+
+            int result = DBHelper.ExecuteNonQuery(query, new SqlParameter[] {
+                new SqlParameter("@date", dateInput),
+                new SqlParameter("@price", price),
+                new SqlParameter("@count", newCount),
+                new SqlParameter("@id", id)
+            });
+
+            if (result > 0)
+            {
+                // Điều chỉnh tồn kho: cộng phần chênh lệch (newCount - oldCount)
+                double diff = newCount - oldCount;
+                if (Math.Abs(diff) > 0.0000001)
+                {
+                    IngredientDAO.Instance.UpdateQuantity(ingId, diff);
+                }
+                return true;
+            }
+
+            return false;
+        }
     }
 }

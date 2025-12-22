@@ -27,7 +27,7 @@ namespace QuanLyCaPhe.DAO
                 new SqlParameter("@name", name)
             });
 
-            if (data.Rows.Count > 0)
+            if (data.Rows.Count >0)
             {
                 Ingredient p = new Ingredient(data.Rows[0]);
                 return p.Id;
@@ -77,7 +77,7 @@ namespace QuanLyCaPhe.DAO
                 new SqlParameter("@name", name),
                 new SqlParameter("@unit", unit),
                 new SqlParameter("@quan", quantity)
-            }) > 0;
+            }) >0;
         }
         // --- Sửa nguyên liệu ---
         public bool UpdateIngredient(int id, string name, string unit, double quantity)
@@ -88,7 +88,7 @@ namespace QuanLyCaPhe.DAO
                 new SqlParameter("@unit", unit),
                 new SqlParameter("@quan", quantity),
                 new SqlParameter("@id", id)
-            }) > 0;
+            }) >0;
         }
 
         // --- Cập nhật tồn kho ---
@@ -100,13 +100,33 @@ namespace QuanLyCaPhe.DAO
                 new SqlParameter("@id", id)
             });
         }
+
+        // --- Kiểm tra nguyên liệu có được sử dụng trong công thức món hay không ---
+        public bool IsIngredientUsed(int id)
+        {
+            string query = "SELECT COUNT(*) FROM Recipes WHERE IngId = @id";
+            try
+            {
+                var result = DBHelper.ExecuteScalar(query, new SqlParameter[] { new SqlParameter("@id", id) });
+                return Convert.ToInt32(result) >0;
+            }
+            catch
+            {
+                // Nếu có lỗi khi kiểm tra, an toàn hơn là coi như đang được sử dụng
+                return true;
+            }
+        }
+
         // --- Xóa nguyên liệu ---
         public bool DeleteIngredient(int id)
         {
+            // Nếu nguyên liệu đang được sử dụng trong Recipes thì không cho xóa
+            if (IsIngredientUsed(id)) return false;
+
             string query = "DELETE Ingredients WHERE Id = @id";
             return DBHelper.ExecuteNonQuery(query, new SqlParameter[] {
                 new SqlParameter("@id", id)
-            }) > 0;
+            }) >0;
         }
     }
 }

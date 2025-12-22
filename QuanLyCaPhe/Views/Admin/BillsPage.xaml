@@ -17,6 +17,11 @@
                     <TextBlock Text="&#xE70F;" FontFamily="Segoe MDL2 Assets"/>
                 </MenuItem.Icon>
             </MenuItem>
+            <MenuItem x:Name="BtnDelete" Header="Xóa hóa đơn này" Foreground="Red" Click="BtnDelete_Click">
+                <MenuItem.Icon>
+                    <TextBlock Text="&#xE74D;" FontFamily="Segoe MDL2 Assets" Foreground="Red"/>
+                </MenuItem.Icon>
+            </MenuItem>
         </ContextMenu>
     </Page.Resources>
 
@@ -27,10 +32,11 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <TextBlock Grid.Row="0" Padding="20,10" Foreground="{StaticResource PrimaryLightColor}"
-                   Text="Lịch Sử Hóa Đơn" FontSize="32" FontWeight="Bold"/>
+        <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" 
+                   Padding="10" Foreground="{StaticResource PrimaryLightColor}"
+                   Text="Lịch sử hóa đơn" FontSize="36" FontWeight="Bold"/>
 
-        <Grid Grid.Row="1" Margin="20,0,20,10">
+        <Grid Grid.Row="1" Margin="3">
             <comp:SearchBar HorizontalAlignment="Right" Clicked="SearchBar_Clicked" Width="300"/>
         </Grid>
 

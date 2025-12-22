@@ -144,5 +144,18 @@ namespace QuanLyCaPhe.Views.Admin
                 MessageBox.Show("Lỗi tải dữ liệu tổng quan: " + ex.Message);
             }
         }
+
+        // Expose a public method to allow external callers (e.g., AdminWindow) to request an immediate refresh
+        public void RefreshOverview()
+        {
+            try
+            {
+                LoadOverviewData();
+            }
+            catch
+            {
+                // Swallow any exception to avoid crashing callers
+            }
+        }
     }
 }

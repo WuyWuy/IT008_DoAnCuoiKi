@@ -46,6 +46,31 @@ namespace QuanLyCaPhe.Views.Admin
             }
         }
 
+        // --- XỬ LÝ XÓA HÓA ĐƠN ---
+        private void BtnDelete_Click(object sender, RoutedEventArgs e)
+        {
+            Bill selectedBill = Billsdg.SelectedItem as Bill;
+            if (selectedBill == null)
+            {
+                MessageBox.Show("Vui lòng chọn hóa đơn để xóa.", "Chưa chọn", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
+            var result = MessageBox.Show($"Bạn có chắc muốn xóa hóa đơn #{selectedBill.Id}?", "Xác nhận", MessageBoxButton.YesNo, MessageBoxImage.Question);
+            if (result == MessageBoxResult.Yes)
+            {
+                if (BillDAO.Instance.DeleteBill(selectedBill.Id))
+                {
+                    MessageBox.Show("Đã xóa hóa đơn.", "Thành công", MessageBoxButton.OK, MessageBoxImage.Information);
+                    LoadData();
+                }
+                else
+                {
+                    MessageBox.Show("Xóa thất bại. Vui lòng thử lại.", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+            }
+        }
+
         // --- XỬ LÝ TÌM KIẾM ---
         private void SearchBar_Clicked(object sender, string keyword)
         {

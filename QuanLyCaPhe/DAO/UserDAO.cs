@@ -5,6 +5,7 @@ using Microsoft.Data.SqlClient;
 using System.Collections.Generic;
 using System;
 using System.Security.Cryptography;
+using QuanLyCaPhe.DAO;
 
 namespace QuanLyCaPhe.DAO
 {
@@ -108,7 +109,7 @@ namespace QuanLyCaPhe.DAO
 
         public int GetIdByEmail(string email)
         {
-            string query = "SELECT * FROM Users WHERE Email = @email";
+            string query = "SELECT * FROM Users WHERE Email = @email AND IsActive =1";
             DataTable data = DBHelper.ExecuteQuery(query, new SqlParameter[] { new SqlParameter("@email", email) });
             if (data.Rows.Count > 0) return (int)data.Rows[0]["Id"];
             return -1;
@@ -134,7 +135,7 @@ namespace QuanLyCaPhe.DAO
         public List<User> GetListUser()
         {
             List<User> list = new List<User>();
-            DataTable data = DBHelper.ExecuteQuery("SELECT * FROM Users WHERE IsActive = 1"); 
+            DataTable data = DBHelper.ExecuteQuery("SELECT * FROM Users WHERE IsActive =1"); 
             foreach (DataRow item in data.Rows) list.Add(new User(item));
             return list;
         }
@@ -143,7 +144,7 @@ namespace QuanLyCaPhe.DAO
         public List<User> SearchUserByAll (string str)
         {
             List<User> list = new List<User>();
-            string query = "SELECT * FROM Users WHERE (FullName LIKE @str OR Email LIKE @str OR RoleName LIKE @str) AND IsActive = 1";
+            string query = "SELECT * FROM Users WHERE (FullName LIKE @str OR Email LIKE @str OR RoleName LIKE @str) AND IsActive =1";
             DataTable data = DBHelper.ExecuteQuery(query, new SqlParameter[] { new SqlParameter("@str", "%" + str + "%") });
             foreach (DataRow item in data.Rows) list.Add(new User(item));
             return list;
@@ -179,6 +180,20 @@ namespace QuanLyCaPhe.DAO
             }
         }
 
+        // --- Đếm số Admin (RoleName = 'Admin') ---
+        public int GetCountAdmin()
+        {
+            string query = "SELECT COUNT(*) FROM Users WHERE RoleName = 'Admin' AND IsActive =1";
+            try
+            {
+                return Convert.ToInt32(DBHelper.ExecuteScalar(query));
+            }
+            catch
+            {
+                return 0;
+            }
+        }
+
         // --- Sửa ---
         public bool UpdateUser(int id, string name, string phone, string address, string gender, string role, decimal hourlyWage)
         {
@@ -197,8 +212,18 @@ namespace QuanLyCaPhe.DAO
         // --- Xóa ---
         public bool DeleteUser(int id)
         {
-            string query = "UPDATE Users SET IsActive = 0 WHERE Id = @id";
-            return DBHelper.ExecuteNonQuery(query, new SqlParameter[] { new SqlParameter("@id", id) }) > 0;
+            try
+            {
+                // First delete any schedules for this user
+                WorkScheduleDAO.Instance.DeleteSchedulesByUserId(id);
+            }
+            catch
+            {
+                // If schedule deletion fails, still attempt to delete user
+            }
+
+            string query = "DELETE FROM Users WHERE Id = @id";
+            return DBHelper.ExecuteNonQuery(query, new SqlParameter[] { new SqlParameter("@id", id) }) >0;
         }
     }
 }

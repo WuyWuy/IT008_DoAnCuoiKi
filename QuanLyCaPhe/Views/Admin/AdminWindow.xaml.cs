@@ -6,6 +6,7 @@ using System.Windows.Media.Animation; // Cần dòng này cho Animation
 using QuanLyCaPhe.Views.Components;
 using QuanLyCaPhe.Views.Login;
 using QuanLyCaPhe.Views.SharedPage;
+using QuanLyCaPhe.Services;
 
 namespace QuanLyCaPhe.Views.Admin
 {
@@ -21,11 +22,36 @@ namespace QuanLyCaPhe.Views.Admin
             InitializeComponent();
             this.Loaded += AdminWindow_Loaded;
             this.Closing += AdminWindow_Closing;
+
+            // Subscribe to global activity events so the Admin window can refresh overview when staff deleted
+            GlobalService.OnActivityOccurred += HandleGlobalActivity;
         }
 
         private void AdminWindow_Loaded(object sender, RoutedEventArgs e)
         {
             MainFrame.Navigate(new HomePage());
+        }
+
+        private void HandleGlobalActivity(QuanLyCaPhe.Models.Activity act)
+        {
+            // If activity type indicates a delete of staff, refresh HomePage overview counters
+            try
+            {
+                if (act != null && act.ActivityType == "Delete" && act.Description.Contains("nhân viên"))
+                {
+                    Dispatcher.Invoke(() =>
+                    {
+                        if (MainFrame.Content is HomePage home)
+                        {
+                            home.RefreshOverview();
+                        }
+                    });
+                }
+            }
+            catch
+            {
+                // Swallow exceptions from handling events to avoid app crash
+            }
         }
 
         // ... (Các hàm điều hướng giữ nguyên) ...

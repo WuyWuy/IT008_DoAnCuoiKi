@@ -7,7 +7,7 @@ using System;
 
 namespace QuanLyCaPhe.DAO
 {
-    public class BillDAO
+    public partial class BillDAO
     {
         private static BillDAO instance;
         public static BillDAO Instance

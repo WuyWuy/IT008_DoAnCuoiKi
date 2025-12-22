@@ -87,9 +87,17 @@ namespace QuanLyCaPhe.Views.Admin
             {
                 try
                 {
-                    IngredientDAO.Instance.DeleteIngredient(selectedIngredient.Id);
-                    MessageBox.Show("Đã xóa thành công!");
-                    LoadData();
+                    bool deleted = IngredientDAO.Instance.DeleteIngredient(selectedIngredient.Id);
+                    if (deleted)
+                    {
+                        MessageBox.Show("Đã xóa thành công!");
+                        LoadData();
+                    }
+                    else
+                    {
+                        MessageBox.Show("Không thể xóa nguyên liệu này vì đang được sử dụng trong một hoặc nhiều món.",
+                                        "Không thể xóa", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    }
                 }
                 catch
                 {
@@ -155,6 +163,11 @@ namespace QuanLyCaPhe.Views.Admin
                 ExcelHelper.ExportList<Ingredient>(sfd.FileName, list, "NguyenLieus");
                 MessageBox.Show("Xuất xong!");
             }
+        }
+
+        private void IETable_Loaded(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }

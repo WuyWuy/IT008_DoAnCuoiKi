@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection; // Thư viện dùng để "soi" code
+using QuanLyCaPhe.Models;
 
 namespace QuanLyCaPhe.Helpers
 {
@@ -18,12 +19,82 @@ namespace QuanLyCaPhe.Helpers
                 using (var workbook = new XLWorkbook())
                 {
                     var worksheet = workbook.Worksheets.Add(sheetName);
-                    PropertyInfo[] properties = typeof(T).GetProperties();
+                    var properties = typeof(T).GetProperties().ToList();
+
+                    // Optional header translations for known types
+                    Dictionary<string, string> headerMap = null;
+                    if (typeof(T) == typeof(Ingredient))
+                    {
+                        headerMap = new Dictionary<string, string>
+                        {
+                            { "Id", "STT" },
+                            { "IngName", "Tên nguyên liệu" },
+                            { "Unit", "Đơn vị" },
+                            { "Quantity", "Còn lại" }
+                        };
+                    }
+                    else if (typeof(T) == typeof(Product))
+                    {
+                        headerMap = new Dictionary<string, string>
+                        {
+                            { "Id", "STT" },
+                            { "ProName", "Tên món" },
+                            { "Price", "Giá" }
+                        };
+                    }
+                    else if (typeof(T) == typeof(User))
+                    {
+                        headerMap = new Dictionary<string, string>
+                        {
+                            { "Id", "STT" },
+                            { "FullName", "Họ và tên" },
+                            { "Email", "Email" },
+                            { "Phone", "Số điện thoại" },
+                            { "Address", "Địa chỉ" },
+                            { "Gender", "Giới tính" },
+                            { "CreatedAt", "Ngày tạo" },
+                            { "RoleName", "Chức vụ" },
+                            { "RoleLevel", "Quyền" },
+                            { "IsActive", "Hoạt động" },
+                            { "HourlyWage", "Lương giờ" }
+                        };
+                    }
+
+                    // If we have a headerMap, create ordered properties so header names and data columns align
+                    List<PropertyInfo> orderedProperties;
+                    if (headerMap != null)
+                    {
+                        var desiredOrder = headerMap.Keys.ToList();
+                        orderedProperties = new List<PropertyInfo>();
+
+                        // Add properties in desired order when available
+                        foreach (var name in desiredOrder)
+                        {
+                            var p = properties.FirstOrDefault(x => x.Name == name);
+                            if (p != null) orderedProperties.Add(p);
+                        }
+
+                        // Append any remaining properties that weren't specified in headerMap
+                        foreach (var p in properties)
+                        {
+                            if (!orderedProperties.Contains(p)) orderedProperties.Add(p);
+                        }
+                    }
+                    else
+                    {
+                        orderedProperties = properties;
+                    }
 
                     // --- HEADER ---
-                    for (int i = 0; i < properties.Length; i++)
+                    for (int i = 0; i < orderedProperties.Count; i++)
                     {
-                        worksheet.Cell(1, i + 1).Value = properties[i].Name;
+                        string headerName = orderedProperties[i].Name;
+                        if (headerMap != null && headerMap.ContainsKey(headerName))
+                        {
+                            headerName = headerMap[headerName];
+                        }
+
+                        worksheet.Cell(1, i + 1).Value = headerName;
                     }
 
                     // Format Header
@@ -35,9 +106,9 @@ namespace QuanLyCaPhe.Helpers
                     // --- DATA ---
                     for (int r = 0; r < data.Count; r++)
                     {
-                        for (int c = 0; c < properties.Length; c++)
+                        for (int c = 0; c < orderedProperties.Count; c++)
                         {
-                            var value = properties[c].GetValue(data[r]);
+                            var value = orderedProperties[c].GetValue(data[r]);
                             // Xử lý ngày tháng hoặc null
                             if (value != null)
                             {

@@ -9,6 +9,7 @@ using Microsoft.Win32;
 using QuanLyCaPhe.Views.Admin.DetailWindow;
 using QuanLyCaPhe.Views.Components;
 using QuanLyCaPhe.DataAccess;
+using QuanLyCaPhe.Services;
 
 namespace QuanLyCaPhe.Views.Admin
 {
@@ -83,6 +84,24 @@ namespace QuanLyCaPhe.Views.Admin
 
             if (selectedUser == null) return;
 
+            // Prevent deleting the last Admin
+            try
+            {
+                if (selectedUser.RoleName == "Admin")
+                {
+                    int adminCount = UserDAO.Instance.GetCountAdmin();
+                    if (adminCount <= 1)
+                    {
+                        MessageBox.Show("Không thể xóa. Phải giữ ít nhất 1 Admin.", "Cảnh báo", MessageBoxButton.OK, MessageBoxImage.Warning);
+                        return;
+                    }
+                }
+            }
+            catch
+            {
+                // If DB check fails, fall back to original behavior (but still proceed with caution)
+            }
+
             var result = MessageBox.Show($"Bạn có chắc muốn xóa nhân viên '{selectedUser.FullName}' không?",
                                          "Xác nhận xóa", MessageBoxButton.YesNo, MessageBoxImage.Warning);
 
@@ -90,6 +109,16 @@ namespace QuanLyCaPhe.Views.Admin
             {
                 if (UserDAO.Instance.DeleteUser(selectedUser.Id))
                 {
+                    // Record activity so Activities panel updates immediately
+                    try
+                    {
+                        GlobalService.RecordActivity("Delete", "Xóa nhân viên", $"Đã xóa nhân viên {selectedUser.FullName}");
+                    }
+                    catch
+                    {
+                        // Swallow any exception from recording activity to avoid breaking delete flow
+                    }
+
                     MessageBox.Show("Đã xóa thành công!");
                     LoadData();
                 }

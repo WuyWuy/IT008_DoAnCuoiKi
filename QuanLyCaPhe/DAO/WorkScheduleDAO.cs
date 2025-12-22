@@ -38,7 +38,15 @@ namespace QuanLyCaPhe.DAO
 
         public bool DeleteSchedule(int id)
         {
-            return DBHelper.ExecuteNonQuery("DELETE WorkSchedules WHERE Id = " + id) > 0;
+            string query = "DELETE FROM WorkSchedules WHERE Id = @id";
+            return DBHelper.ExecuteNonQuery(query, new SqlParameter[] { new SqlParameter("@id", id) }) > 0;
+        }
+
+        // Delete all schedules for a given user
+        public void DeleteSchedulesByUserId(int userId)
+        {
+            string query = "DELETE FROM WorkSchedules WHERE UserId = @uid";
+            DBHelper.ExecuteNonQuery(query, new SqlParameter[] { new SqlParameter("@uid", userId) });
         }
 
         // Update existing schedule's date/time

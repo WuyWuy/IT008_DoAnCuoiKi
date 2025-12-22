@@ -24,7 +24,8 @@
 
         <!--________________________________Chữ Chào Mừng__________________________________-->
         <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" 
-                   Padding="10" Text="Trang Chủ" Style="{StaticResource FontHeader}"/>
+           Padding="10" Foreground="{StaticResource PrimaryLightColor}"
+           Text="Trang chủ" FontSize="36" FontWeight="Bold"/>
         <!--________________________________Panel Chào mừng________________________________-->
         <Border Grid.Row="1" Grid.Column="0" Grid.RowSpan="3" 
                 Width="auto" 
