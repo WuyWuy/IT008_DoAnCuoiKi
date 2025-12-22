@@ -33,14 +33,25 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <!--________________________________Tiêu đề__________________________________-->
-        <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" 
-                   Padding="10" Foreground="{StaticResource PrimaryLightColor}"
-                   Text="Hàng Hóa" FontSize="36" FontWeight="Bold"/>
+        <Border Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3"
+        Margin="10, 10, 0, 0">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
 
+                <StackPanel Grid.Row="0" Orientation="Horizontal">
+                    <TextBlock Grid.Column="0" Text="&#xE74C;" Style="{StaticResource PageHeaderIcon}"/>
+                    <TextBlock Text="HÀNG HÓA" Style="{StaticResource PageHeaderTitle}"/>
+                </StackPanel>
+            </Grid>
+        </Border>
+        
         <Grid Grid.Row="1">
             <StackPanel Orientation="Horizontal">
-                <comp:ExcelControl VerticalAlignment="Bottom" Margin="3"/>
+                <comp:ExcelControl x:Name="IETable" Clicked="IETable_Clicked"
+                    IsImportEnabled="False" VerticalAlignment="Bottom" Margin="3"/>
             </StackPanel>
 
             <comp:SearchBar HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="3"/>

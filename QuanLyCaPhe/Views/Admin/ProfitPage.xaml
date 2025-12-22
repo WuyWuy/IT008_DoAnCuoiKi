@@ -29,10 +29,20 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <!--________________________________Doanh số__________________________________-->
-        <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" 
-                   Padding="10" Foreground="{StaticResource PrimaryLightColor}"
-                   Text="Doanh Số" FontSize="36" FontWeight="Bold"/>
+        <Border Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3"
+        Margin="10, 10, 0, 0">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <StackPanel Grid.Row="0" Orientation="Horizontal">
+                    <TextBlock Grid.Column="0" Text="&#xE9D9;" Style="{StaticResource PageHeaderIcon}"/>
+                    <TextBlock Text="BÁO CÁO DOANH THU" Style="{StaticResource PageHeaderTitle}"/>
+                </StackPanel>
+            </Grid>
+        </Border>
 
 
 

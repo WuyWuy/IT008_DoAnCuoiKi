@@ -212,16 +212,6 @@ namespace QuanLyCaPhe.DAO
         // --- Xóa ---
         public bool DeleteUser(int id)
         {
-            try
-            {
-                // First delete any schedules for this user
-                WorkScheduleDAO.Instance.DeleteSchedulesByUserId(id);
-            }
-            catch
-            {
-                // If schedule deletion fails, still attempt to delete user
-            }
-
             string query = "DELETE FROM Users WHERE Id = @id";
             return DBHelper.ExecuteNonQuery(query, new SqlParameter[] { new SqlParameter("@id", id) }) >0;
         }

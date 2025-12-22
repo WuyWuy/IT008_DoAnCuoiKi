@@ -93,6 +93,7 @@
                     </Grid>
 
                     <Button Content="Đóng" Width="120" HorizontalAlignment="Right"
+                            IsDefault="True"
                             Style="{StaticResource GlassDeleteButtonStyle}"
                             Click="BtnClose_Click"/>
                 </StackPanel>

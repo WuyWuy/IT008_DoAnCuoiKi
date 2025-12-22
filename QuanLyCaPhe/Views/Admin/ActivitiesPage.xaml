@@ -53,7 +53,7 @@
     
     <Grid>
         <Border Style="{StaticResource LiquidGlassStyle}" 
-                Padding="20, 20, 0, 20">
+                Padding="20, 20, 5, 20">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>

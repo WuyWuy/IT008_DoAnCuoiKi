@@ -1,6 +1,6 @@
 ﻿using QuanLyCaPhe.DAO;
 using QuanLyCaPhe.Models;
-using QuanLyCaPhe.Views.Components; // <-- Import
+using QuanLyCaPhe.Views.Components; // <-- Import Custom MessageBox
 using System;
 using System.Security.Cryptography;
 using System.Text;
@@ -102,7 +102,7 @@ namespace QuanLyCaPhe.Views.Admin.DetailWindow
                         return;
                     }
 
-                    string password = txtPassword.Password; // Thực tế nên hash password ở đây trước khi gửi xuống DAO nếu DAO chưa hash
+                    string password = txtPassword.Password;
 
                     if (UserDAO.Instance.InsertUser(name, email, phone, address, gender, password, role, hourly))
                     {
@@ -138,27 +138,6 @@ namespace QuanLyCaPhe.Views.Admin.DetailWindow
         private void BtnCancel_Click(object sender, RoutedEventArgs e)
         {
             this.Close();
-        }
-
-        // Helper functions (Giữ nguyên)
-        private string CreateSalt()
-        {
-            byte[] bytes = new byte[128 / 8];
-            using (var keyGenerator = RandomNumberGenerator.Create())
-            {
-                keyGenerator.GetBytes(bytes);
-                return Convert.ToBase64String(bytes);
-            }
-        }
-
-        private string HashPassword(string password, string salt)
-        {
-            using (var sha256 = SHA256.Create())
-            {
-                var combinedBytes = Encoding.UTF8.GetBytes(password + salt);
-                var hashBytes = sha256.ComputeHash(combinedBytes);
-                return Convert.ToBase64String(hashBytes);
-            }
         }
     }
 }

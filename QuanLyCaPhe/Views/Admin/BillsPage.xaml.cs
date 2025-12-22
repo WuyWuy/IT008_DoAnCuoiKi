@@ -1,6 +1,9 @@
-﻿using QuanLyCaPhe.DAO;
+﻿using Microsoft.Win32;
+using QuanLyCaPhe.DAO;
+using QuanLyCaPhe.Helpers;
 using QuanLyCaPhe.Models;
 using QuanLyCaPhe.Views.Admin.DetailWindow;
+using QuanLyCaPhe.Views.Components; // [QUAN TRỌNG] Import component
 using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
@@ -46,27 +49,36 @@ namespace QuanLyCaPhe.Views.Admin
             }
         }
 
-        // --- XỬ LÝ XÓA HÓA ĐƠN ---
+        // --- XỬ LÝ XÓA HÓA ĐƠN (ĐÃ ĐỒNG BỘ) ---
         private void BtnDelete_Click(object sender, RoutedEventArgs e)
         {
             Bill selectedBill = Billsdg.SelectedItem as Bill;
             if (selectedBill == null)
             {
-                MessageBox.Show("Vui lòng chọn hóa đơn để xóa.", "Chưa chọn", MessageBoxButton.OK, MessageBoxImage.Warning);
+                // [FIXED] Dùng JetMoonMessageBox - Warning
+                JetMoonMessageBox.Show("Vui lòng chọn hóa đơn để xóa.", "Chưa chọn", MsgType.Warning);
                 return;
             }
 
-            var result = MessageBox.Show($"Bạn có chắc muốn xóa hóa đơn #{selectedBill.Id}?", "Xác nhận", MessageBoxButton.YesNo, MessageBoxImage.Question);
-            if (result == MessageBoxResult.Yes)
+            // [FIXED] Dùng JetMoonMessageBox - Question
+            var result = JetMoonMessageBox.Show(
+                $"Bạn có chắc muốn xóa hóa đơn #{selectedBill.Id}?",
+                "Xác nhận xóa",
+                MsgType.Question,
+                true); // true để hiện nút Cancel/No
+
+            if (result == true)
             {
                 if (BillDAO.Instance.DeleteBill(selectedBill.Id))
                 {
-                    MessageBox.Show("Đã xóa hóa đơn.", "Thành công", MessageBoxButton.OK, MessageBoxImage.Information);
+                    // [FIXED] Dùng JetMoonMessageBox - Success
+                    JetMoonMessageBox.Show("Đã xóa hóa đơn.", "Thành công", MsgType.Success);
                     LoadData();
                 }
                 else
                 {
-                    MessageBox.Show("Xóa thất bại. Vui lòng thử lại.", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+                    // [FIXED] Dùng JetMoonMessageBox - Error
+                    JetMoonMessageBox.Show("Xóa thất bại. Vui lòng thử lại.", "Lỗi", MsgType.Error);
                 }
             }
         }
@@ -80,6 +92,22 @@ namespace QuanLyCaPhe.Views.Admin
         private void Billsdg_LoadingRow(object sender, DataGridRowEventArgs e)
         {
             e.Row.Header = (e.Row.GetIndex() + 1).ToString();
+        }
+
+        private void IETable_Clicked(object sender, string e)
+        {
+            if (e == "Export") ExportData();
+        }
+
+        private void ExportData()
+        {
+            var sfd = new SaveFileDialog() { Filter = "Excel|*.xlsx", FileName = "DS_Hoadon.xlsx" };
+            if (sfd.ShowDialog() == true)
+            {
+                var list = BillDAO.Instance.GetListBills();
+                ExcelHelper.ExportList<Bill>(sfd.FileName, list, "Hoadons");
+                JetMoonMessageBox.Show("Xuất xong!", "Thông báo", MsgType.Success);
+            }
         }
     }
 }

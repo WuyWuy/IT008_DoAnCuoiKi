@@ -43,7 +43,7 @@
 
             <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,20,0,0">
                 <Button Content="Hủy" Width="90" Margin="0,0,10,0" Style="{StaticResource GlassDeleteButtonStyle}" Click="BtnCancel_Click"/>
-                <Button Content="Cập nhật" Width="100" Style="{StaticResource GlassButtonStyle}" Click="BtnSave_Click"/>
+                <Button Content="Cập nhật" Width="100" IsDefault="True" Style="{StaticResource GlassButtonStyle}" Click="BtnSave_Click"/>
             </StackPanel>
         </Grid>
     </Border>

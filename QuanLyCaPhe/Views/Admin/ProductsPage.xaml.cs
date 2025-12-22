@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using QuanLyCaPhe.Helpers;
 using QuanLyCaPhe.Views.Admin.DetailWindow;
 using Microsoft.Win32;
+using QuanLyCaPhe.Views.Components; // <-- Import Custom MessageBox
 
 namespace QuanLyCaPhe.Views.Admin
 {
@@ -33,9 +34,9 @@ namespace QuanLyCaPhe.Views.Admin
                 ProductsList = ProductDAO.Instance.GetListProduct();
                 Productsdg.ItemsSource = ProductsList;
             }
-            catch
+            catch (Exception ex)
             {
-                MessageBox.Show("mày đây r con chó");
+                JetMoonMessageBox.Show("Lỗi tải dữ liệu: " + ex.Message, "Lỗi", MsgType.Error);
             }
         }
 
@@ -69,7 +70,7 @@ namespace QuanLyCaPhe.Views.Admin
 
             if (selectedProduct == null)
             {
-                MessageBox.Show("Vui lòng chọn món cần sửa!");
+                JetMoonMessageBox.Show("Vui lòng chọn món cần sửa!", "Chưa chọn dòng", MsgType.Warning);
                 return;
             }
 
@@ -88,23 +89,27 @@ namespace QuanLyCaPhe.Views.Admin
 
             if (selectedProduct == null) return;
 
-            var result = MessageBox.Show($"Bạn có chắc muốn xóa món '{selectedProduct.ProName}' không?",
-                                         "Xác nhận xóa", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+            var result = JetMoonMessageBox.Show(
+                $"Bạn có chắc muốn xóa món '{selectedProduct.ProName}' không?",
+                "Xác nhận xóa",
+                MsgType.Question,
+                true); // Hiện nút Cancel
 
-            if (result == MessageBoxResult.Yes)
+            if (result == true)
             {
                 if (ProductDAO.Instance.DeleteProduct(selectedProduct.Id))
                 {
-                    MessageBox.Show("Đã xóa thành công!");
+                    JetMoonMessageBox.Show("Đã xóa thành công!", "Hoàn tất", MsgType.Success);
                     LoadData();
                 }
                 else
                 {
-                    MessageBox.Show("Không thể xóa món này (Có thể món đã từng được bán trong hóa đơn).",
-                                    "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+                    JetMoonMessageBox.Show(
+                        "Không thể xóa món này (Có thể món đã từng được bán trong hóa đơn).",
+                        "Lỗi ràng buộc",
+                        MsgType.Error);
                 }
             }
-            
         }
 
         // --- Click nút Import/Export Excel ---
@@ -145,11 +150,11 @@ namespace QuanLyCaPhe.Views.Admin
                     }
 
                     LoadData();
-                    MessageBox.Show($"Xử lý xong!\n- Thêm mới: {countAdd} món\n- Cập nhật giá: {countUpdate} món", "Kết quả");
+                    JetMoonMessageBox.Show($"Xử lý xong!\n- Thêm mới: {countAdd} món\n- Cập nhật giá: {countUpdate} món", "Kết quả", MsgType.Success);
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show("Lỗi: " + ex.Message);
+                    JetMoonMessageBox.Show("Lỗi: " + ex.Message, "Lỗi Import", MsgType.Error);
                 }
             }
         }
@@ -161,7 +166,7 @@ namespace QuanLyCaPhe.Views.Admin
             {
                 var list = ProductDAO.Instance.GetListProduct();
                 ExcelHelper.ExportList<Product>(sfd.FileName, list, "SanPhams");
-                MessageBox.Show("Xuất xong!");
+                JetMoonMessageBox.Show("Xuất xong!", "Thông báo", MsgType.Success);
             }
         }
 
@@ -172,13 +177,12 @@ namespace QuanLyCaPhe.Views.Admin
 
             if (selectedProduct == null)
             {
-                MessageBox.Show("Vui lòng chọn món cần quản lý công thức!");
+                JetMoonMessageBox.Show("Vui lòng chọn món cần quản lý công thức!", "Chưa chọn dòng", MsgType.Warning);
                 return;
             }
 
             var w = new RecipeEditorWindow(selectedProduct.Id, selectedProduct.ProName);
             w.ShowDialog();
-            // no direct change to products; recipes managed separately
         }
     }
 }

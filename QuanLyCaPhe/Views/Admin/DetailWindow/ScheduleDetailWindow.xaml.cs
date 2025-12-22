@@ -5,7 +5,7 @@ using System.Windows;
 using System.Windows.Controls;
 using QuanLyCaPhe.DAO;
 using QuanLyCaPhe.Models;
-using QuanLyCaPhe.Views.Components; 
+using QuanLyCaPhe.Views.Components; // <-- Import Custom MessageBox
 
 namespace QuanLyCaPhe.Views.Admin.DetailWindow
 {
@@ -34,7 +34,6 @@ namespace QuanLyCaPhe.Views.Admin.DetailWindow
             try
             {
                 var users = UserDAO.Instance.GetListUser();
-                // Chỉ lấy nhân viên Staff đang hoạt động
                 var staffUsers = users.Where(u => u.RoleName == "Staff" && u.IsActive).ToList();
 
                 cbName.ItemsSource = staffUsers;
@@ -49,12 +48,10 @@ namespace QuanLyCaPhe.Views.Admin.DetailWindow
             cbEndHour.Items.Clear();
             cbEndMinute.Items.Clear();
 
-            // Giờ từ 6h đến 23h
             for (int i = 6; i <= 23; i++) cbEndHour.Items.Add(i);
             cbEndMinute.Items.Add(0);
             cbEndMinute.Items.Add(30);
 
-            // Mặc định chọn giờ kết thúc = Bắt đầu + 4 tiếng
             int endH = _startTime.Hours + 4;
             if (endH > 22) endH = 22;
 
@@ -64,16 +61,15 @@ namespace QuanLyCaPhe.Views.Admin.DetailWindow
 
         private void Confirm_Click(object sender, RoutedEventArgs e)
         {
-            // 1. Kiểm tra nhập liệu
             if (cbName.SelectedItem == null)
             {
-                txtError.Text = "Vui lòng chọn nhân viên!";
+                JetMoonMessageBox.Show("Vui lòng chọn nhân viên!", "Thiếu thông tin", MsgType.Warning);
                 return;
             }
 
             if (cbEndHour.SelectedItem == null || cbEndMinute.SelectedItem == null)
             {
-                txtError.Text = "Vui lòng chọn giờ kết thúc!";
+                JetMoonMessageBox.Show("Vui lòng chọn giờ kết thúc!", "Thiếu thông tin", MsgType.Warning);
                 return;
             }
 
@@ -84,28 +80,26 @@ namespace QuanLyCaPhe.Views.Admin.DetailWindow
 
             if (endTime <= _startTime)
             {
-                txtError.Text = "Giờ kết thúc phải lớn hơn giờ bắt đầu!";
+                JetMoonMessageBox.Show("Giờ kết thúc phải lớn hơn giờ bắt đầu!", "Lỗi thời gian", MsgType.Warning);
                 return;
             }
 
-            // 2. Lưu vào CSDL
             try
             {
-                // Gọi DAO để lưu (Hàm RegisterSchedule cần kiểm tra trùng ca bên trong hoặc ở đây)
                 if (WorkScheduleDAO.Instance.RegisterSchedule(userId, _date, _startTime, endTime, ""))
                 {
                     JetMoonMessageBox.Show("Đăng ký ca làm thành công!", "Hoàn tất", MsgType.Success);
-                    this.DialogResult = true; // Báo cho cửa sổ cha là OK
+                    this.DialogResult = true;
                     this.Close();
                 }
                 else
                 {
-                    txtError.Text = "Lỗi: Không thể lưu vào CSDL (Có thể do trùng ca).";
+                    JetMoonMessageBox.Show("Không thể lưu vào CSDL (Có thể do trùng ca).", "Lỗi", MsgType.Error);
                 }
             }
             catch (Exception ex)
             {
-                txtError.Text = "Lỗi hệ thống: " + ex.Message;
+                JetMoonMessageBox.Show("Lỗi hệ thống: " + ex.Message, "Lỗi", MsgType.Error);
             }
         }
 

@@ -378,4 +378,15 @@
     <!--=========================================================================================================-->
     <!--                                                                                                         -->
     <!--=========================================================================================================-->
+
+    <Style x:Key="HoverAnimationStyle" TargetType="Border">
+        <Setter Property="CacheMode" Value="BitmapCache"/>
+        <Setter Property="RenderTransformOrigin" Value="0.5,0.5"/>
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="BorderBrush" Value="{StaticResource PrimaryColor}"/>
+                <Setter Property="Background" Value="{StaticResource HoverBackground}"/>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
 </ResourceDictionary>

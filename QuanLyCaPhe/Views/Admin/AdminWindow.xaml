@@ -30,7 +30,7 @@
                 <Button x:Name="Homebtn" Content="Trang chủ" Tag="&#xE80F;"
                 Style="{StaticResource AdminButtonStyle}" Click="Homebtn_Click"/>
 
-                <Button x:Name="Prodbtn" Content="Món ăn" Tag="&#xE701;"
+                <Button x:Name="Prodbtn" Content="Món ăn" Tag="&#xE719;"
                 Style="{StaticResource AdminButtonStyle}" Click="Prodbtn_Click"/>
 
                 <Button x:Name="Ingredbtn" Content="Nguyên liệu" Tag="&#xE80A;"
@@ -39,16 +39,16 @@
                 <Button x:Name="Staffbtn" Content="Nhân viên" Tag="&#xE77B;"
                 Style="{StaticResource AdminButtonStyle}" Click="Staffbtn_Click"/>
 
-                <Button x:Name="Suplybtn" Content="Hàng hóa" Tag="&#xE7B8;"
+                <Button x:Name="Suplybtn" Content="Hàng hóa" Tag="&#xE74C;"
                 Style="{StaticResource AdminButtonStyle}" Click="Suplybtn_Click"/>
 
-                <Button x:Name="Billbtn" Content="Hóa đơn" Tag="&#xE7C1;"
+                <Button x:Name="Billbtn" Content="Hóa đơn" Tag="&#xE7B8;"
                 Style="{StaticResource AdminButtonStyle}" Click="Billbtn_Click"/>
 
                 <Button x:Name="Timelbtn" Content="Ca làm" Tag="&#xE787;"
                 Style="{StaticResource AdminButtonStyle}" Click="Timelbtn_Click"/>
 
-                <Button x:Name="Profitbtn" Content="Doanh thu" Tag="&#xE719;"
+                <Button x:Name="Profitbtn" Content="Doanh thu" Tag="&#xE9D9;"
                 Style="{StaticResource AdminButtonStyle}" Click="Profitbtn_Click"/>
 
             </StackPanel>

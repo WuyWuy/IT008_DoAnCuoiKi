@@ -1,4 +1,6 @@
-﻿using QuanLyCaPhe.DAO;
+﻿using Microsoft.Win32;
+using QuanLyCaPhe.DAO;
+using QuanLyCaPhe.Helpers;
 using QuanLyCaPhe.Models;
 using QuanLyCaPhe.Services; // [QUAN TRỌNG] Để gọi CheckWarnings
 using QuanLyCaPhe.Views.Admin.DetailWindow;
@@ -115,6 +117,23 @@ namespace QuanLyCaPhe.Views.Admin
                 LoadData();
             else
                 InputInfosdg.ItemsSource = InputInfoDAO.Instance.SearchInputInfo(keyword);
+        }
+
+        // --- EXPORT ---
+
+        private void IETable_Clicked(object sender, string e)
+        {
+            if (e == "Export") ExportData();
+        }
+        private void ExportData()
+        {
+            var sfd = new SaveFileDialog() { Filter = "Excel|*.xlsx", FileName = "DS_Hanghoa.xlsx" };
+            if (sfd.ShowDialog() == true)
+            {
+                var list = InputInfoDAO.Instance.GetListInputInfo();
+                ExcelHelper.ExportList<InputInfo>(sfd.FileName, list, "HangHoas");
+                JetMoonMessageBox.Show("Xuất xong!", "Thông báo", MsgType.Success);
+            }
         }
     }
 }

@@ -62,6 +62,7 @@
                 
                 <Button Content="Xác nhận" Click="Confirm_Click" 
                         Style="{StaticResource GlassButtonStyle}" 
+                        IsDefault="True"
                         Width="110" Margin="10, 0, 0, 0"/>
             </StackPanel>
         </Grid>

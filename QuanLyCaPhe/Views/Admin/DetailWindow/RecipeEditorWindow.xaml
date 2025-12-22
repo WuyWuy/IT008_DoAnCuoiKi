@@ -29,7 +29,7 @@
 
             <StackPanel Orientation="Horizontal" Grid.Row="2" HorizontalAlignment="Right" Margin="0,25,0,0">
                 <Button x:Name="btnCancel" Content="Hủy" Width="80" Margin="0,0,10,0" Style="{StaticResource GlassDeleteButtonStyle}" Click="btnCancel_Click"/>
-                <Button x:Name="btnOk" Content="Thêm" Width="90" Style="{StaticResource GlassButtonStyle}" Click="btnOk_Click"/>
+                <Button x:Name="btnOk" Content="Thêm" Width="90" IsDefault="True" Style="{StaticResource GlassButtonStyle}" Click="btnOk_Click"/>
             </StackPanel>
         </Grid>
     </Border>

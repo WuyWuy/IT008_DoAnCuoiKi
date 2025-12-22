@@ -3,14 +3,14 @@ using QuanLyCaPhe.DAO;
 using QuanLyCaPhe.Helpers;
 using QuanLyCaPhe.Models;
 using QuanLyCaPhe.Views.Admin.DetailWindow;
+using QuanLyCaPhe.Views.Components; // [QUAN TRỌNG] Import để dùng JetMoonMessageBox
+using System;
+using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
 
 namespace QuanLyCaPhe.Views.Admin
 {
-    /// <summary>
-    /// Interaction logic for IngredientsPage.xaml
-    /// </summary>
     public partial class IngredientPage : Page
     {
         public List<Ingredient> IngredientList { get; set; }
@@ -53,7 +53,7 @@ namespace QuanLyCaPhe.Views.Admin
             }
         }
 
-        // --- Sửa Món ---
+        // --- Sửa Nguyên Liệu ---
         private void BtnEdit_Click(object sender, RoutedEventArgs e)
         {
             var menuItem = sender as MenuItem;
@@ -61,7 +61,7 @@ namespace QuanLyCaPhe.Views.Admin
 
             if (selectedIngredient == null)
             {
-                MessageBox.Show("Vui lòng chọn món cần sửa!");
+                JetMoonMessageBox.Show("Vui lòng chọn nguyên liệu cần sửa!", "Chưa chọn dòng", MsgType.Warning);
                 return;
             }
 
@@ -72,7 +72,7 @@ namespace QuanLyCaPhe.Views.Admin
             }
         }
 
-        // --- Xóa Món ---
+        // --- Xóa Nguyên Liệu (Đã hoàn thiện) ---
         private void BtnDelete_Click(object sender, RoutedEventArgs e)
         {
             var menuItem = sender as MenuItem;
@@ -80,29 +80,39 @@ namespace QuanLyCaPhe.Views.Admin
 
             if (selectedIngredient == null) return;
 
-            var result = MessageBox.Show($"Bạn có chắc muốn xóa nguyên liệu '{selectedIngredient.IngName}' không?",
-                                         "Xác nhận xóa", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+            // 1. Hỏi xác nhận
+            var result = JetMoonMessageBox.Show(
+                $"Bạn có chắc chắn muốn xóa nguyên liệu '{selectedIngredient.IngName}' không?\n" +
+                $"Lưu ý: Lịch sử nhập hàng của nguyên liệu này cũng sẽ bị xóa.",
+                "Xác nhận xóa",
+                MsgType.Question,
+                true); // Hiện nút Cancel
 
-            if (result == MessageBoxResult.Yes)
+            if (result == true)
             {
                 try
                 {
+                    // 2. Gọi DAO xóa
                     bool deleted = IngredientDAO.Instance.DeleteIngredient(selectedIngredient.Id);
+
                     if (deleted)
                     {
-                        MessageBox.Show("Đã xóa thành công!");
+                        JetMoonMessageBox.Show("Đã xóa thành công!", "Hoàn tất", MsgType.Success);
                         LoadData();
                     }
                     else
                     {
-                        MessageBox.Show("Không thể xóa nguyên liệu này vì đang được sử dụng trong một hoặc nhiều món.",
-                                        "Không thể xóa", MessageBoxButton.OK, MessageBoxImage.Warning);
+                        // Trường hợp không xóa được do ràng buộc (đang dùng trong công thức)
+                        JetMoonMessageBox.Show(
+                            "Không thể xóa nguyên liệu này vì đang được sử dụng trong công thức món ăn.\n" +
+                            "Vui lòng gỡ nguyên liệu khỏi công thức trước.",
+                            "Không thể xóa",
+                            MsgType.Warning);
                     }
                 }
-                catch
+                catch (Exception ex)
                 {
-                    MessageBox.Show("Không thể xóa nguyên liệu này.",
-                                    "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+                    JetMoonMessageBox.Show("Lỗi hệ thống: " + ex.Message, "Lỗi", MsgType.Error);
                 }
             }
         }
@@ -113,6 +123,7 @@ namespace QuanLyCaPhe.Views.Admin
             if (e == "Import") ImportData();
             else ExportData();
         }
+
         // --- Import ---
         private void ImportData()
         {
@@ -145,23 +156,34 @@ namespace QuanLyCaPhe.Views.Admin
                     }
 
                     LoadData();
-                    MessageBox.Show($"Xử lý xong!\n- Thêm mới: {countAdd} nguyên liệu\n- Cập nhật : {countUpdate} nguyên liệu", "Kết quả");
+                    JetMoonMessageBox.Show(
+                        $"Xử lý xong!\n- Thêm mới: {countAdd} nguyên liệu\n- Cập nhật: {countUpdate} nguyên liệu",
+                        "Kết quả Import",
+                        MsgType.Success);
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show("Lỗi: " + ex.Message);
+                    JetMoonMessageBox.Show("Lỗi Import: " + ex.Message, "Lỗi", MsgType.Error);
                 }
             }
         }
+
         // --- Export ---
         private void ExportData()
         {
             var sfd = new SaveFileDialog() { Filter = "Excel|*.xlsx", FileName = "DS_NguyenLieu.xlsx" };
             if (sfd.ShowDialog() == true)
             {
-                var list = IngredientDAO.Instance.GetListIngredient();
-                ExcelHelper.ExportList<Ingredient>(sfd.FileName, list, "NguyenLieus");
-                MessageBox.Show("Xuất xong!");
+                try
+                {
+                    var list = IngredientDAO.Instance.GetListIngredient();
+                    ExcelHelper.ExportList<Ingredient>(sfd.FileName, list, "NguyenLieus");
+                    JetMoonMessageBox.Show("Xuất dữ liệu thành công!", "Thông báo", MsgType.Success);
+                }
+                catch (Exception ex)
+                {
+                    JetMoonMessageBox.Show("Lỗi Export: " + ex.Message, "Lỗi", MsgType.Error);
+                }
             }
         }
 

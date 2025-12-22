@@ -31,8 +31,8 @@ namespace QuanLyCaPhe.Views.Admin
 
             // Cấu hình Timer
             _timer = new DispatcherTimer();
-            _timer.Interval = TimeSpan.FromSeconds(15); // 5 giây load 1 lần
-            _timer.Tick += (s, e) => LoadOverviewData(); // Cứ hết giờ là gọi hàm Load
+            _timer.Interval = TimeSpan.FromSeconds(15); // 15 giây load 1 lần
+            _timer.Tick += (s, e) => RefreshOverview(); // Cứ hết giờ là gọi hàm Load
 
             // Khi trang hiện lên thì BẮT ĐẦU đếm giờ
             this.Loaded += (s, e) => {
@@ -151,6 +151,8 @@ namespace QuanLyCaPhe.Views.Admin
             try
             {
                 LoadOverviewData();
+                ActivityFrame.Navigate(new ActivitiesPage());
+                WarningFrame.Navigate(new WarningsPage());
             }
             catch
             {

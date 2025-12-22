@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection; // Thư viện dùng để "soi" code
+using System.Reflection;
 using QuanLyCaPhe.Models;
 
 namespace QuanLyCaPhe.Helpers
@@ -10,7 +10,71 @@ namespace QuanLyCaPhe.Helpers
     public class ExcelHelper
     {
         // =============================================================
-        // 1. EXPORT GENERIC (XUẤT RA EXCEL)
+        // HÀM DÙNG CHUNG: ĐỊNH NGHĨA TÊN CỘT Ở MỘT CHỖ DUY NHẤT
+        // =============================================================
+        private static Dictionary<string, string> GetHeaderMap<T>()
+        {
+            if (typeof(T) == typeof(Ingredient))
+            {
+                return new Dictionary<string, string>
+                {
+                    { "Id", "STT" },
+                    { "IngName", "Tên nguyên liệu" },
+                    { "Unit", "Đơn vị" },
+                    { "Quantity", "Còn lại" }
+                };
+            }
+            else if (typeof(T) == typeof(InputInfo))
+            {
+                return new Dictionary<string, string>
+                {
+                    { "Id", "STT" },
+                    { "DateInput", "Ngày nhập" },
+                    { "IngredientName", "Nguyên liệu" },
+                    { "Count", "Số lượng" },
+                    { "InputPrice", "Tổng tiền" },
+                };
+            }
+            else if (typeof(T) == typeof(Bill))
+            {
+                return new Dictionary<string, string>
+                {
+                    { "Id", "STT" },
+                    { "DateCheckIn", "Ngày thực hiện" },
+                    { "TableName", "Bàn" },
+                    { "StaffName", "Nhân viên" },
+                    { "TotalPrice", "Tổng tiền" },
+                };
+            }
+            else if (typeof(T) == typeof(Product))
+            {
+                return new Dictionary<string, string>
+                {
+                    { "Id", "STT" },
+                    { "ProName", "Tên món" },
+                    { "Price", "Giá" }
+                };
+            }
+            else if (typeof(T) == typeof(User))
+            {
+                return new Dictionary<string, string>
+                {
+                    { "Id", "STT" },
+                    { "FullName", "Họ và tên" },
+                    { "Email", "Email" },
+                    { "Phone", "Số điện thoại" },
+                    { "Address", "Địa chỉ" },
+                    { "Gender", "Giới tính" },
+                    { "CreatedAt", "Ngày tạo" },
+                    { "RoleName", "Chức vụ" },
+                    { "HourlyWage", "Lương giờ" }
+                };
+            }
+            return null;
+        }
+
+        // =============================================================
+        // 1. EXPORT (GIỮ NGUYÊN LOGIC, CHỈ GỌI HÀM GET MAP)
         // =============================================================
         public static bool ExportList<T>(string filePath, List<T> data, string sheetName)
         {
@@ -21,63 +85,18 @@ namespace QuanLyCaPhe.Helpers
                     var worksheet = workbook.Worksheets.Add(sheetName);
                     var properties = typeof(T).GetProperties().ToList();
 
-                    // Optional header translations for known types
-                    Dictionary<string, string> headerMap = null;
-                    if (typeof(T) == typeof(Ingredient))
-                    {
-                        headerMap = new Dictionary<string, string>
-                        {
-                            { "Id", "STT" },
-                            { "IngName", "Tên nguyên liệu" },
-                            { "Unit", "Đơn vị" },
-                            { "Quantity", "Còn lại" }
-                        };
-                    }
-                    else if (typeof(T) == typeof(Product))
-                    {
-                        headerMap = new Dictionary<string, string>
-                        {
-                            { "Id", "STT" },
-                            { "ProName", "Tên món" },
-                            { "Price", "Giá" }
-                        };
-                    }
-                    else if (typeof(T) == typeof(User))
-                    {
-                        headerMap = new Dictionary<string, string>
-                        {
-                            { "Id", "STT" },
-                            { "FullName", "Họ và tên" },
-                            { "Email", "Email" },
-                            { "Phone", "Số điện thoại" },
-                            { "Address", "Địa chỉ" },
-                            { "Gender", "Giới tính" },
-                            { "CreatedAt", "Ngày tạo" },
-                            { "RoleName", "Chức vụ" },
-                            { "RoleLevel", "Quyền" },
-                            { "IsActive", "Hoạt động" },
-                            { "HourlyWage", "Lương giờ" }
-                        };
-                    }
+                    // 1. Lấy Map từ hàm chung
+                    Dictionary<string, string> headerMap = GetHeaderMap<T>();
 
-                    // If we have a headerMap, create ordered properties so header names and data columns align
                     List<PropertyInfo> orderedProperties;
                     if (headerMap != null)
                     {
                         var desiredOrder = headerMap.Keys.ToList();
                         orderedProperties = new List<PropertyInfo>();
-
-                        // Add properties in desired order when available
                         foreach (var name in desiredOrder)
                         {
                             var p = properties.FirstOrDefault(x => x.Name == name);
                             if (p != null) orderedProperties.Add(p);
-                        }
-
-                        // Append any remaining properties that weren't specified in headerMap
-                        foreach (var p in properties)
-                        {
-                            if (!orderedProperties.Contains(p)) orderedProperties.Add(p);
                         }
                     }
                     else
@@ -89,11 +108,11 @@ namespace QuanLyCaPhe.Helpers
                     for (int i = 0; i < orderedProperties.Count; i++)
                     {
                         string headerName = orderedProperties[i].Name;
+                        // Map: Property -> Tiếng Việt
                         if (headerMap != null && headerMap.ContainsKey(headerName))
                         {
                             headerName = headerMap[headerName];
                         }
-
                         worksheet.Cell(1, i + 1).Value = headerName;
                     }
 
@@ -106,10 +125,10 @@ namespace QuanLyCaPhe.Helpers
                     // --- DATA ---
                     for (int r = 0; r < data.Count; r++)
                     {
-                        for (int c = 0; c < orderedProperties.Count; c++)
+                        worksheet.Cell(r + 2, 1).Value = r + 1; // STT
+                        for (int c = 1; c < orderedProperties.Count; c++)
                         {
                             var value = orderedProperties[c].GetValue(data[r]);
-                            // Xử lý ngày tháng hoặc null
                             if (value != null)
                             {
                                 if (value is DateTime date)
@@ -128,7 +147,7 @@ namespace QuanLyCaPhe.Helpers
         }
 
         // =============================================================
-        // 2. IMPORT GENERIC (NHẬP TỪ EXCEL) - HÀM BẠN ĐANG CẦN
+        // 2. IMPORT (SỬA LẠI ĐỂ DÙNG REVERSE MAP)
         // =============================================================
         public static List<T> ImportList<T>(string filePath) where T : new()
         {
@@ -136,49 +155,65 @@ namespace QuanLyCaPhe.Helpers
 
             using (var workbook = new XLWorkbook(filePath))
             {
-                var worksheet = workbook.Worksheet(1); // Lấy sheet đầu tiên
-
-                // Lấy dòng Header (Dòng 1) để biết cột nào tên là gì
+                var worksheet = workbook.Worksheet(1);
                 var headerRow = worksheet.Row(1);
                 var properties = typeof(T).GetProperties();
 
-                // Tạo map: Tên cột -> Số thứ tự cột (Ví dụ: "ProName" -> Cột 2)
-                var columnMap = new Dictionary<string, int>();
-                foreach (var cell in headerRow.CellsUsed())
+                // 1. Lấy Map gốc (Property -> Tiếng Việt)
+                var headerMap = GetHeaderMap<T>();
+
+                // 2. Tạo Map Ngược (Tiếng Việt -> Property)
+                // Ví dụ: "Tên nguyên liệu" -> "IngName"
+                var reverseMap = new Dictionary<string, string>();
+                if (headerMap != null)
                 {
-                    columnMap[cell.GetString()] = cell.Address.ColumnNumber;
+                    foreach (var kvp in headerMap)
+                    {
+                        // Key mới là Tiếng Việt, Value mới là Property Name
+                        if (!reverseMap.ContainsKey(kvp.Value))
+                            reverseMap.Add(kvp.Value, kvp.Key);
+                    }
                 }
 
-                // Duyệt qua các dòng dữ liệu (Bỏ dòng 1)
-                var rows = worksheet.RangeUsed().RowsUsed().Skip(1);
+                // 3. Map cột Excel sang Property Name
+                // Key: Tên Property (IngName), Value: Cột số mấy (2)
+                var columnMap = new Dictionary<string, int>();
 
+                foreach (var cell in headerRow.CellsUsed())
+                {
+                    string headerText = cell.GetString().Trim(); // Lấy tên cột trong Excel ("Tên nguyên liệu")
+                    string propertyName = headerText; // Mặc định giả sử tên cột = tên Property
+
+                    // Nếu có trong map ngược, thì đổi tên Tiếng Việt về tên Property thật
+                    if (reverseMap.ContainsKey(headerText))
+                    {
+                        propertyName = reverseMap[headerText];
+                    }
+
+                    columnMap[propertyName] = cell.Address.ColumnNumber;
+                }
+
+                // 4. Đọc dữ liệu (Giữ nguyên logic cũ, chỉ thay đổi cách lấy columnMap ở trên)
+                var rows = worksheet.RangeUsed().RowsUsed().Skip(1);
                 foreach (var row in rows)
                 {
-                    T item = new T(); // Tạo mới đối tượng (User, Product...)
-
+                    T item = new T();
                     foreach (var prop in properties)
                     {
-                        // Nếu trong Excel có cột trùng tên với thuộc tính này
+                        // Lúc này columnMap đã chứa Key là tên Property thật (IngName)
                         if (columnMap.ContainsKey(prop.Name))
                         {
                             int colIndex = columnMap[prop.Name];
-                            var cellValue = row.Cell(colIndex).GetValue<string>(); // Lấy giá trị chuỗi
+                            var cellValue = row.Cell(colIndex).GetValue<string>();
 
                             if (!string.IsNullOrEmpty(cellValue))
                             {
                                 try
                                 {
-                                    // Chuyển đổi kiểu dữ liệu (String -> Int/Decimal/Double...)
-                                    // Hàm ChangeTypeSafe được viết ở dưới
                                     object safeValue = ChangeTypeSafe(cellValue, prop.PropertyType);
-
-                                    // Gán giá trị vào đối tượng
                                     prop.SetValue(item, safeValue);
                                 }
-                                catch
-                                {
-                                    // Nếu lỗi convert (vd: chữ vào số) thì bỏ qua, để mặc định 
-                                }
+                                catch { }
                             }
                         }
                     }
@@ -188,22 +223,22 @@ namespace QuanLyCaPhe.Helpers
             return list;
         }
 
-        // Hàm phụ trợ: Chuyển đổi kiểu dữ liệu an toàn
         private static object ChangeTypeSafe(string value, Type conversionType)
         {
-            // Xử lý Nullable (int?, double?...)
             if (conversionType.IsGenericType && conversionType.GetGenericTypeDefinition() == typeof(Nullable<>))
             {
                 if (string.IsNullOrEmpty(value)) return null;
                 conversionType = Nullable.GetUnderlyingType(conversionType);
             }
-
-            // Xử lý riêng cho Decimal (Tiền tệ) vì Excel hay lưu dưới dạng Double
             if (conversionType == typeof(decimal))
             {
                 return Convert.ToDecimal(double.Parse(value));
             }
-
+            // Thêm xử lý ngày tháng nếu cần
+            if (conversionType == typeof(DateTime))
+            {
+                return DateTime.Parse(value);
+            }
             return Convert.ChangeType(value, conversionType);
         }
     }

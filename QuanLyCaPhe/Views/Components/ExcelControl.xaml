@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              mc:Ignorable="d" 
+             x:Name="Root"
              Height="44" Width="180">
 
     <UserControl.Resources>
@@ -25,7 +26,7 @@
                                 BorderThickness="{TemplateBinding BorderThickness}"
                                 CornerRadius="4" 
                                 Padding="4"
-                            SnapsToDevicePixels="True">
+                                SnapsToDevicePixels="True">
 
                             <ContentPresenter HorizontalAlignment="Center"
                                               VerticalAlignment="Center"
@@ -54,6 +55,7 @@
                                 <Setter TargetName="bd" Property="Background" Value="#F3F4F6"/>
                                 <Setter TargetName="bd" Property="Effect" Value="{x:Null}"/>
                                 <Setter Property="Foreground" Value="#9CA3AF"/>
+                                <Setter Property="Cursor" Value="No"/>
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
@@ -71,10 +73,12 @@
         <Button x:Name="Importbtn" Grid.Column="0"
                 Content="Import" 
                 Margin="0, 0, 5, 0"
+                IsEnabled="{Binding ElementName=Root, Path=IsImportEnabled}"
                 Style="{StaticResource GlassButtonStyle}" Click="Importbtn_Click"/>
-        
+
         <Button x:Name="Exportbtn" Grid.Column="1"
                 Content="Export"
+                IsEnabled="{Binding ElementName=Root, Path=IsExportEnabled}"
                 Style="{StaticResource GlassButtonStyle}" Click="Exportbtn_Click"/>
     </Grid>
 </UserControl>

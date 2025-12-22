@@ -22,10 +22,21 @@
             <RowDefinition Height="65*"/>
         </Grid.RowDefinitions>
 
-        <!--________________________________Chữ Chào Mừng__________________________________-->
-        <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" 
-           Padding="10" Foreground="{StaticResource PrimaryLightColor}"
-           Text="Trang chủ" FontSize="36" FontWeight="Bold"/>
+        <!--________________________________ Trang chủ __________________________________-->
+        <Border Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3"
+                Margin="10, 10, 0, 0">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <StackPanel Grid.Row="0" Orientation="Horizontal">
+                    <TextBlock Grid.Column="0" Text="&#xE80F;" Style="{StaticResource PageHeaderIcon}"/>
+                    <TextBlock Text="TRANG CHỦ" Style="{StaticResource PageHeaderTitle}"/>
+                </StackPanel>
+            </Grid>
+        </Border>
         <!--________________________________Panel Chào mừng________________________________-->
         <Border Grid.Row="1" Grid.Column="0" Grid.RowSpan="3" 
                 Width="auto" 

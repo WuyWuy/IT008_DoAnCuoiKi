@@ -2,10 +2,11 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="Phiếu Nhập Kho" 
-        MinHeight="600" Height="auto" Width="420"
+        MinHeight="550" Height="Auto" Width="450"
         WindowStartupLocation="CenterScreen" ResizeMode="NoResize"
         Background="{StaticResource BorderStroke}">
-    <Border Padding="25" Margin="15">
+
+    <Border Padding="30">
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
@@ -13,42 +14,67 @@
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
 
-            <TextBlock Text="PHIẾU NHẬP KHO" 
+            <TextBlock Grid.Row="0"
+                       Text="PHIẾU NHẬP KHO" 
                        HorizontalAlignment="Center" 
-                       FontFamily="Segoe UI Light" FontSize="24" FontWeight="Bold" 
-                       Foreground="#0C4A6E" Margin="0,0,0,25"/>
-
+                       FontFamily="Segoe UI Light" 
+                       FontSize="26" 
+                       FontWeight="Bold" 
+                       Foreground="{StaticResource TextPrimary}" 
+                       Margin="0,0,0,30"/>
             <StackPanel Grid.Row="1">
-                <TextBlock Text="Chọn nguyên liệu" FontWeight="SemiBold" Margin="0,0,0,5" Foreground="#0C4A6E"/>
-                <ComboBox x:Name="cboIngredient" Style="{StaticResource ComboBoxStyle}"
-                          DisplayMemberPath="IngName" SelectedValuePath="Id" Height="38"/>
 
-                <TextBlock Text="Ngày nhập hàng" FontWeight="SemiBold" Margin="0,15,0,5" Foreground="#0C4A6E"/>
-                <DatePicker x:Name="dpDateInput" Height="38" BorderThickness="0" Background="Transparent"/>
+                <TextBlock Text="Nguyên liệu nhập" FontWeight="SemiBold" Margin="0,0,0,8" Foreground="{StaticResource TextPrimary}"/>
+                <ComboBox x:Name="cboIngredient" 
+                          Style="{StaticResource ComboBoxStyle}"
+                          DisplayMemberPath="IngName" 
+                          SelectedValuePath="Id" 
+                          Height="38"
+                          Margin="0,0,0,15"/>
 
-                <Grid Margin="0,15,0,0">
+                <TextBlock Text="Ngày nhập hàng" FontWeight="SemiBold" Margin="0,0,0,8" Foreground="{StaticResource TextPrimary}"/>
+                <DatePicker x:Name="dpDateInput" 
+                            Style="{StaticResource GlassDatePickerStyle}" 
+                            Height="38" 
+                            Margin="0,0,0,15"/>
+
+                <Grid Margin="0,0,0,15">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="2*"/>
                         <ColumnDefinition Width="15"/>
                         <ColumnDefinition Width="1*"/>
                     </Grid.ColumnDefinitions>
+
                     <StackPanel Grid.Column="0">
-                        <TextBlock Text="Số lượng nhập" FontWeight="SemiBold" Margin="0,0,0,5" Foreground="#0C4A6E"/>
+                        <TextBlock Text="Số lượng" FontWeight="SemiBold" Margin="0,0,0,8" Foreground="{StaticResource TextPrimary}"/>
                         <TextBox x:Name="txtCount" Style="{StaticResource GlassTextStyleInput}"/>
                     </StackPanel>
+
                     <StackPanel Grid.Column="2">
-                        <TextBlock Text="Đơn vị" FontWeight="SemiBold" Margin="0,0,0,5" Foreground="#0C4A6E"/>
-                        <TextBox x:Name="txtUnit" IsReadOnly="True" Background="#F3F4F6" Style="{StaticResource GlassTextStyleInput}"/>
+                        <TextBlock Text="Đơn vị" FontWeight="SemiBold" Margin="0,0,0,8" Foreground="{StaticResource TextSecondary}"/>
+                        <TextBox x:Name="txtUnit" IsReadOnly="True" Focusable="False"
+                                 Background="{StaticResource BackgroundLight}" 
+                                 Foreground="{StaticResource TextSecondary}"
+                                 Style="{StaticResource GlassTextStyleInput}"/>
                     </StackPanel>
                 </Grid>
 
-                <TextBlock Text="Giá trị lô hàng (VNĐ)" FontWeight="SemiBold" Margin="0,15,0,5" Foreground="#0C4A6E"/>
+                <TextBlock Text="Tổng giá trị lô hàng (VNĐ)" FontWeight="SemiBold" Margin="0,0,0,8" Foreground="{StaticResource TextPrimary}"/>
                 <TextBox x:Name="txtInputPrice" Style="{StaticResource GlassTextStyleInput}"/>
+
+                <TextBlock Text="* Giá trị này sẽ được dùng để tính báo cáo chi tiêu." 
+                           FontSize="11" FontStyle="Italic" 
+                           Foreground="{StaticResource TextSecondary}" Margin="0,5,0,0"/>
             </StackPanel>
 
-            <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,25,0,0">
-                <Button Content="Hủy" Width="90" Margin="0,0,10,0" Style="{StaticResource GlassDeleteButtonStyle}" Click="BtnCancel_Click"/>
-                <Button Content="Nhập Kho" Width="110" Style="{StaticResource GlassButtonStyle}" Click="BtnSave_Click"/>
+            <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,30,0,0">
+                <Button Content="Hủy bỏ" Width="100" Margin="0,0,10,0" 
+                        Style="{StaticResource GlassDeleteButtonStyle}" 
+                        Click="BtnCancel_Click"/>
+
+                <Button Content="Lưu Phiếu" Width="120" IsDefault="True" 
+                        Style="{StaticResource GlassButtonStyle}" 
+                        Click="BtnSave_Click"/>
             </StackPanel>
         </Grid>
     </Border>

@@ -7,9 +7,9 @@ using System.Collections.Generic;
 using QuanLyCaPhe.Helpers;
 using Microsoft.Win32;
 using QuanLyCaPhe.Views.Admin.DetailWindow;
-using QuanLyCaPhe.Views.Components;
-using QuanLyCaPhe.DataAccess;
+using QuanLyCaPhe.Views.Components; // <-- Import Custom MessageBox
 using QuanLyCaPhe.Services;
+using QuanLyCaPhe.DataAccess;
 
 namespace QuanLyCaPhe.Views.Admin
 {
@@ -57,7 +57,7 @@ namespace QuanLyCaPhe.Views.Admin
             }
         }
 
-        // --- Sửa Món ---
+        // --- Sửa ---
         private void BtnEdit_Click(object sender, RoutedEventArgs e)
         {
             var menuItem = sender as MenuItem;
@@ -65,7 +65,7 @@ namespace QuanLyCaPhe.Views.Admin
 
             if (selectedUser == null)
             {
-                MessageBox.Show("Vui lòng chọn món cần sửa!");
+                JetMoonMessageBox.Show("Vui lòng chọn dòng cần sửa!", "Chưa chọn dòng", MsgType.Warning);
                 return;
             }
 
@@ -76,7 +76,7 @@ namespace QuanLyCaPhe.Views.Admin
             }
         }
 
-        // --- Xóa Món ---
+        // --- Xóa ---
         private void BtnDelete_Click(object sender, RoutedEventArgs e)
         {
             var menuItem = sender as MenuItem;
@@ -92,40 +92,39 @@ namespace QuanLyCaPhe.Views.Admin
                     int adminCount = UserDAO.Instance.GetCountAdmin();
                     if (adminCount <= 1)
                     {
-                        MessageBox.Show("Không thể xóa. Phải giữ ít nhất 1 Admin.", "Cảnh báo", MessageBoxButton.OK, MessageBoxImage.Warning);
+                        JetMoonMessageBox.Show("Không thể xóa. Phải giữ ít nhất 1 Admin.", "Cảnh báo", MsgType.Warning);
                         return;
                     }
                 }
             }
             catch
             {
-                // If DB check fails, fall back to original behavior (but still proceed with caution)
+                // If DB check fails, continue
             }
 
-            var result = MessageBox.Show($"Bạn có chắc muốn xóa nhân viên '{selectedUser.FullName}' không?",
-                                         "Xác nhận xóa", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+            var result = JetMoonMessageBox.Show(
+                $"Bạn có chắc muốn xóa nhân viên '{selectedUser.FullName}' không?",
+                "Xác nhận xóa",
+                MsgType.Question,
+                true);
 
-            if (result == MessageBoxResult.Yes)
+            if (result == true)
             {
                 if (UserDAO.Instance.DeleteUser(selectedUser.Id))
                 {
-                    // Record activity so Activities panel updates immediately
+                    // Record activity
                     try
                     {
                         GlobalService.RecordActivity("Delete", "Xóa nhân viên", $"Đã xóa nhân viên {selectedUser.FullName}");
                     }
-                    catch
-                    {
-                        // Swallow any exception from recording activity to avoid breaking delete flow
-                    }
+                    catch { }
 
-                    MessageBox.Show("Đã xóa thành công!");
+                    JetMoonMessageBox.Show("Đã xóa thành công!", "Hoàn tất", MsgType.Success);
                     LoadData();
                 }
                 else
                 {
-                    MessageBox.Show("Không thể xóa nhân viên này.",
-                                    "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+                    JetMoonMessageBox.Show("Không thể xóa nhân viên này.", "Lỗi", MsgType.Error);
                 }
             }
         }
@@ -157,24 +156,22 @@ namespace QuanLyCaPhe.Views.Admin
 
                         if (existingId != -1)
                         {
-                            // pass hourly wage when updating
                             if (UserDAO.Instance.UpdateUser(existingId, item.FullName, item.Phone, item.Address, item.Gender, item.RoleName, item.HourlyWage))
                                 countUpdate++;
                         }
                         else
                         {
-                            // pass hourly wage when inserting
                             if (UserDAO.Instance.InsertUser(item.FullName, item.Email, item.Phone, item.Address, item.Gender, Constants.DEFAULT_PASSWORD, item.RoleName, item.HourlyWage))
                                 countAdd++;
                         }
                     }
 
                     LoadData();
-                    MessageBox.Show($"Xử lý xong!\n- Thêm mới: {countAdd} nhân viên\n- Cập nhật thông tin: {countUpdate} nhân viên", "Kết quả");
+                    JetMoonMessageBox.Show($"Xử lý xong!\n- Thêm mới: {countAdd} nhân viên\n- Cập nhật thông tin: {countUpdate} nhân viên", "Kết quả", MsgType.Success);
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show("Lỗi: " + ex.Message);
+                    JetMoonMessageBox.Show("Lỗi: " + ex.Message, "Lỗi Import", MsgType.Error);
                 }
             }
         }
@@ -186,7 +183,7 @@ namespace QuanLyCaPhe.Views.Admin
             {
                 var list = UserDAO.Instance.GetListUser();
                 ExcelHelper.ExportList<User>(sfd.FileName, list, "NhanViens");
-                MessageBox.Show("Xuất xong!");
+                JetMoonMessageBox.Show("Xuất xong!", "Thông báo", MsgType.Success);
             }
         }
     }

@@ -186,4 +186,50 @@
         <Setter Property="BorderThickness" Value="1"/>
         
     </Style>
+    <!-- Titile -->
+    <Style x:Key="PageHeaderContainer" TargetType="Border">
+        <Setter Property="Margin" Value="0,0,0,20"/>
+        <Setter Property="Padding" Value="0,0,0,15"/>
+        <Setter Property="BorderThickness" Value="0,0,0,2"/>
+        <Setter Property="BorderBrush">
+            <Setter.Value>
+                <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                    <GradientStop Color="{Binding Color, Source={StaticResource TextPrimary}}" Offset="0"/>
+                    <GradientStop Color="{Binding Color, Source={StaticResource TextSecondary}}" Offset="0.3"/>
+                    <GradientStop Color="Transparent" Offset="0.8"/>
+                </LinearGradientBrush>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="PageHeaderIcon" TargetType="TextBlock">
+        <Setter Property="FontFamily" Value="Segoe MDL2 Assets"/>
+        <Setter Property="FontSize" Value="32"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
+        <Setter Property="Margin" Value="0,0,15,0"/>
+        <Setter Property="Foreground" Value="{StaticResource TextPrimary}"/>
+        <Setter Property="Effect">
+            <Setter.Value>
+                <DropShadowEffect Color="{Binding Color, Source={StaticResource TextPrimary}}" 
+                              BlurRadius="15" ShadowDepth="0" Opacity="0.4"/>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="PageHeaderTitle" TargetType="TextBlock">
+        <Setter Property="FontFamily" Value="Segoe UI Light"/>
+        <Setter Property="FontSize" Value="28"/>
+        <Setter Property="FontWeight" Value="Thin"/>
+        <Setter Property="Foreground" Value="{StaticResource TextPrimary}"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
+    </Style>
+
+    <Style x:Key="PageHeaderSubtitle" TargetType="TextBlock">
+        <Setter Property="FontFamily" Value="Segoe UI"/>
+        <Setter Property="FontSize" Value="13"/>
+        <Setter Property="Foreground" Value="{StaticResource TextSecondary }"/>
+        <Setter Property="FontWeight" Value="DemiBold"/>
+        <Setter Property="Margin" Value="2,2,0,0"/>
+    </Style>
+    
 </ResourceDictionary>
