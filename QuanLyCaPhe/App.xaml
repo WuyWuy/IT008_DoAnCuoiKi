@@ -5,7 +5,7 @@
              xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit" 
              xmlns:sys="clr-namespace:System;assembly=netstandard"
              ShutdownMode="OnExplicitShutdown"
-             StartupUri="Views/Admin/AdminWindow.xaml">
+             StartupUri="Views/Staff/StaffWindow.xaml">
 
     <Application.Resources>
         <ResourceDictionary>

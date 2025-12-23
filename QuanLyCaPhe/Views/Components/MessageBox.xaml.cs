@@ -1,6 +1,6 @@
-﻿using System.Windows;
-using System.Windows.Input;
+﻿using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows;
 
 namespace QuanLyCaPhe.Views.Components
 {
@@ -8,6 +8,9 @@ namespace QuanLyCaPhe.Views.Components
 
     public partial class JetMoonMessageBox : Window
     {
+        // SelectedOption stores which labeled button the user clicked (null means closed without choice)
+        public string? SelectedOption { get; private set; }
+
         public JetMoonMessageBox()
         {
             InitializeComponent();
@@ -21,13 +24,25 @@ namespace QuanLyCaPhe.Views.Components
 
         private void btnOK_Click(object sender, RoutedEventArgs e)
         {
+            // Treat OK as a chosen option (label may be customized)
+            SelectedOption = btnOK.Content?.ToString();
             DialogResult = true;
             Close();
         }
 
         private void btnCancel_Click(object sender, RoutedEventArgs e)
         {
+            // Cancel means user explicitly cancelled -> leave SelectedOption null
+            SelectedOption = null;
             DialogResult = false;
+            Close();
+        }
+
+        // New handler for the middle/alternative primary option (e.g. "Chuyển khoản")
+        private void btnAlt_Click(object sender, RoutedEventArgs e)
+        {
+            SelectedOption = btnAlt.Content?.ToString();
+            DialogResult = true;
             Close();
         }
 
@@ -37,6 +52,9 @@ namespace QuanLyCaPhe.Views.Components
             var msg = new JetMoonMessageBox();
             msg.txtMessage.Text = message;
             msg.txtTitle.Text = title;
+
+            // Ensure the alternate button is hidden for simple Show
+            msg.btnAlt.Visibility = Visibility.Collapsed;
 
             // Xử lý hiển thị nút Cancel
             if (showCancel)
@@ -54,6 +72,37 @@ namespace QuanLyCaPhe.Views.Components
             SetupIconAndColor(msg, type);
 
             return msg.ShowDialog();
+        }
+
+        // NEW: Show two-choice options (both primary blue) plus a cancel option "Hủy".
+        // Returns the chosen option label (option1 or option2) or null when Hủy/closed.
+        public static string? ShowOptions(string message, string title, string option1, string option2, MsgType type = MsgType.Info, bool showCancel = true)
+        {
+            var msg = new JetMoonMessageBox();
+            msg.txtMessage.Text = message;
+            msg.txtTitle.Text = title;
+
+            // Set primary option labels (both blue)
+            msg.btnOK.Content = option1 ?? "OK";
+            msg.btnAlt.Content = option2 ?? "Alt";
+            msg.btnAlt.Visibility = Visibility.Visible;
+
+            // Show Cancel as a secondary button labeled "Hủy"
+            msg.btnCancel.Content = "Hủy";
+            msg.btnCancel.Visibility = Visibility.Visible;
+
+            // Icon/color
+            SetupIconAndColor(msg, type);
+
+            // Show dialog and then inspect SelectedOption
+            msg.ShowDialog();
+
+            // If user clicked one of the primary buttons, SelectedOption will be that label
+            if (string.Equals(msg.SelectedOption, option1)) return option1;
+            if (string.Equals(msg.SelectedOption, option2)) return option2;
+
+            // Cancel or closed -> return null
+            return null;
         }
 
         private static void SetupIconAndColor(JetMoonMessageBox msg, MsgType type)

@@ -1,4 +1,5 @@
-﻿using QuanLyCaPhe.DataAccess;
+﻿
+using QuanLyCaPhe.DataAccess;
 using QuanLyCaPhe.Models;
 using System.Data;
 using Microsoft.Data.SqlClient;
@@ -85,8 +86,8 @@ namespace QuanLyCaPhe.DAO
                 new SqlParameter("@phone", phone),
                 new SqlParameter("@address", address),
                 new SqlParameter("@gender", gender),
-                new SqlParameter("@hash", hash), 
-                new SqlParameter("@salt", salt), 
+                new SqlParameter("@hash", hash),
+                new SqlParameter("@salt", salt),
                 new SqlParameter("@role", role),
                 new SqlParameter("@hourly", hourlyWage)
             }) > 0;
@@ -135,13 +136,13 @@ namespace QuanLyCaPhe.DAO
         public List<User> GetListUser()
         {
             List<User> list = new List<User>();
-            DataTable data = DBHelper.ExecuteQuery("SELECT * FROM Users WHERE IsActive =1"); 
+            DataTable data = DBHelper.ExecuteQuery("SELECT * FROM Users WHERE IsActive =1");
             foreach (DataRow item in data.Rows) list.Add(new User(item));
             return list;
         }
 
         // --- Tìm kiếm ---
-        public List<User> SearchUserByAll (string str)
+        public List<User> SearchUserByAll(string str)
         {
             List<User> list = new List<User>();
             string query = "SELECT * FROM Users WHERE (FullName LIKE @str OR Email LIKE @str OR RoleName LIKE @str) AND IsActive =1";
@@ -209,12 +210,30 @@ namespace QuanLyCaPhe.DAO
             }) > 0;
         }
 
-        // --- Xóa ---
+        // --- Xóa (HARD DELETE + remove schedule blocks) ---
         public bool DeleteUser(int id)
         {
-            string query = "UPDATE Users SET IsActive = 0 WHERE Id = @id";
+            // Perform deletion inside a transaction: first remove related WorkSchedules, then delete the user row.
+            string query = @"
+BEGIN TRY
+    BEGIN TRANSACTION;
+    DELETE FROM WorkSchedules WHERE UserId = @id;
+    DELETE FROM Users WHERE Id = @id;
+    COMMIT TRANSACTION;
+END TRY
+BEGIN CATCH
+    IF @@TRANCOUNT > 0 ROLLBACK TRANSACTION;
+    THROW;
+END CATCH";
 
-            return DBHelper.ExecuteNonQuery(query, new SqlParameter[] { new SqlParameter("@id", id) }) > 0;
+            try
+            {
+                return DBHelper.ExecuteNonQuery(query, new SqlParameter[] { new SqlParameter("@id", id) }) > 0;
+            }
+            catch
+            {
+                return false;
+            }
         }
     }
 }

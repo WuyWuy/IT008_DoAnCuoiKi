@@ -1,4 +1,5 @@
-﻿using System;
+﻿
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
@@ -21,6 +22,11 @@ using QuanLyCaPhe.Models;
 using QuanLyCaPhe.DataAccess;
 using QuanLyCaPhe.Views.Admin;
 using QuanLyCaPhe.Views.Components; // <-- QUAN TRỌNG: Để dùng JetMoonMessageBox
+
+using PayOS;
+using PayOS.Models;
+using System.Diagnostics;
+using System.Windows.Media.Imaging;
 
 namespace QuanLyCaPhe.Views.Staff
 {
@@ -74,6 +80,8 @@ namespace QuanLyCaPhe.Views.Staff
 
         // Cờ chặn sự kiện TextChanged
         private bool _suspendCbOrderTextChanged = false;
+
+
 
         // --- CONSTRUCTOR ---
         public StaffWindow()
@@ -583,91 +591,160 @@ namespace QuanLyCaPhe.Views.Staff
         }
 
         // --- LOGIC THANH TOÁN (PURCHASE) ---
-
-        private void Button_Click_1(object sender, RoutedEventArgs e)
+        private async void Button_Click_1(object sender, RoutedEventArgs e)
         {
             var selectedTable = lbTables.SelectedItem as Table;
             if (selectedTable == null) return;
 
-            // Kiểm tra hợp lệ chung
-            if (_currentSum == 0 && _selectedHourPrice == 0)
-            {
-                // [FIXED]
-                JetMoonMessageBox.Show("Bàn chưa có món hoặc chưa chọn giờ. Không thể thanh toán!", "Lỗi thanh toán", MsgType.Error);
-                return;
-            }
-
-            if (_selectedHourPrice <= 0 && (selectedTable.Status == "Free" || selectedTable.Status == "Selected"))
-            {
-                // [FIXED]
-                JetMoonMessageBox.Show("Vui lòng chọn gói giờ trước khi thanh toán!", "Lỗi thanh toán", MsgType.Warning);
-                return;
-            }
-
-            // [FIXED] Hỏi xác nhận
-            var choice = JetMoonMessageBox.Show(
-                $"Bạn có chắc chắn muốn thanh toán cho {selectedTable.Name} không?\nTổng tiền: {tbSum.Text}",
-                "Xác nhận thanh toán",
-                MsgType.Question,
-                true);
-
-            if (choice != true) return;
-
-            // Xử lý Logic thời gian
+            // Require both time and at least one drink before allowing payment
             int hours = GetSelectedHoursFromRadioButtons();
-            if (hours > 0)
+            if (hours <= 0)
             {
-                var baseTime = selectedTable.EndTimeUtc ?? DateTime.UtcNow;
-                selectedTable.EndTimeUtc = baseTime.AddHours(hours);
-                selectedTable.Countdown = (int)Math.Max(0, (selectedTable.EndTimeUtc.Value - DateTime.UtcNow).TotalSeconds);
-                selectedTable.Status = "Busy";
-            }
-            else if (selectedTable.Status == "Free" || selectedTable.Status == "Selected")
-            {
-                // Nếu bàn mới mà không chọn giờ -> set mặc định tối thiểu (tránh lỗi logic)
-                selectedTable.EndTimeUtc = DateTime.UtcNow;
-                selectedTable.Status = "Busy";
-            }
-
-            // Trừ nguyên liệu
-            if (_currentSum > 0)
-            {
-                if (!CanFulfillOrderList(out var msg))
-                {
-                    // [FIXED]
-                    JetMoonMessageBox.Show(msg, "Kho không đủ nguyên liệu", MsgType.Warning);
-                    return;
-                }
-                DeductIngredientsForOrderList();
-            }
-
-            // Lưu hóa đơn
-            int billId = SaveBillAndDetails(selectedTable, null);
-            if (billId <= 0)
-            {
-                // [FIXED]
-                JetMoonMessageBox.Show("Lưu hóa đơn thất bại! Vui lòng kiểm tra Database.", "Lỗi Hệ Thống", MsgType.Error);
+                JetMoonMessageBox.Show("Vui lòng chọn số giờ (gói giờ) trước khi thanh toán!", "Quy trình Order", MsgType.Warning, true);
                 return;
             }
 
-            // Notify Admin
+            if (OrderList == null || OrderList.Count == 0 || _currentSum <= 0)
+            {
+                JetMoonMessageBox.Show("Vui lòng chọn món trước khi thanh toán!", "Quy trình Order", MsgType.Warning, true);
+                return;
+            }
+
+            // Ask user for payment method (modal) using ShowOptions (returns chosen label or null)
+            string? chosenMethod = null;
             try
             {
-                var adminWin = Application.Current.Windows.OfType<AdminWindow>().FirstOrDefault();
-                if (adminWin != null && adminWin.MainFrame.Content is BillsPage bp)
+                chosenMethod = JetMoonMessageBox.ShowOptions(
+                    $"Chọn phương thức thanh toán",
+                    "Phương thức thanh toán",
+                    "Tiền mặt",
+                    "Chuyển khoản",
+                    MsgType.Info,
+                    true);
+            }
+            catch
+            {
+                return;
+            }
+
+            if (string.IsNullOrWhiteSpace(chosenMethod))
+            {
+                // user cancelled
+                return;
+            }
+
+            try
+            {
+                // Compute intended checkout time but DO NOT apply it to the UI/table yet.
+                DateTime? intendedEndUtc = null;
+                if (hours > 0)
                 {
-                    bp.RefreshData();
+                    var baseTime = selectedTable.EndTimeUtc ?? DateTime.UtcNow;
+                    intendedEndUtc = baseTime.AddHours(hours);
+                }
+
+                // Check inventory availability before showing any further payment UI.
+                if (_currentSum > 0)
+                {
+                    if (!CanFulfillOrderList(out var msg))
+                    {
+                        JetMoonMessageBox.Show(msg, "Kho không đủ nguyên liệu", MsgType.Warning);
+                        return;
+                    }
+                }
+
+                // If transfer chosen, show VietQR (modal). Do NOT touch the table UI yet.
+                if (string.Equals(chosenMethod, "Chuyển khoản", StringComparison.OrdinalIgnoreCase))
+                {
+                    decimal totalAmount = _currentSum + _selectedHourPrice;
+                    int amountInt = Convert.ToInt32(totalAmount);
+                    int nextBillNumber = 1;
+                    try
+                    {
+                        var bills = BillDAO.Instance.GetListBills();
+                        if (bills != null) nextBillNumber = bills.Count + 1;
+                    }
+                    catch { nextBillNumber = 1; }
+
+                    string addInfo = $"Thanh toán hóa đơn {nextBillNumber}";
+                    string accountName = "Nguyễn Huy";
+
+                    string quickLink = "https://img.vietqr.io/image/970415-107875046252-compact2.png";
+                    string url = BuildVietQrUrl(quickLink, amountInt, addInfo, accountName);
+
+                    bool confirmed = ShowVietQrDialog(url, amountInt, addInfo, accountName);
+
+                    if (!confirmed)
+                    {
+                        // User cancelled. Do not modify table UI, do not deduct inventory.
+                        return;
+                    }
+
+                    // User confirmed payment (clicked "Đã thanh toán") — proceed to save bill.
+                }
+
+                // For cash or after transfer confirmation:
+                // Save bill and details (pass the intended checkout time). Inventory will be deducted after successful save.
+                int billId = SaveBillAndDetails(selectedTable, intendedEndUtc, null, hours > 0 ? hours : (int?)null, chosenMethod);
+                if (billId <= 0)
+                {
+                    JetMoonMessageBox.Show("Lỗi khi lưu hóa đơn.", "Lỗi", MsgType.Error);
+                    return;
+                }
+
+                // Deduct inventory now that bill is recorded.
+                if (_currentSum > 0)
+                {
+                    DeductIngredientsForOrderList();
+                }
+
+                // Now apply the UI change (table becomes Busy and timer starts)
+                if (intendedEndUtc.HasValue)
+                {
+                    selectedTable.EndTimeUtc = intendedEndUtc;
+                    selectedTable.Countdown = (int)Math.Max(0, (intendedEndUtc.Value - DateTime.UtcNow).TotalSeconds);
+                }
+                else
+                {
+                    selectedTable.EndTimeUtc = null;
+                    selectedTable.Countdown = 0;
+                }
+                selectedTable.Status = "Busy";
+
+                // Clear UI and reset order
+                CompleteOrderCleanup();
+
+                // Clear radio button hour selection after successful purchase
+                ClearHourSelection();
+
+                JetMoonMessageBox.Show("Thanh toán thành công!", "Hoàn tất", MsgType.Success);
+            }
+            catch (Exception ex)
+            {
+                JetMoonMessageBox.Show("Lỗi khi xử lý thanh toán: " + ex.Message, "Lỗi", MsgType.Error);
+            }
+        }
+
+        // --- CÁC HÀM HỖ TRỢ LOGIC (HELPER) ---
+        private void DeductIngredientsForOrderList()
+        {
+            if (OrderList == null || OrderList.Count == 0) return;
+            var needed = new Dictionary<int, double>();
+            foreach (var it in OrderList)
+            {
+                int qty = ParseIntFromFormatted(it.Quantity);
+                if (qty <= 0) continue;
+                var recs = RecipeDAO.Instance.GetListRecipeByProID(it.ProductId);
+                foreach (var r in recs)
+                {
+                    if (!needed.ContainsKey(r.IngId)) needed[r.IngId] = 0;
+                    needed[r.IngId] += r.Amount * qty;
                 }
             }
-            catch { }
-
-            // Cleanup sau khi thanh toán
-            CompleteOrderCleanup();
-            ClearHourSelection();
-            UpdateSumDisplay();
-
-            // [FIXED] Thông báo thành công
-            JetMoonMessageBox.Show("Thanh toán thành công!", "Hoàn tất", MsgType.Success);
+            foreach (var kv in needed)
+            {
+                IngredientDAO.Instance.UpdateQuantity(kv.Key, -kv.Value);
+            }
         }
 
         // --- CÁC HÀM HỖ TRỢ LOGIC (HELPER) ---
@@ -733,28 +810,7 @@ namespace QuanLyCaPhe.Views.Staff
             return true;
         }
 
-        private void DeductIngredientsForOrderList()
-        {
-            if (OrderList == null || OrderList.Count == 0) return;
-            var needed = new Dictionary<int, double>();
-            foreach (var it in OrderList)
-            {
-                int qty = ParseIntFromFormatted(it.Quantity);
-                if (qty <= 0) continue;
-                var recs = RecipeDAO.Instance.GetListRecipeByProID(it.ProductId);
-                foreach (var r in recs)
-                {
-                    if (!needed.ContainsKey(r.IngId)) needed[r.IngId] = 0;
-                    needed[r.IngId] += r.Amount * qty;
-                }
-            }
-            foreach (var kv in needed)
-            {
-                IngredientDAO.Instance.UpdateQuantity(kv.Key, -kv.Value);
-            }
-        }
-
-        private int SaveBillAndDetails(Table table, int? userId)
+        private int SaveBillAndDetails(Table table, DateTime? checkOutUtc, int? userId, int? timeUsedHours, string? paymentMethod)
         {
             try
             {
@@ -767,12 +823,13 @@ namespace QuanLyCaPhe.Views.Staff
                 }
 
                 DateTime checkIn = DateTime.Now;
-                DateTime? checkOut = table.EndTimeUtc?.ToLocalTime();
+                DateTime? checkOut = checkOutUtc?.ToLocalTime();
                 int status = 1; // 1 = Paid
                 int discount = 0;
                 decimal totalPrice = _currentSum + _selectedHourPrice;
 
-                int billId = BillDAO.Instance.InsertBill(checkIn, checkOut, status, discount, totalPrice, table.Id, userId);
+                // call updated DAO InsertBill that stores paymentMethod and timeUsedHours
+                int billId = BillDAO.Instance.InsertBill(checkIn, checkOut, status, discount, totalPrice, table.Id, userId, paymentMethod, timeUsedHours);
                 if (billId <= 0) return -1;
 
                 foreach (var it in OrderList)
@@ -783,10 +840,10 @@ namespace QuanLyCaPhe.Views.Staff
 
                     string query = "INSERT INTO BillInfos (BillId, ProId, Count) VALUES (@billId, @proId, @count)";
                     DBHelper.ExecuteNonQuery(query, new SqlParameter[] {
-                        new SqlParameter("@billId", billId),
-                        new SqlParameter("@proId", proId),
-                        new SqlParameter("@count", count)
-                    });
+                new SqlParameter("@billId", billId),
+                new SqlParameter("@proId", proId),
+                new SqlParameter("@count", count)
+            });
                 }
                 return billId;
             }
@@ -1093,6 +1150,89 @@ namespace QuanLyCaPhe.Views.Staff
                 File.WriteAllText(_tablesStatePath, json);
             }
             catch { }
+        }
+
+        // Build VietQR quicklink URL with parameters
+        private static string BuildVietQrUrl(string quickLinkBase, int amount, string addInfo, string accountName)
+        {
+            return $"{quickLinkBase}?amount={amount}&addInfo={Uri.EscapeDataString(addInfo)}&accountName={Uri.EscapeDataString(accountName)}";
+        }
+
+        // Show an inline dialog with the QR image. Returns true if user confirmed payment.
+        private bool ShowVietQrDialog(string url, int amount, string addInfo, string accountName)
+        {
+            // Build UI dynamically
+            var win = new Window()
+            {
+                Title = "VietQR - Quét để thanh toán",
+                Width = 420,
+                Height = 560,
+                WindowStartupLocation = WindowStartupLocation.CenterOwner,
+                ResizeMode = ResizeMode.NoResize,
+                Owner = this
+            };
+
+            var panel = new StackPanel() { Margin = new Thickness(10) };
+
+            var txt = new TextBlock()
+            {
+                Text = $"Quét mã QR để thanh toán: {amount} VNĐ\n{addInfo}\nNgười nhận: {accountName}",
+                TextWrapping = TextWrapping.Wrap,
+                Margin = new Thickness(0, 0, 0, 8)
+            };
+            panel.Children.Add(txt);
+
+            var img = new System.Windows.Controls.Image()
+            {
+                Width = 380,
+                Height = 380,
+                Stretch = System.Windows.Media.Stretch.Uniform,
+                HorizontalAlignment = HorizontalAlignment.Center,
+                VerticalAlignment = VerticalAlignment.Center,
+                Margin = new Thickness(0, 0, 0, 8)
+            };
+
+            try
+            {
+                var bmp = new BitmapImage();
+                bmp.BeginInit();
+                bmp.UriSource = new Uri(url);
+                bmp.CacheOption = BitmapCacheOption.OnLoad;
+                bmp.EndInit();
+                img.Source = bmp;
+            }
+            catch
+            {
+                // If image fails to load, show a placeholder text
+                panel.Children.Add(new TextBlock() { Text = "Không thể tải hình QR. Vui lòng kiểm tra mạng hoặc URL.", Foreground = System.Windows.Media.Brushes.Red });
+            }
+
+            panel.Children.Add(img);
+
+            var btnPanel = new StackPanel() { Orientation = Orientation.Horizontal, HorizontalAlignment = HorizontalAlignment.Center };
+            var btnConfirm = new Button() { Content = "Đã thanh toán", Width = 120, Margin = new Thickness(6) };
+            var btnCancel = new Button() { Content = "Hủy", Width = 120, Margin = new Thickness(6) };
+            btnPanel.Children.Add(btnConfirm);
+            btnPanel.Children.Add(btnCancel);
+            panel.Children.Add(btnPanel);
+
+            bool result = false;
+            btnConfirm.Click += (s, e) =>
+            {
+                result = true;
+                win.DialogResult = true;
+                win.Close();
+            };
+            btnCancel.Click += (s, e) =>
+            {
+                result = false;
+                win.DialogResult = false;
+                win.Close();
+            };
+
+            win.Content = panel;
+            win.ShowDialog();
+            return result;
         }
     }
 }

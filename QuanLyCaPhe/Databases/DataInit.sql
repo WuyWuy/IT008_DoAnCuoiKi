@@ -71,7 +71,8 @@ CREATE TABLE Products
 (
     Id INT IDENTITY(1,1) PRIMARY KEY,
     ProName NVARCHAR(100) NOT NULL,
-    Price DECIMAL(18,0) NOT NULL
+    Price DECIMAL(18,0) NOT NULL,
+    IsActive BIT DEFAULT 1
 );
 GO
 
@@ -104,6 +105,10 @@ CREATE TABLE Bills
     
     TableId INT NOT NULL,
     UserId INT NULL,                   -- Nhân viên thanh toán
+
+    -- New columns
+    PaymentMethod NVARCHAR(50) NULL,   -- 'Tiền mặt' | 'Chuyển khoản'
+    TimeUsedHours INT NULL,            -- 1,3,6,12
     
     CONSTRAINT FK_Bills_TableCoffees FOREIGN KEY (TableId) REFERENCES TableCoffees(Id),
     CONSTRAINT FK_Bills_Users FOREIGN KEY (UserId) REFERENCES Users(Id)

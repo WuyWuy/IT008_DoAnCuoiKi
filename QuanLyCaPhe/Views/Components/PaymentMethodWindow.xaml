@@ -1,0 +1,29 @@
+﻿<Window x:Class="QuanLyCaPhe.Views.Components.PaymentMethodWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Phương thức thanh toán" Height="180" Width="360"
+        WindowStartupLocation="CenterOwner"
+        ResizeMode="NoResize"
+        WindowStyle="ToolWindow"
+        ShowInTaskbar="False">
+    <Border Padding="16" Background="White" CornerRadius="8">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <TextBlock Text="Chọn phương thức thanh toán" FontSize="16" FontWeight="SemiBold" Margin="0,0,0,8"/>
+
+            <StackPanel Grid.Row="1" Orientation="Vertical" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0,4">
+                <Button x:Name="BtnCash" Content="Tiền mặt" Width="260" Height="40" Margin="0,6" Background="#03A9F4" Foreground="White" FontWeight="SemiBold" Click="BtnCash_Click"/>
+                <Button x:Name="BtnTransfer" Content="Chuyển khoản" Width="260" Height="40" Margin="0,6" Background="#0EA5A4" Foreground="White" FontWeight="SemiBold" Click="BtnTransfer_Click"/>
+            </StackPanel>
+
+            <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,8,0,0">
+                <Button Content="Huỷ" Width="80" Height="30" Margin="0,0,8,0" Click="BtnCancel_Click"/>
+            </StackPanel>
+        </Grid>
+    </Border>
+</Window>

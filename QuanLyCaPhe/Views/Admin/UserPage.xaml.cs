@@ -161,7 +161,7 @@ namespace QuanLyCaPhe.Views.Admin
                         }
                         else
                         {
-                            if (UserDAO.Instance.InsertUser(item.FullName, item.Email, item.Phone, item.Address, item.Gender, Constants.DEFAULT_PASSWORD, item.RoleName, item.HourlyWage))
+                            if (UserDAO.Instance.InsertUser(item.FullName, item.Email, item.Phone, item.Address, item.Gender, DataAccess.Constants.DEFAULT_PASSWORD, item.RoleName, item.HourlyWage))
                                 countAdd++;
                         }
                     }

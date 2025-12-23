@@ -1,4 +1,5 @@
-﻿using Microsoft.Win32;
+﻿
+using Microsoft.Win32;
 using QuanLyCaPhe.DAO;
 using QuanLyCaPhe.Helpers;
 using QuanLyCaPhe.Models;
@@ -7,6 +8,7 @@ using QuanLyCaPhe.Views.Components; // [QUAN TRỌNG] Import component
 using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
+using QuanLyCaPhe.Services;
 
 namespace QuanLyCaPhe.Views.Admin
 {
@@ -71,6 +73,16 @@ namespace QuanLyCaPhe.Views.Admin
             {
                 if (BillDAO.Instance.DeleteBill(selectedBill.Id))
                 {
+                    // Record activity of deletion so Activities/Recent list updates
+                    try
+                    {
+                        GlobalService.RecordActivity("Delete", "Xóa hóa đơn", $"Đã xóa hóa đơn #{selectedBill.Id}");
+                    }
+                    catch
+                    {
+                        // Swallow to avoid breaking UI if logging fails
+                    }
+
                     // [FIXED] Dùng JetMoonMessageBox - Success
                     JetMoonMessageBox.Show("Đã xóa hóa đơn.", "Thành công", MsgType.Success);
                     LoadData();
