@@ -212,8 +212,9 @@ namespace QuanLyCaPhe.DAO
         // --- Xóa ---
         public bool DeleteUser(int id)
         {
-            string query = "DELETE FROM Users WHERE Id = @id";
-            return DBHelper.ExecuteNonQuery(query, new SqlParameter[] { new SqlParameter("@id", id) }) >0;
+            string query = "UPDATE Users SET IsActive = 0 WHERE Id = @id";
+
+            return DBHelper.ExecuteNonQuery(query, new SqlParameter[] { new SqlParameter("@id", id) }) > 0;
         }
     }
 }
