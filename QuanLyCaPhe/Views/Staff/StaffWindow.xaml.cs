@@ -1161,35 +1161,68 @@ namespace QuanLyCaPhe.Views.Staff
         // Show an inline dialog with the QR image. Returns true if user confirmed payment.
         private bool ShowVietQrDialog(string url, int amount, string addInfo, string accountName)
         {
-            // Build UI dynamically
+            // 1. Khởi tạo Window với Background từ Resource
             var win = new Window()
             {
-                Title = "VietQR - Quét để thanh toán",
-                Width = 420,
-                Height = 560,
-                WindowStartupLocation = WindowStartupLocation.CenterOwner,
+                Title = "Thanh toán VietQR",
+                Width = 450,
+                Height = 600,
+                WindowStartupLocation = WindowStartupLocation.CenterScreen,
                 ResizeMode = ResizeMode.NoResize,
-                Owner = this
+                Owner = this,
+                Background = (System.Windows.Media.Brush)Application.Current.FindResource("CardBackground"),
+                BorderBrush = (System.Windows.Media.Brush)Application.Current.FindResource("PrimaryColor"),
+                BorderThickness = new Thickness(1)
             };
 
-            var panel = new StackPanel() { Margin = new Thickness(10) };
+            var panel = new StackPanel() { Margin = new Thickness(20) };
 
-            var txt = new TextBlock()
+            var txtTitle = new TextBlock()
             {
-                Text = $"Quét mã QR để thanh toán: {amount} VNĐ\n{addInfo}\nNgười nhận: {accountName}",
-                TextWrapping = TextWrapping.Wrap,
-                Margin = new Thickness(0, 0, 0, 8)
+                Text = "QUÉT MÃ ĐỂ THANH TOÁN",
+                FontSize = 22,
+                FontWeight = FontWeights.Bold,
+                HorizontalAlignment = HorizontalAlignment.Center,
+                Foreground = (System.Windows.Media.Brush)Application.Current.FindResource("TextPrimary"),
+                Margin = new Thickness(0, 0, 0, 10)
             };
-            panel.Children.Add(txt);
+            panel.Children.Add(txtTitle);
+
+            var txtInfo = new TextBlock()
+            {
+                Text = $"Số tiền: {amount:N0} VNĐ\nNội dung: {addInfo}\nNgười nhận: {accountName}",
+                TextWrapping = TextWrapping.Wrap,
+                FontSize = 14,
+                TextAlignment = TextAlignment.Center,
+                HorizontalAlignment = HorizontalAlignment.Center,
+                Foreground = (System.Windows.Media.Brush)Application.Current.FindResource("TextSecondary"),
+                Margin = new Thickness(0, 0, 0, 15)
+            };
+            panel.Children.Add(txtInfo);
+
+            var qrBorder = new Border()
+            {
+                BorderBrush = (System.Windows.Media.Brush)Application.Current.FindResource("BorderLight"),
+                BorderThickness = new Thickness(1),
+                CornerRadius = new CornerRadius(12), // Bo góc
+                Padding = new Thickness(10),
+                Background = System.Windows.Media.Brushes.White,
+                HorizontalAlignment = HorizontalAlignment.Center,
+                Margin = new Thickness(0, 0, 0, 20),
+                Effect = new System.Windows.Media.Effects.DropShadowEffect()
+                {
+                    Color = System.Windows.Media.Colors.Gray,
+                    BlurRadius = 15,
+                    Opacity = 0.2,
+                    ShadowDepth = 3
+                }
+            };
 
             var img = new System.Windows.Controls.Image()
             {
-                Width = 380,
-                Height = 380,
-                Stretch = System.Windows.Media.Stretch.Uniform,
-                HorizontalAlignment = HorizontalAlignment.Center,
-                VerticalAlignment = VerticalAlignment.Center,
-                Margin = new Thickness(0, 0, 0, 8)
+                Width = 300,
+                Height = 300,
+                Stretch = System.Windows.Media.Stretch.Uniform
             };
 
             try
@@ -1203,19 +1236,44 @@ namespace QuanLyCaPhe.Views.Staff
             }
             catch
             {
-                // If image fails to load, show a placeholder text
-                panel.Children.Add(new TextBlock() { Text = "Không thể tải hình QR. Vui lòng kiểm tra mạng hoặc URL.", Foreground = System.Windows.Media.Brushes.Red });
+                panel.Children.Add(new TextBlock()
+                {
+                    Text = "Lỗi tải ảnh QR!",
+                    Foreground = System.Windows.Media.Brushes.Red,
+                    HorizontalAlignment = HorizontalAlignment.Center
+                });
             }
 
-            panel.Children.Add(img);
+            qrBorder.Child = img;
+            panel.Children.Add(qrBorder);
 
-            var btnPanel = new StackPanel() { Orientation = Orientation.Horizontal, HorizontalAlignment = HorizontalAlignment.Center };
-            var btnConfirm = new Button() { Content = "Đã thanh toán", Width = 120, Margin = new Thickness(6) };
-            var btnCancel = new Button() { Content = "Hủy", Width = 120, Margin = new Thickness(6) };
-            btnPanel.Children.Add(btnConfirm);
+            var btnPanel = new StackPanel()
+            {
+                Orientation = Orientation.Horizontal,
+                HorizontalAlignment = HorizontalAlignment.Center
+            };
+
+            var btnCancel = new Button()
+            {
+                Content = "Hủy bỏ",
+                Width = 120,
+                Margin = new Thickness(10, 0, 10, 0),
+                Style = (Style)Application.Current.FindResource("GlassDeleteButtonStyle")
+            };
+
+            var btnConfirm = new Button()
+            {
+                Content = "Đã thanh toán",
+                Width = 140,
+                Margin = new Thickness(10, 0, 10, 0),
+                Style = (Style)Application.Current.FindResource("GlassButtonStyle")
+            };
+
             btnPanel.Children.Add(btnCancel);
+            btnPanel.Children.Add(btnConfirm);
             panel.Children.Add(btnPanel);
 
+            // Logic sự kiện
             bool result = false;
             btnConfirm.Click += (s, e) =>
             {
