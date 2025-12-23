@@ -76,5 +76,11 @@ namespace QuanLyCaPhe.Views.Login
         {
             Application.Current.Shutdown();
         }
+
+        private void BtnForgotPassword_Click(object sender, RoutedEventArgs e)
+        {
+            var forgotWindow = new QuanLyCaPhe.Views.Login.ForgotPasswordWindow();
+            forgotWindow.ShowDialog();
+        }
     }
 }
