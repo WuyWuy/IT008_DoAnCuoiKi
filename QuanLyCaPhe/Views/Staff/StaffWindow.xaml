@@ -185,6 +185,16 @@
 
 
                             </ComboBox>
+                            
+                            <!-- F5 Button -->
+                            <Button Grid.Row="1" 
+                                    Click="BtnRefresh_Click"
+                                    HorizontalAlignment="Right" VerticalAlignment="Center"
+                                    Style="{StaticResource GlassButtonStyle}"
+                                    Width="40" Height="36" Margin="0,0,10,0"
+                                    ToolTip="Cập nhật danh sách bàn từ hệ thống">
+                                <TextBlock Text="&#xE72C;" FontFamily="Segoe MDL2 Assets" FontSize="14" FontWeight="Bold"/>
+                            </Button>
                             <!-- Blank Line-->
                             <Border Grid.Row="1" Style="{StaticResource RunningGlowBorderStyle}" 
                                     Width="360" Height="0.6" 

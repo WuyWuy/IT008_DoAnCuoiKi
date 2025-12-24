@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:QuanLyCaPhe.Views.Admin"
         mc:Ignorable="d"
         Title="AdminWindow"
-        MinHeight="650" MinWidth="1000"
+        MinHeight="700" MinWidth="1000"
         WindowStyle="SingleBorderWindow"
         Background="{StaticResource AppBackground}">
     <Grid>
@@ -50,6 +50,12 @@
 
                 <Button x:Name="Profitbtn" Content="Doanh thu" Tag="&#xE9D9;"
                 Style="{StaticResource AdminButtonStyle}" Click="Profitbtn_Click"/>
+
+                <Button x:Name="Tablebtn" Content="Bàn phục vụ" Tag="&#xE91B;"
+                Style="{StaticResource AdminButtonStyle}" Click="Tablebtn_Click"/>
+
+                <Button x:Name="Paymentbtn" Content="Thanh toán" Tag="&#xE8C7;"
+                Style="{StaticResource AdminButtonStyle}" Click="Paymentbtn_Click"/>
 
             </StackPanel>
 

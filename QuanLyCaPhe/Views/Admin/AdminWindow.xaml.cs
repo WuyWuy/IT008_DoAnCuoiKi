@@ -54,7 +54,6 @@ namespace QuanLyCaPhe.Views.Admin
             }
         }
 
-        // ... (Các hàm điều hướng giữ nguyên) ...
         private void Homebtn_Click(object sender, RoutedEventArgs e) { MainFrame.Navigate(new HomePage()); }
         private void Prodbtn_Click(object sender, RoutedEventArgs e) { MainFrame.Navigate(new ProductsPage()); }
         private void Ingredbtn_Click(object sender, RoutedEventArgs e) { MainFrame.Navigate(new IngredientPage()); }
@@ -63,6 +62,8 @@ namespace QuanLyCaPhe.Views.Admin
         private void Billbtn_Click(object sender, RoutedEventArgs e) { MainFrame.Navigate(new BillsPage()); }
         private void Timelbtn_Click(object sender, RoutedEventArgs e) { MainFrame.Navigate(new SchedulePage()); }
         private void Profitbtn_Click(object sender, RoutedEventArgs e) { MainFrame.Navigate(new ProfitPage()); }
+        private void Tablebtn_Click(object sender, RoutedEventArgs e) { MainFrame.Navigate(new TablePage()); }
+        private void Paymentbtn_Click(object sender, RoutedEventArgs e) { MainFrame.Navigate(new PaymentPage()); }
 
         // [FIX] SỬA LẠI HÀM NÀY
         private void Menubtn_Click(object sender, RoutedEventArgs e)
@@ -122,5 +123,6 @@ namespace QuanLyCaPhe.Views.Admin
             loginWindow.Show();
             this.Close();
         }
+
     }
 }

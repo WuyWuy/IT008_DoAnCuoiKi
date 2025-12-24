@@ -598,9 +598,9 @@ namespace QuanLyCaPhe.Views.Staff
 
             // Require both time and at least one drink before allowing payment
             int hours = GetSelectedHoursFromRadioButtons();
-            if (hours <= 0)
+            if (hours <= 0 && selectedTable.Countdown == 0)
             {
-                JetMoonMessageBox.Show("Vui lòng chọn số giờ (gói giờ) trước khi thanh toán!", "Quy trình Order", MsgType.Warning, true);
+                JetMoonMessageBox.Show("Vui lòng chọn số giờ (gói giờ) trước khi thanh toán!", "Quy trình Order", MsgType.Warning, false);
                 return;
             }
 
@@ -656,28 +656,42 @@ namespace QuanLyCaPhe.Views.Staff
                 // If transfer chosen, show VietQR (modal). Do NOT touch the table UI yet.
                 if (string.Equals(chosenMethod, "Chuyển khoản", StringComparison.OrdinalIgnoreCase))
                 {
+                    // [MỚI] Lấy thông tin tài khoản đang kích hoạt từ CSDL
+                    var activeAcc = PaymentAccountDAO.Instance.GetActiveAccount();
+
+                    if (activeAcc == null)
+                    {
+                        JetMoonMessageBox.Show("Chưa cấu hình tài khoản nhận tiền trong Admin!", "Lỗi cấu hình", MsgType.Error);
+                        return;
+                    }
+
                     decimal totalAmount = _currentSum + _selectedHourPrice;
                     int amountInt = Convert.ToInt32(totalAmount);
+
+                    // Lấy số hóa đơn tiếp theo để làm nội dung CK
                     int nextBillNumber = 1;
                     try
                     {
                         var bills = BillDAO.Instance.GetListBills();
                         if (bills != null) nextBillNumber = bills.Count + 1;
                     }
-                    catch { nextBillNumber = 1; }
+                    catch { }
 
                     string addInfo = $"Thanh toán hóa đơn {nextBillNumber}";
-                    string accountName = "Nguyễn Huy";
 
-                    string quickLink = "https://img.vietqr.io/image/970415-107875046252-compact2.png";
-                    string url = BuildVietQrUrl(quickLink, amountInt, addInfo, accountName);
+                    // [MỚI] Tạo Link QR động từ dữ liệu DB
+                    // Format: https://img.vietqr.io/image/<BANK_BIN>-<ACCOUNT_NO>-<TEMPLATE>.png
+                    string quickLinkBase = $"https://img.vietqr.io/image/{activeAcc.BankBin}-{activeAcc.AccountNumber}-{activeAcc.Template}.png";
 
-                    bool confirmed = ShowVietQrDialog(url, amountInt, addInfo, accountName);
+                    // Build URL đầy đủ với số tiền và nội dung
+                    string url = BuildVietQrUrl(quickLinkBase, amountInt, addInfo, activeAcc.AccountName);
+
+                    // Hiển thị mã QR
+                    bool confirmed = ShowVietQrDialog(url, amountInt, addInfo, activeAcc.AccountName);
 
                     if (!confirmed)
                     {
-                        // User cancelled. Do not modify table UI, do not deduct inventory.
-                        return;
+                        return; // Khách hủy thanh toán
                     }
 
                     // User confirmed payment (clicked "Đã thanh toán") — proceed to save bill.
@@ -1108,44 +1122,134 @@ namespace QuanLyCaPhe.Views.Staff
             }
         }
 
+        private void BtnRefresh_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                // 1. Lưu lại ID bàn đang chọn (nếu có) để sau khi refresh chọn lại nó
+                int selectedId = -1;
+                if (lbTables.SelectedItem is Table current)
+                {
+                    selectedId = current.Id;
+                }
+
+                // 2. Gọi lại hàm load dữ liệu (Hàm này phải là phiên bản load từ DB nha)
+                InitializeTables();
+
+                // 3. Gán lại nguồn dữ liệu cho ListBox (vì InitializeTables tạo list mới)
+                lbTables.ItemsSource = Tables;
+
+                // 4. Khôi phục lại lựa chọn cũ
+                if (selectedId != -1)
+                {
+                    var t = Tables.FirstOrDefault(x => x.Id == selectedId);
+                    if (t != null)
+                    {
+                        lbTables.SelectedItem = t;
+                        // Nếu bàn đang chọn vẫn còn (chưa bị xóa), giữ trạng thái Selected
+                        if (t.Status == "Free") t.Status = "Selected";
+                        else if (t.Status == "Busy") t.Status = "Selected Busy";
+                    }
+                    else
+                    {
+                        // Nếu bàn đang chọn bị Admin xóa rồi -> Chọn bàn trống đầu tiên
+                        SelectFirstFreeTable();
+                    }
+                }
+                else
+                {
+                    SelectFirstFreeTable();
+                }
+
+                JetMoonMessageBox.Show("Đã cập nhật danh sách bàn mới nhất!", "Thành công", MsgType.Success);
+            }
+            catch (Exception ex)
+            {
+                JetMoonMessageBox.Show("Lỗi cập nhật: " + ex.Message, "Lỗi", MsgType.Error);
+            }
+        }
+
         private void InitializeTables()
         {
+            // 1. Tải danh sách bàn gốc từ CSDL (Chứa Tên, IsActive, Note)
+            var dbTables = new List<Table>();
+            try
+            {
+                // Load tất cả, sau đó chỉ lấy bàn Active
+                dbTables = TableDAO.Instance.LoadTableList().Where(t => t.IsActive).OrderBy(t => t.Id).ToList();
+            }
+            catch
+            {
+                // Fallback nếu mất kết nối DB: Tạo dữ liệu giả
+                dbTables = Enumerable.Range(1, 12).Select(i => new Table
+                {
+                    Id = i,
+                    Name = $"Bàn {i}",
+                    Status = "Free",
+                    IsActive = true,
+                    Note = "Mất kết nối CSDL"
+                }).ToList();
+            }
+
+            // 2. Đọc trạng thái runtime (Busy/Timer) từ file JSON (nếu app bị tắt đột ngột)
+            List<TableState> savedStates = null;
             if (File.Exists(_tablesStatePath))
             {
                 try
                 {
                     var json = File.ReadAllText(_tablesStatePath);
-                    var states = JsonSerializer.Deserialize<List<TableState>>(json);
-                    if (states != null && states.Count > 0)
-                    {
-                        Tables = new ObservableCollection<Table>(
-                            states.Select(s =>
-                            {
-                                var t = new Table { Id = s.Id, Name = s.Name, Status = s.Status, EndTimeUtc = s.EndTimeUtc };
-                                if (s.EndTimeUtc.HasValue)
-                                    t.Countdown = (int)Math.Max(0, (s.EndTimeUtc.Value - DateTime.UtcNow).TotalSeconds);
-                                else
-                                    t.Countdown = 0;
-                                return t;
-                            }).OrderBy(t => t.Id)
-                        );
-                        return;
-                    }
+                    savedStates = JsonSerializer.Deserialize<List<TableState>>(json);
                 }
                 catch { }
             }
 
-            // Default
-            Tables = new ObservableCollection<Table>(
-                Enumerable.Range(1, 12).Select(i => new Table { Id = i, Name = $"Bàn {i}", Status = "Free", Countdown = 0 })
-            );
+            // 3. Ghép trạng thái từ JSON vào danh sách bàn từ DB
+            if (savedStates != null && savedStates.Count > 0)
+            {
+                foreach (var table in dbTables)
+                {
+                    // Tìm trạng thái lưu cũ của bàn này
+                    var savedState = savedStates.FirstOrDefault(s => s.Id == table.Id);
+                    if (savedState != null)
+                    {
+                        table.Status = savedState.Status;
+                        table.EndTimeUtc = savedState.EndTimeUtc;
+
+                        // Tính lại countdown
+                        if (table.EndTimeUtc.HasValue)
+                        {
+                            table.Countdown = (int)Math.Max(0, (table.EndTimeUtc.Value - DateTime.UtcNow).TotalSeconds);
+                            // Nếu hết giờ mà chưa thanh toán, vẫn giữ status Busy (hoặc xử lý tùy logic quán)
+                            if (table.Countdown == 0 && table.Status == "Busy")
+                            {
+                                // Có thể đổi màu cảnh báo ở đây nếu muốn
+                            }
+                        }
+                        else
+                        {
+                            table.Countdown = 0;
+                        }
+                    }
+                    else
+                    {
+                        // Nếu không có trạng thái lưu, mặc định là Free
+                        table.Status = "Free";
+                        table.Countdown = 0;
+                    }
+                }
+            }
+
+            // 4. Đưa vào ObservableCollection để hiển thị lên giao diện
+            Tables = new ObservableCollection<Table>(dbTables);
         }
 
         private void SaveTablesState()
         {
             try
             {
-                var states = Tables.Select(t => new TableState(t.Id, t.Name ?? $"Bàn {t.Id}", t.Status, t.EndTimeUtc)).ToList();
+                // Chỉ lưu trạng thái runtime (Id, Status, Time)
+                // Không cần lưu Name hay Note vì cái đó DB quản lý rồi
+                var states = Tables.Select(t => new TableState(t.Id, t.Name, t.Status, t.EndTimeUtc)).ToList();
                 var json = JsonSerializer.Serialize(states, new JsonSerializerOptions { WriteIndented = true });
                 File.WriteAllText(_tablesStatePath, json);
             }

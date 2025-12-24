@@ -17,9 +17,9 @@
 
         <Grid.RowDefinitions>
             <RowDefinition Height="15*"/>
-            <RowDefinition Height="15*"/>
-            <RowDefinition Height="15*"/>
-            <RowDefinition Height="65*"/>
+            <RowDefinition Height="20*"/>
+            <RowDefinition Height="20*"/>
+            <RowDefinition Height="55*"/>
         </Grid.RowDefinitions>
 
         <!--________________________________ Trang chủ __________________________________-->
@@ -37,8 +37,8 @@
                 </StackPanel>
             </Grid>
         </Border>
-        <!--________________________________Panel Chào mừng________________________________-->
-        <Border Grid.Row="1" Grid.Column="0" Grid.RowSpan="3" 
+        <!--________________________________Panel Hoạt động________________________________-->
+        <Border Grid.Row="3" Grid.Column="0" Grid.RowSpan="2" 
                 Width="auto" 
                 Padding="0" Margin="10, 5"
                 Background="White"
@@ -142,8 +142,18 @@
             </Grid>
         </Border>
 
-        <!--________________________________Panel ff________________________________-->
-        <Border Grid.Row="3" Grid.Column="1" Grid.RowSpan="2" Grid.ColumnSpan="2"
+        <!--________________________________Panel Hoạt động________________________________-->
+        <Border Grid.Row="1" Grid.Column="0" Grid.RowSpan="2" 
+        Width="auto" 
+        
+        Padding="0" Margin="10, 5"
+        Background="White"
+        Style="{StaticResource DynamicGlassStyle}">
+            <Frame x:Name="TopFrame" Margin="1"/>
+        </Border>
+
+        <!--________________________________Panel Cảnh báo________________________________-->
+        <Border Grid.Row="5" Grid.Column="1" Grid.RowSpan="2" Grid.ColumnSpan="2"
                 Padding="10"
                 Margin="10"
                 Background="White" Opacity="1"

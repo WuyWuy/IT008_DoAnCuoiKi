@@ -70,6 +70,16 @@ namespace QuanLyCaPhe.Helpers
                     { "HourlyWage", "Lương giờ" }
                 };
             }
+            else if (typeof(T) == typeof(Table))
+            {
+                return new Dictionary<string, string>
+                {
+                    { "Id", "STT" },
+                    { "Name", "Tên Bàn" },       
+                    { "IsActive", "Hoạt động" },
+                    { "Note", "Ghi chú" }
+                };
+            }
             return null;
         }
 

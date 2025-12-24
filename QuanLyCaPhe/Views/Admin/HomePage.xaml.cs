@@ -51,6 +51,7 @@ namespace QuanLyCaPhe.Views.Admin
             LoadOverviewData();
             ActivityFrame.Navigate(new ActivitiesPage());
             WarningFrame.Navigate(new WarningsPage());
+            TopFrame.Navigate(new TopProductPage());
 
 
         }
@@ -153,6 +154,8 @@ namespace QuanLyCaPhe.Views.Admin
                 LoadOverviewData();
                 ActivityFrame.Navigate(new ActivitiesPage());
                 WarningFrame.Navigate(new WarningsPage());
+                TopFrame.Navigate(new TopProductPage());
+
             }
             catch
             {

@@ -48,7 +48,9 @@ CREATE TABLE TableCoffees
 (
     Id INT IDENTITY(1,1) PRIMARY KEY,
     TableName NVARCHAR(50) NOT NULL,
-    Status NVARCHAR(20) DEFAULT N'Trống'   -- 'Trống', 'Có người'
+    Status NVARCHAR(20) DEFAULT 'Free', -- Lưu ý: Nên để 'Free' để khớp với code C#
+    IsActive BIT DEFAULT 1,             -- 1: Hoạt động, 0: Ngưng sử dụng
+    Note NVARCHAR(MAX) DEFAULT ''       -- Ghi chú (ví dụ: "Gãy chân", "Đã đặt trước")
 );
 GO
 
@@ -155,6 +157,17 @@ CREATE TABLE InputInfos
 );
 GO
 
+CREATE TABLE PaymentAccounts (
+    Id INT IDENTITY(1,1) PRIMARY KEY,
+    BankName NVARCHAR(100) NOT NULL, -- Ví dụ: VietinBank
+    BankBin NVARCHAR(20) NOT NULL,   -- Ví dụ: 970415
+    AccountNumber NVARCHAR(50) NOT NULL, -- Số tài khoản
+    AccountName NVARCHAR(100) NOT NULL,  -- Tên chủ tài khoản
+    Template NVARCHAR(20) DEFAULT 'compact2', -- Mẫu QR (print, compact2...)
+    IsActive BIT DEFAULT 0 -- 1 là đang dùng, 0 là không dùng
+);
+GO
+
 -- Bảng 10: Activities
 CREATE TABLE Activities (
     Id INT IDENTITY(1,1) PRIMARY KEY,
@@ -252,49 +265,9 @@ INSERT INTO Recipes (ProId, IngId, Amount) VALUES
 (9,10,150.0);
 GO
 
-USE QuanLyCaPhe
-GO
-
--- KHAI BÁO BIẾN ĐỂ LƯU ID HÓA ĐƠN VỪA TẠO
-DECLARE @NewBillId INT;
-
--- 1. TẠO HÓA ĐƠN (BILLS)
--- Giả sử: Bàn ID 1, Nhân viên ID 1, Giảm giá 10%, Trạng thái 1 (Đã thanh toán)
-INSERT INTO Bills (DateCheckIn, DateCheckOut, Status, Discount, TotalPrice, TableId, UserId)
-VALUES (
-    GETDATE(),              -- Giờ vào: Bây giờ
-    DATEADD(minute, 45, GETDATE()), -- Giờ ra: 45 phút sau
-    1,                      -- Status: 1 (Đã thanh toán)
-    10,                     -- Discount: 10%
-    0,                      -- TotalPrice: Tạm để 0, lát tính sau
-    1,                      -- TableId: 1
-    1                       -- UserId: 1
-);
-
--- Lấy ID của hóa đơn vừa insert
-SET @NewBillId = SCOPE_IDENTITY();
-
--- 2. THÊM MÓN ĂN VÀO CHI TIẾT (BILLINFOS)
--- Món 1: ID 1 (Cà phê đen), Số lượng: 2 ly
-INSERT INTO BillInfos (BillId, ProId, Count) VALUES (@NewBillId, 1, 2);
-
--- Món 2: ID 3 (Bạc xỉu), Số lượng: 1 ly
-INSERT INTO BillInfos (BillId, ProId, Count) VALUES (@NewBillId, 3, 1);
-
--- 3. CẬP NHẬT LẠI TỔNG TIỀN (TOTALPRICE) CHO BILL
--- Logic: (Tổng tiền món) - (Giảm giá %)
-UPDATE Bills
-SET TotalPrice = (
-    SELECT SUM(p.Price * bi.Count) 
-    FROM BillInfos bi
-    JOIN Products p ON bi.ProId = p.Id
-    WHERE bi.BillId = @NewBillId
-) * (100 - Discount) / 100
-WHERE Id = @NewBillId;
-
--- 4. HIỂN THỊ KẾT QUẢ ĐỂ KIỂM TRA
-SELECT * FROM Bills WHERE Id = @NewBillId;
-SELECT * FROM BillInfos WHERE BillId = @NewBillId;
+-- Thêm một tài khoản mẫu
+INSERT INTO PaymentAccounts (BankName, BankBin, AccountNumber, AccountName, IsActive)
+VALUES (N'VietinBank', '970415', '107875046252', 'NGUYEN HUY', 1);
 
 
 
