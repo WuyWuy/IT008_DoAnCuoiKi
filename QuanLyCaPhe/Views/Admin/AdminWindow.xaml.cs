@@ -34,19 +34,45 @@ namespace QuanLyCaPhe.Views.Admin
 
         private void HandleGlobalActivity(QuanLyCaPhe.Models.Activity act)
         {
-            // If activity type indicates a delete of staff, refresh HomePage overview counters
+            // Handle various activities: staff deletion (existing), and product-related activities (added/updated/deleted)
             try
             {
-                if (act != null && act.ActivityType == "Delete" && act.Description.Contains("nhân viên"))
+                if (act == null) return;
+
+                // Run UI updates on dispatcher
+                Dispatcher.Invoke(() =>
                 {
-                    Dispatcher.Invoke(() =>
+                    // Existing logic: when staff deleted, refresh HomePage overview
+                    if (act.ActivityType == "Delete" && act.Description?.Contains("nhân viên") == true)
                     {
                         if (MainFrame.Content is HomePage home)
                         {
                             home.RefreshOverview();
                         }
-                    });
-                }
+                    }
+
+                    // New: product activities -> refresh overview and products list when required
+                    // We accept either a dedicated ActivityType "Product" or any activity whose description mentions "món" (case-insensitive)
+                    bool isProductActivity = string.Equals(act.ActivityType, "Product", StringComparison.OrdinalIgnoreCase)
+                                             || (act.ActivityType != null && act.ActivityType.IndexOf("món", StringComparison.OrdinalIgnoreCase) >= 0)
+                                             || (act.Description != null && act.Description.IndexOf("món", StringComparison.OrdinalIgnoreCase) >= 0);
+
+                    if (isProductActivity)
+                    {
+                        // Refresh HomePage counters (product count etc.)
+                        if (MainFrame.Content is HomePage hp)
+                        {
+                            hp.RefreshOverview();
+                        }
+
+                        // If admin currently viewing ProductsPage, refresh it by navigating to a new instance
+                        // (This keeps the UI in sync after imports / edits / deletes)
+                        if (MainFrame.Content is ProductsPage)
+                        {
+                            MainFrame.Navigate(new ProductsPage());
+                        }
+                    }
+                });
             }
             catch
             {
@@ -90,7 +116,7 @@ namespace QuanLyCaPhe.Views.Admin
             Sidebar.BeginAnimation(FrameworkElement.WidthProperty, widthAnimation);
             Sidebar.BeginAnimation(UIElement.OpacityProperty, opacityAnimation);
 
-            if (! _isSidebarOpen)
+            if (!_isSidebarOpen)
                 Logoutbtn.HorizontalAlignment = HorizontalAlignment.Center;
             else
                 Logoutbtn.HorizontalAlignment = HorizontalAlignment.Right;

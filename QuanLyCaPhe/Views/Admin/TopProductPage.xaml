@@ -64,10 +64,7 @@
                                     <TextBlock Text="{Binding Name}" 
                                                FontWeight="SemiBold" Foreground="#1E1B4B" FontSize="14" 
                                                TextTrimming="CharacterEllipsis"/>
-
-                                    <Border Height="4" CornerRadius="2" Background="#F1F5F9" Margin="0,4,20,0" HorizontalAlignment="Stretch">
-                                        <Border HorizontalAlignment="Left" Width="40" CornerRadius="2" Background="{StaticResource PrimaryColor}"/>
-                                    </Border>
+                                    <!-- progress bar removed per request -->
                                 </StackPanel>
 
                                 <Border Grid.Column="2" 

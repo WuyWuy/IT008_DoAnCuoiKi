@@ -19,7 +19,7 @@
             <Setter Property="Height" Value="72"/>
         </Style>
     </Page.Resources>
-    
+
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="0.15*"/>
@@ -73,7 +73,10 @@
                     <TextBlock Text="TỔNG CHI" Margin="5, 0"/>
                     <TextBlock x:Name="TotalExpenseText" 
                                Margin="5, 10"
-                               Text="0đ" FontSize="24"/>
+                               Text="0đ" FontSize="24"
+                               Cursor="Hand"
+                               ToolTip="Click để xem chi tiết (lương nhân viên, phiếu nhập)"
+                               MouseLeftButtonUp="TotalExpenseText_MouseLeftButtonUp"/>
                 </StackPanel>
             </Border>
 

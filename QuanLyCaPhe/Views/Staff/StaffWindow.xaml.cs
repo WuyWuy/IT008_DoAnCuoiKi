@@ -552,12 +552,7 @@ namespace QuanLyCaPhe.Views.Staff
 
             iudAmmount.Value = 1; // Reset về 1
 
-            // [ĐÃ SỬA LỖI] Ghi log hoạt động đúng cú pháp
-            QuanLyCaPhe.Services.GlobalService.RecordActivity(
-                "Order",
-                $"Order mới: {selectedTable?.Name ?? "Khách mang về"}",
-                $"{d.Name} - Số lượng: {amount}" // Dùng biến d.Name và amount có sẵn
-            );
+            // NOTE: Activity logging moved to purchase completion (Button_Click_1)
         }
 
         private void btnDelete_Click(object sender, RoutedEventArgs e)
@@ -591,12 +586,13 @@ namespace QuanLyCaPhe.Views.Staff
         }
 
         // --- LOGIC THANH TOÁN (PURCHASE) ---
+
         private async void Button_Click_1(object sender, RoutedEventArgs e)
         {
             var selectedTable = lbTables.SelectedItem as Table;
             if (selectedTable == null) return;
 
-            // Require both time and at least one drink before allowing payment
+            // Require time selection when table currently has no countdown and no hours chosen
             int hours = GetSelectedHoursFromRadioButtons();
             if (hours <= 0 && selectedTable.Countdown == 0)
             {
@@ -604,10 +600,17 @@ namespace QuanLyCaPhe.Views.Staff
                 return;
             }
 
-            if (OrderList == null || OrderList.Count == 0 || _currentSum <= 0)
+            bool hasDrinks = OrderList != null && OrderList.Count > 0 && _currentSum > 0;
+
+            // Allow purchasing extra hours without ordering drinks only when the selected table is "Selected Busy"
+            if (!hasDrinks)
             {
-                JetMoonMessageBox.Show("Vui lòng chọn món trước khi thanh toán!", "Quy trình Order", MsgType.Warning, true);
-                return;
+                bool isAddingHoursToBusySelected = selectedTable.Status == "Selected Busy" && hours > 0;
+                if (!isAddingHoursToBusySelected)
+                {
+                    JetMoonMessageBox.Show("Vui lòng chọn món trước khi thanh toán!", "Quy trình Order", MsgType.Warning, true);
+                    return;
+                }
             }
 
             // Ask user for payment method (modal) using ShowOptions (returns chosen label or null)
@@ -710,6 +713,37 @@ namespace QuanLyCaPhe.Views.Staff
                 if (_currentSum > 0)
                 {
                     DeductIngredientsForOrderList();
+                }
+
+                // Record activity for Admin view: only when transaction is completed (bill saved)
+                try
+                {
+                    // Build activity message
+                    string activityTitle = "Order";
+                    string activityTarget = $"Order mới: {selectedTable?.Name ?? "Khách mang về"}";
+
+                    // Compose detail lines: product list and/or hours info
+                    var details = new List<string>();
+                    if (_currentSum > 0 && OrderList != null && OrderList.Count > 0)
+                    {
+                        foreach (var it in OrderList)
+                        {
+                            int qty = ParseIntFromFormatted(it.Quantity);
+                            details.Add($"{it.Name} - Số lượng: {qty}");
+                        }
+                    }
+                    if (hours > 0)
+                    {
+                        details.Add($"Gói giờ: {hours} giờ - {FormatCurrency(_selectedHourPrice)}");
+                    }
+
+                    string activityDetail = details.Count > 0 ? string.Join(", ", details) : "Thanh toán giờ";
+
+                    QuanLyCaPhe.Services.GlobalService.RecordActivity(activityTitle, activityTarget, activityDetail);
+                }
+                catch
+                {
+                    // Swallow activity logging errors to avoid breaking the payment flow
                 }
 
                 // Now apply the UI change (table becomes Busy and timer starts)

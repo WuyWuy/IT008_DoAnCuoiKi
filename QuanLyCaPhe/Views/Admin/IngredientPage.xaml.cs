@@ -135,10 +135,28 @@ namespace QuanLyCaPhe.Views.Admin
                 {
                     List<Ingredient> importedList = ExcelHelper.ImportList<Ingredient>(ofd.FileName);
 
+                    // Validate format / contract before processing
+                    if (!ValidateImportedIngredients(importedList, out var validationError))
+                    {
+                        JetMoonMessageBox.Show(
+                            validationError,
+                            "Lỗi định dạng Excel",
+                            MsgType.Error);
+                        return;
+                    }
+
+                    // Remove any fully empty rows (defensive)
+                    var cleaned = new List<Ingredient>();
+                    foreach (var it in importedList)
+                    {
+                        if (!string.IsNullOrWhiteSpace(it?.IngName))
+                            cleaned.Add(it);
+                    }
+
                     int countAdd = 0;
                     int countUpdate = 0;
 
-                    foreach (var item in importedList)
+                    foreach (var item in cleaned)
                     {
                         string excelName = item.IngName.Trim();
                         int existingId = IngredientDAO.Instance.GetIdByName(excelName);
@@ -166,6 +184,68 @@ namespace QuanLyCaPhe.Views.Admin
                     JetMoonMessageBox.Show("Lỗi Import: " + ex.Message, "Lỗi", MsgType.Error);
                 }
             }
+        }
+
+        private bool ValidateImportedIngredients(List<Ingredient> importedList, out string error)
+        {
+            error = string.Empty;
+
+            // Basic checks
+            if (importedList == null || importedList.Count == 0)
+            {
+                error = "Không tìm thấy dữ liệu trong file Excel. Vui lòng kiểm tra lại định dạng.\n" +
+                        "Yêu cầu: file phải chứa các cột tương ứng với thuộc tính model: 'IngName', 'Unit', 'Quantity'.";
+                return false;
+            }
+
+            int total = importedList.Count;
+            int missingName = 0;
+            int missingUnit = 0;
+            int invalidQuantityCount = 0;
+
+            for (int i = 0; i < importedList.Count; i++)
+            {
+                var row = importedList[i];
+                if (row == null)
+                {
+                    missingName++;
+                    missingUnit++;
+                    invalidQuantityCount++;
+                    continue;
+                }
+
+                if (string.IsNullOrWhiteSpace(row.IngName)) missingName++;
+                if (string.IsNullOrWhiteSpace(row.Unit)) missingUnit++;
+
+                // Quantity can be zero legitimately; check for obviously invalid values (NaN)
+                if (double.IsNaN(row.Quantity))
+                    invalidQuantityCount++;
+            }
+
+            // If a significant portion of rows are invalid, reject import as wrong format
+            // (Use conservative thresholds to avoid rejecting files with a few empty trailing rows)
+            if (missingName > 0)
+            {
+                error = $"File Excel không đúng định dạng: phát hiện {missingName} hàng không có tên nguyên liệu (cột 'IngName').\n" +
+                        "Đảm bảo file sử dụng cột: 'IngName', 'Unit', 'Quantity'.";
+                return false;
+            }
+
+            if (missingUnit > 0)
+            {
+                error = $"File Excel không đúng định dạng: phát hiện {missingUnit} hàng thiếu đơn vị (cột 'Unit').\n" +
+                        "Đảm bảo file sử dụng cột: 'IngName', 'Unit', 'Quantity'.";
+                return false;
+            }
+
+            if (invalidQuantityCount > total / 2) // if majority of rows have invalid quantity, likely wrong mapping
+            {
+                error = "File Excel có vấn đề với cột 'Quantity' (giá trị không hợp lệ hoặc cột không đúng). " +
+                        "Vui lòng kiểm tra lại định dạng cột.";
+                return false;
+            }
+
+            return true;
         }
 
         // --- Export ---

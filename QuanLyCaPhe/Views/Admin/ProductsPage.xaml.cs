@@ -129,10 +129,25 @@ namespace QuanLyCaPhe.Views.Admin
                 {
                     List<Product> importedList = ExcelHelper.ImportList<Product>(ofd.FileName);
 
+                    // Validate contract / format before processing
+                    if (!ValidateImportedProducts(importedList, out var validationError))
+                    {
+                        JetMoonMessageBox.Show(validationError, "Lỗi định dạng Excel", MsgType.Error);
+                        return;
+                    }
+
+                    // Remove any fully empty rows (defensive)
+                    var cleaned = new List<Product>();
+                    foreach (var it in importedList)
+                    {
+                        if (it != null && !string.IsNullOrWhiteSpace(it.ProName))
+                            cleaned.Add(it);
+                    }
+
                     int countAdd = 0;
                     int countUpdate = 0;
 
-                    foreach (var item in importedList)
+                    foreach (var item in cleaned)
                     {
                         string excelName = item.ProName.Trim();
                         int existingId = ProductDAO.Instance.GetIdByName(excelName);
@@ -157,6 +172,54 @@ namespace QuanLyCaPhe.Views.Admin
                     JetMoonMessageBox.Show("Lỗi: " + ex.Message, "Lỗi Import", MsgType.Error);
                 }
             }
+        }
+
+        private bool ValidateImportedProducts(List<Product> importedList, out string error)
+        {
+            error = string.Empty;
+
+            if (importedList == null || importedList.Count == 0)
+            {
+                error = "Không tìm thấy dữ liệu trong file Excel. Vui lòng kiểm tra lại định dạng.\n" +
+                        "Yêu cầu: file phải chứa các cột tương ứng với thuộc tính model: 'ProName', 'Price'.";
+                return false;
+            }
+
+            int total = importedList.Count;
+            int missingName = 0;
+            int invalidPriceCount = 0;
+
+            for (int i = 0; i < importedList.Count; i++)
+            {
+                var row = importedList[i];
+                if (row == null)
+                {
+                    missingName++;
+                    invalidPriceCount++;
+                    continue;
+                }
+
+                if (string.IsNullOrWhiteSpace(row.ProName)) missingName++;
+
+                // price should be non-negative and reasonably non-zero (0 may be allowed but count it as suspicious)
+                if (row.Price < 0) invalidPriceCount++;
+            }
+
+            if (missingName > 0)
+            {
+                error = $"File Excel không đúng định dạng: phát hiện {missingName} hàng không có tên món (cột 'ProName').\n" +
+                        "Đảm bảo file sử dụng cột: 'ProName', 'Price'.";
+                return false;
+            }
+
+            // If a significant portion of rows have invalid price, likely wrong mapping
+            if (invalidPriceCount > total / 2)
+            {
+                error = "File Excel có vấn đề với cột 'Price' (giá trị âm hoặc cột không đúng). Vui lòng kiểm tra lại định dạng cột 'Price'.";
+                return false;
+            }
+
+            return true;
         }
         // --- Export ---
         private void ExportData()

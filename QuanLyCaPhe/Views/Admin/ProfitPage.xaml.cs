@@ -6,6 +6,8 @@ using QuanLyCaPhe.DAO;
 using QuanLyCaPhe.Models;
 using System.ComponentModel;
 using System.Globalization;
+using System.Text;
+using QuanLyCaPhe.Views.Components;
 
 namespace QuanLyCaPhe.Views.Admin
 {
@@ -119,6 +121,60 @@ namespace QuanLyCaPhe.Views.Admin
         private string FormatCurrencyVnd(decimal amount)
         {
             return string.Format(CultureInfo.InvariantCulture, "{0:N0}đ", amount);
+        }
+
+        // Show details when user clicks the TotalExpenseText
+        private void TotalExpenseText_MouseLeftButtonUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            try
+            {
+                DateTime selected = DatePickerV2.SelectedDate;
+                int month = selected.Month;
+                int year = selected.Year;
+
+                // Calculate input expenses for month and collect entries
+                var inputs = InputInfoDAO.Instance.GetListInputInfo()
+                                .Where(i => i.DateInput.Month == month && i.DateInput.Year == year)
+                                .OrderByDescending(i => i.DateInput)
+                                .ToList();
+
+                decimal totalInput = inputs.Sum(i => i.InputPrice);
+
+                // Calculate labor total (same logic as UpdateTotals)
+                decimal totalLabor = 0m;
+                var users = UserDAO.Instance.GetListUser();
+                var wageById = users.ToDictionary(u => u.Id, u => u.HourlyWage);
+
+                DateTime firstDay = new DateTime(year, month, 1);
+                int daysInMonth = DateTime.DaysInMonth(year, month);
+
+                for (int d = 0; d < daysInMonth; d++)
+                {
+                    DateTime date = firstDay.AddDays(d);
+                    var schedules = WorkScheduleDAO.Instance.GetListByDate(date);
+                    foreach (var s in schedules)
+                    {
+                        double hoursDouble = (s.EndTime - s.StartTime).TotalHours;
+                        if (hoursDouble <= 0) continue;
+                        if (wageById.TryGetValue(s.UserId, out decimal hourlyWage))
+                        {
+                            totalLabor += (decimal)hoursDouble * hourlyWage;
+                        }
+                    }
+                }
+
+                var sb = new StringBuilder();
+                sb.AppendLine();
+                sb.AppendLine($"- Tổng chi nhập hàng: {FormatCurrencyVnd(totalInput)}");
+                sb.AppendLine($"- Tổng lương nhân viên: {FormatCurrencyVnd(totalLabor)}");
+
+                // Show using existing JetMoonMessageBox for consistent UI
+                JetMoonMessageBox.Show(sb.ToString(), "Chi tiết Tổng Chi", MsgType.Info);
+            }
+            catch (Exception ex)
+            {
+                JetMoonMessageBox.Show("Không thể hiển thị chi tiết: " + ex.Message, "Lỗi", MsgType.Error);
+            }
         }
     }
 }

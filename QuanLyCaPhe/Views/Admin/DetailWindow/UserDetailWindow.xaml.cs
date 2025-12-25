@@ -7,6 +7,7 @@ using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Text.RegularExpressions;
+using QuanLyCaPhe.Services;
 
 namespace QuanLyCaPhe.Views.Admin.DetailWindow
 {
@@ -106,6 +107,12 @@ namespace QuanLyCaPhe.Views.Admin.DetailWindow
 
                     if (UserDAO.Instance.InsertUser(name, email, phone, address, gender, password, role, hourly))
                     {
+                        try
+                        {
+                            GlobalService.RecordActivity("Nhân viên", "Thêm nhân viên", $"Đã thêm nhân viên: {name} ({email})");
+                        }
+                        catch { }
+
                         JetMoonMessageBox.Show("Thêm nhân viên thành công!", "Hoàn tất", MsgType.Success);
                         DialogResult = true;
                         Close();
@@ -117,8 +124,31 @@ namespace QuanLyCaPhe.Views.Admin.DetailWindow
                 }
                 else
                 {
+                    // capture old values for activity details
+                    var oldName = _user.FullName;
+                    var oldPhone = _user.Phone;
+                    var oldAddress = _user.Address;
+                    var oldGender = _user.Gender;
+                    var oldRole = _user.RoleName;
+                    var oldHourly = _user.HourlyWage;
+
                     if (UserDAO.Instance.UpdateUser(_user.Id, name, phone, address, gender, role, hourly))
                     {
+                        try
+                        {
+                            var changes = new System.Collections.Generic.List<string>();
+                            if (oldName != name) changes.Add($"Tên: \"{oldName}\" → \"{name}\"");
+                            if (oldPhone != phone) changes.Add($"Điện thoại: \"{oldPhone}\" → \"{phone}\"");
+                            if (oldAddress != address) changes.Add("Địa chỉ: đã thay đổi");
+                            if (oldGender != gender) changes.Add($"Giới tính: \"{oldGender}\" → \"{gender}\"");
+                            if (oldRole != role) changes.Add($"Vai trò: \"{oldRole}\" → \"{role}\"");
+                            if (oldHourly != hourly) changes.Add($"Lương theo giờ: \"{oldHourly}\" → \"{hourly}\"");
+
+                            var detail = changes.Count > 0 ? string.Join("; ", changes) : "Không có thay đổi nội dung";
+                            GlobalService.RecordActivity("Nhân viên", "Cập nhật nhân viên", $"Nhân viên #{_user.Id}: {detail}");
+                        }
+                        catch { }
+
                         JetMoonMessageBox.Show("Cập nhật hồ sơ thành công!", "Hoàn tất", MsgType.Success);
                         DialogResult = true;
                         Close();

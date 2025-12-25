@@ -22,6 +22,27 @@
                 </MenuItem.Icon>
             </MenuItem>
         </ContextMenu>
+
+        <!-- Center-align CheckBox inside DataGridCheckBoxColumn -->
+        <Style x:Key="DataGridCenterCheckBoxStyle" TargetType="CheckBox">
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="Padding" Value="0"/>
+            <Setter Property="Margin" Value="0"/>
+            <!-- Allow focus so user can click the checkbox -->
+            <Setter Property="Focusable" Value="True"/>
+            <!-- handle Click to persist immediately -->
+            <EventSetter Event="Click" Handler="TableCheckBox_Click"/>
+        </Style>
+
+        <!-- Ensure the DataGridCell centers its content (the CheckBox) -->
+        <Style x:Key="DataGridCenterCellStyle" TargetType="DataGridCell">
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="Padding" Value="0"/>
+        </Style>
     </Page.Resources>
 
     <Grid>
@@ -56,7 +77,8 @@
             <DataGrid x:Name="Tablesdg" Grid.Row="2"
                   LoadingRow="Tablesdg_LoadingRow"
                   AutoGenerateColumns="False" CanUserAddRows="False" IsReadOnly="True" SelectionMode="Single"
-                  Style="{StaticResource CardStyleDataGridStyle}">
+                  Style="{StaticResource CardStyleDataGridStyle}"
+                  CellEditEnding="Tablesdg_CellEditEnding">
 
                 <DataGrid.RowStyle>
                     <Style TargetType="DataGridRow" BasedOn="{StaticResource CardRowType}">
@@ -69,7 +91,14 @@
 
                     <DataGridTextColumn Header="Tên Bàn" Binding="{Binding Name}" Width="200"/>
 
-                    <DataGridCheckBoxColumn Header="Hoạt động" Binding="{Binding IsActive}" Width="auto" IsReadOnly="True"/>
+                    <!-- Make checkbox column editable and handle clicks immediately -->
+                    <DataGridCheckBoxColumn Header="Hoạt động"
+                                            Binding="{Binding IsActive, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                            Width="auto"
+                                            IsReadOnly="False"
+                                            ElementStyle="{StaticResource DataGridCenterCheckBoxStyle}"
+                                            EditingElementStyle="{StaticResource DataGridCenterCheckBoxStyle}"
+                                            CellStyle="{StaticResource DataGridCenterCellStyle}"/>
 
                     <DataGridTextColumn Header="Ghi chú" Binding="{Binding Note}" Width="*" />
                 </DataGrid.Columns>

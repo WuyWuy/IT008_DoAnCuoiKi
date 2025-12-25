@@ -51,8 +51,31 @@
                 </Grid>
 
                 <TextBlock Text="Ghi chú / Lưu ý" FontWeight="SemiBold" Margin="0,0,0,5" Foreground="#0C4A6E"/>
-                <TextBox x:Name="txtNote" Style="{StaticResource GlassTextStyleInput}" 
-                     Height="80" TextWrapping="Wrap" VerticalContentAlignment="Top" Padding="5"/>
+                <!-- Force top-aligned content inside TextBox: AcceptsReturn + explicit template with PART_ContentHost VerticalAlignment="Top" -->
+                <TextBox x:Name="txtNote"
+                         Height="80"
+                         TextWrapping="Wrap"
+                         AcceptsReturn="True"
+                         Padding="5"
+                         Text=""
+                         Background="{StaticResource CardBackground}"
+                         BorderBrush="{StaticResource BorderLight}"
+                         BorderThickness="1">
+                    <TextBox.Template>
+                        <ControlTemplate TargetType="TextBox">
+                            <Border Background="{TemplateBinding Background}"
+                                    BorderBrush="{TemplateBinding BorderBrush}"
+                                    BorderThickness="{TemplateBinding BorderThickness}"
+                                    CornerRadius="6"
+                                    SnapsToDevicePixels="True">
+                                <!-- PART_ContentHost must exist for TextBox to render content; set VerticalAlignment=Top to force top placement -->
+                                <ScrollViewer x:Name="PART_ContentHost"
+                                              Padding="{TemplateBinding Padding}"
+                                              VerticalAlignment="Top"/>
+                            </Border>
+                        </ControlTemplate>
+                    </TextBox.Template>
+                </TextBox>
 
             </StackPanel>
 
