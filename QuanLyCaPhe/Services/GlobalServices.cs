@@ -72,9 +72,12 @@ namespace QuanLyCaPhe.Services
                 foreach (var ing in ingredients)
                 {
                     // Ngưỡng cảnh báo: <= 200 đơn vị
-                    if (ing.Quantity <= 200)
+                    if (0 < ing.Quantity && ing.Quantity <= 200)
                     {
                         CurrentWarnings.Add($"⚠️ {ing.IngName} sắp hết (Còn {ing.Quantity} {ing.Unit})");
+                    } else if (ing.Quantity == 0)
+                    {
+                        CurrentWarnings.Add($"❌ {ing.IngName} đã hết!");
                     }
                 }
             }

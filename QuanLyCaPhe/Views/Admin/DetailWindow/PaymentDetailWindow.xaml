@@ -29,12 +29,77 @@
 
                     <StackPanel Grid.Column="0">
                         <TextBlock Text="Tên Ngân hàng" FontWeight="SemiBold" Margin="0,0,0,5" Foreground="#0C4A6E"/>
-                        <TextBox x:Name="txtBankName" Style="{StaticResource GlassTextStyleInput}" ToolTip="Ví dụ: MB Bank, VietinBank"/>
+                        <!-- Replaced TextBox with editable ComboBox of banks -->
+                        <ComboBox x:Name="cboBankName" Style="{StaticResource ComboBoxStyle}" Height="38"
+                          IsEditable="True" IsTextSearchEnabled="True" ToolTip="Chọn hoặc nhập tên ngân hàng"
+                          SelectionChanged="cboBankName_SelectionChanged" LostFocus="cboBankName_LostFocus">
+                            <ComboBoxItem Content="VietinBank" Tag="970415"/>
+                            <ComboBoxItem Content="Vietcombank" Tag="970436"/>
+                            <ComboBoxItem Content="BIDV" Tag="970418"/>
+                            <ComboBoxItem Content="Agribank" Tag="970405"/>
+                            <ComboBoxItem Content="OCB" Tag="970448"/>
+                            <ComboBoxItem Content="MBBank" Tag="970422"/>
+                            <ComboBoxItem Content="Techcombank" Tag="970407"/>
+                            <ComboBoxItem Content="ACB" Tag="970416"/>
+                            <ComboBoxItem Content="VPBank" Tag="970432"/>
+                            <ComboBoxItem Content="TPBank" Tag="970423"/>
+                            <ComboBoxItem Content="Sacombank" Tag="970403"/>
+                            <ComboBoxItem Content="HDBank" Tag="970437"/>
+                            <ComboBoxItem Content="VietCapitalBank" Tag="970454"/>
+                            <ComboBoxItem Content="SCB" Tag="970429"/>
+                            <ComboBoxItem Content="VIB" Tag="970441"/>
+                            <ComboBoxItem Content="SHB" Tag="970443"/>
+                            <ComboBoxItem Content="Eximbank" Tag="970431"/>
+                            <ComboBoxItem Content="MSB" Tag="970426"/>
+                            <ComboBoxItem Content="CAKE" Tag="546034"/>
+                            <ComboBoxItem Content="Ubank" Tag="546035"/>
+                            <ComboBoxItem Content="KienLongBank" Tag="970452"/>
+                            <ComboBoxItem Content="KBank" Tag="668888"/>
+                            <ComboBoxItem Content="MAFC" Tag="977777"/>
+                            <ComboBoxItem Content="HongLeong" Tag="970442"/>
+                            <ComboBoxItem Content="KEBHANAHN" Tag="970467"/>
+                            <ComboBoxItem Content="KEBHanaHCM" Tag="970466"/>
+                            <ComboBoxItem Content="Citibank" Tag="533948"/>
+                            <ComboBoxItem Content="CBBank" Tag="970444"/>
+                            <ComboBoxItem Content="CIMB" Tag="422589"/>
+                            <ComboBoxItem Content="DBSBank" Tag="796500"/>
+                            <ComboBoxItem Content="Vikki" Tag="970406"/>
+                            <ComboBoxItem Content="VBSP" Tag="999888"/>
+                            <ComboBoxItem Content="GPBank" Tag="970408"/>
+                            <ComboBoxItem Content="KookminHCM" Tag="970463"/>
+                            <ComboBoxItem Content="KookminHN" Tag="970462"/>
+                            <ComboBoxItem Content="Woori" Tag="970457"/>
+                            <ComboBoxItem Content="VRB" Tag="970421"/>
+                            <ComboBoxItem Content="HSBC" Tag="458761"/>
+                            <ComboBoxItem Content="IBKHN" Tag="970455"/>
+                            <ComboBoxItem Content="IBKHCM" Tag="970456"/>
+                            <ComboBoxItem Content="ViettelMoney" Tag="971005"/>
+                            <ComboBoxItem Content="Timo" Tag="963388"/>
+                            <ComboBoxItem Content="VNPTMoney" Tag="971011"/>
+                            <ComboBoxItem Content="SaigonBank" Tag="970400"/>
+                            <ComboBoxItem Content="BacABank" Tag="970409"/>
+                            <ComboBoxItem Content="MoMo" Tag="971025"/>
+                            <ComboBoxItem Content="PVcomBank Pay" Tag="971133"/>
+                            <ComboBoxItem Content="PVcomBank" Tag="970412"/>
+                            <ComboBoxItem Content="MBV" Tag="970414"/>
+                            <ComboBoxItem Content="NCB" Tag="970419"/>
+                            <ComboBoxItem Content="ShinhanBank" Tag="970424"/>
+                            <ComboBoxItem Content="ABBANK" Tag="970425"/>
+                            <ComboBoxItem Content="VietABank" Tag="970427"/>
+                            <ComboBoxItem Content="NamABank" Tag="970428"/>
+                            <ComboBoxItem Content="PGBank" Tag="970430"/>
+                            <ComboBoxItem Content="VietBank" Tag="970433"/>
+                            <ComboBoxItem Content="BaoVietBank" Tag="970438"/>
+                            <ComboBoxItem Content="SeABank" Tag="970440"/>
+                            <ComboBoxItem Content="COOPBANK" Tag="970446"/>
+                            <ComboBoxItem Content="LPBank" Tag="970449"/>
+                        </ComboBox>
                     </StackPanel>
 
                     <StackPanel Grid.Column="2">
                         <TextBlock Text="Mã BIN" FontWeight="SemiBold" Margin="0,0,0,5" Foreground="#0C4A6E"/>
-                        <TextBox x:Name="txtBin" Style="{StaticResource GlassTextStyleInput}" ToolTip="Tra cứu tại vietqr.io (VD: 970422)"/>
+                        <!-- txtBin is read-only and filled from bank selection -->
+                        <TextBox x:Name="txtBin" Style="{StaticResource GlassTextStyleInput}" ToolTip="Tra cứu tại vietqr.io (VD: 970422)" IsReadOnly="True"/>
                     </StackPanel>
                 </Grid>
 
