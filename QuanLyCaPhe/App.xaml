@@ -5,7 +5,7 @@
              xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit" 
              xmlns:sys="clr-namespace:System;assembly=netstandard"
              ShutdownMode="OnExplicitShutdown"
-             StartupUri="Views/Admin/AdminWindow.xaml">
+             StartupUri="Views/Login/LoginWindow.xaml">
 
     <Application.Resources>
         <ResourceDictionary>
@@ -23,9 +23,7 @@
                 <ResourceDictionary Source="/Resources/Styles/LastBillStyle.xaml"/>
                 <ResourceDictionary Source="/Resources/Styles/ScheduleStyles.xaml"/>
             </ResourceDictionary.MergedDictionaries>
-            
-            
-            
+
         </ResourceDictionary>
     </Application.Resources>
 </Application>

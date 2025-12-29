@@ -8,12 +8,15 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Text.RegularExpressions;
 using QuanLyCaPhe.Services;
+using System.Linq;
 
 namespace QuanLyCaPhe.Views.Admin.DetailWindow
 {
     public partial class UserDetailWindow : Window
     {
         private User _user;
+        private TextBox? _wageBox;
+        private ComboBoxItem? _staffItem;
 
         public UserDetailWindow()
         {
@@ -21,6 +24,14 @@ namespace QuanLyCaPhe.Views.Admin.DetailWindow
             _user = null;
             txtEmail.IsEnabled = true;
             pnlPassword.Visibility = Visibility.Visible;
+
+            // Cache wage box and staff item, attach handler to keep UI consistent
+            _wageBox = this.FindName("txtHourlyWage") as TextBox;
+            _staffItem = cboRole.Items.OfType<ComboBoxItem>().FirstOrDefault(i => (i.Tag?.ToString() ?? "") == "Staff");
+            cboRole.SelectionChanged += CboRole_SelectionChanged;
+            // default: if role is Admin selected, make wage read-only (rare for create)
+            if ((cboRole.SelectedItem as ComboBoxItem)?.Content?.ToString() == "Admin")
+                if (_wageBox != null) _wageBox.IsReadOnly = true;
         }
 
         public UserDetailWindow(User user)
@@ -33,10 +44,10 @@ namespace QuanLyCaPhe.Views.Admin.DetailWindow
             txtPhone.Text = user.Phone;
             txtAddress.Text = user.Address;
 
-            var wageBox = this.FindName("txtHourlyWage") as TextBox;
-            if (wageBox != null)
+            _wageBox = this.FindName("txtHourlyWage") as TextBox;
+            if (_wageBox != null)
             {
-                wageBox.Text = user.HourlyWage.ToString("N0");
+                _wageBox.Text = user.HourlyWage.ToString("N0");
             }
 
             foreach (ComboBoxItem item in cboRole.Items)
@@ -50,6 +61,45 @@ namespace QuanLyCaPhe.Views.Admin.DetailWindow
 
             txtEmail.IsEnabled = false;
             pnlPassword.Visibility = Visibility.Collapsed;
+
+            // Cache staff item and attach handler
+            _staffItem = cboRole.Items.OfType<ComboBoxItem>().FirstOrDefault(i => (i.Tag?.ToString() ?? "") == "Staff");
+            cboRole.SelectionChanged += CboRole_SelectionChanged;
+
+            // 1) If editing an Admin, make hourly wage read-only by default
+            if (user.RoleName == "Admin" && _wageBox != null)
+            {
+                _wageBox.IsReadOnly = true;
+            }
+
+            // 2) If this is the last remaining Admin, disallow selecting "Staff" (prevent demotion)
+            try
+            {
+                if (user.RoleName == "Admin" && UserDAO.Instance.GetCountAdmin() <= 1)
+                {
+                    if (_staffItem != null)
+                    {
+                        _staffItem.IsEnabled = false;
+                        _staffItem.ToolTip = "Không thể hạ vai trò vì đây là Admin duy nhất.";
+                    }
+                    // Optional: also prevent cboRole being changed entirely
+                    // cboRole.IsEnabled = false;
+                }
+            }
+            catch
+            {
+                // ignore counting errors — fail-safe: keep controls enabled
+            }
+        }
+
+        private void CboRole_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            // Keep hourly wage readonly when selected role is Admin; editable otherwise.
+            var selectedRole = (cboRole.SelectedItem as ComboBoxItem)?.Content?.ToString() ?? "Staff";
+            if (_wageBox != null)
+            {
+                _wageBox.IsReadOnly = selectedRole == "Admin";
+            }
         }
 
         private void BtnSave_Click(object sender, RoutedEventArgs e)
@@ -131,6 +181,25 @@ namespace QuanLyCaPhe.Views.Admin.DetailWindow
                     var oldGender = _user.Gender;
                     var oldRole = _user.RoleName;
                     var oldHourly = _user.HourlyWage;
+
+                    // Prevent demoting the last admin
+                    if (oldRole == "Admin" && role == "Staff")
+                    {
+                        try
+                        {
+                            if (UserDAO.Instance.GetCountAdmin() <= 1)
+                            {
+                                JetMoonMessageBox.Show("Không thể chuyển vai trò vì chỉ còn 1 Admin trong hệ thống.", "Hành động bị chặn", MsgType.Warning);
+                                return;
+                            }
+                        }
+                        catch
+                        {
+                            // if counting fails, block the demotion as a safe default
+                            JetMoonMessageBox.Show("Không thể kiểm tra số lượng Admin. Hành động bị chặn.", "Lỗi", MsgType.Warning);
+                            return;
+                        }
+                    }
 
                     if (UserDAO.Instance.UpdateUser(_user.Id, name, phone, address, gender, role, hourly))
                     {
